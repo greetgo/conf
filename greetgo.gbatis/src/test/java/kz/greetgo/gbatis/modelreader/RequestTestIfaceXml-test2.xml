@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<gbatis-mapper>
-  <request id="methodReadSql1-XX" type="Sele">
-    <sql>select name, value from x_asd where asd = #{asd}</sql>
-  </request>
-</gbatis-mapper>

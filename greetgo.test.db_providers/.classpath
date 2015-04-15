@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="output" path="bin"/>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7" exported="true"/>
-	<classpathentry sourcepath="GRADLE_USER_HOME/caches/modules-2/files-2.1/kz.greetgo/greetgo.conf/0.0.13/62ae6b3110837886f463ba17dab9e61a650c03d7/greetgo.conf-0.0.13-sources.jar" kind="var" path="GRADLE_USER_HOME/caches/modules-2/files-2.1/kz.greetgo/greetgo.conf/0.0.13/926f4a98b74b7358eb12cdb01b53d51cbd3ff3e8/greetgo.conf-0.0.13.jar" exported="true"/>
-	<classpathentry sourcepath="GRADLE_USER_HOME/caches/modules-2/files-2.1/kz.greetgo/greetgo.util/0.0.4/225cf4afe68a425b5ee97098f7c9dc5007162e5c/greetgo.util-0.0.4-sources.jar" kind="var" path="GRADLE_USER_HOME/caches/modules-2/files-2.1/kz.greetgo/greetgo.util/0.0.4/b0fb477abcb12e18afc1b16c73d3673ca09b4371/greetgo.util-0.0.4.jar" exported="true"/>
-</classpath>
