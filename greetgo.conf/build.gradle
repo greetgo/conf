@@ -18,6 +18,8 @@ jar {
   }
 }
 
+eclipse.project.natures 'org.springsource.ide.eclipse.gradle.core.nature'
+
 eclipse {
   jdt {
     //
@@ -27,8 +29,6 @@ eclipse {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
   }
-
-  pathVariables 'GRADLE_USER_HOME': gradle.gradleUserHomeDir
 }
 
 project.eclipse.classpath.file.whenMerged { cp ->
@@ -44,9 +44,8 @@ project.eclipse.classpath.file.whenMerged { cp ->
 repositories {
   maven {
     name 'Our repository'
-    url 'http://192.168.0.1:8080/repository/internal/'
+    url 'http://192.168.11.11:8080/repository/internal/'
   }
-  mavenCentral()
 }
 
 configurations { repoUpload }
@@ -80,7 +79,7 @@ uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives
     repository(
-      url: 'http://192.168.0.1:8080/repository/internal/'
+      url: 'http://192.168.11.11:8080/repository/internal/'
     )
 
     pom.project {

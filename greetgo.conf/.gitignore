@@ -1,4 +1,13 @@
-/target
+/.gradle
+/bin
+/.settings
+/.classpath
+/.project
 /test-output
 /build
-/.gradle
+/.gwt
+/.gwt-tmp
+/tomcat
+/war
+/gwt-unitCache
+/*.log
