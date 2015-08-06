@@ -2,7 +2,7 @@ package kz.greetgo.conf.hot;
 
 public class TestHotConfig {
   public static void main(String[] args) {
-    TestHotconfigFab fab = new TestHotconfigFab("target/hotasd", ".hotconfig");
+    TestHotconfigFab fab = new TestHotconfigFab("build/hotasd", ".hotconfig");
     
     HotConfigModifier m = fab.createModifier();
     

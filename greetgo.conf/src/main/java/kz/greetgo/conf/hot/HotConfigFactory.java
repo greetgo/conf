@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Создаёт прокси-классы, которые предоставляют значения конфигурационных параметров из
@@ -36,6 +39,7 @@ import java.util.Set;
  * 
  * @author pompei
  */
+@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 public abstract class HotConfigFactory {
   private final List<Invokator> invokators = new ArrayList<Invokator>();
   private boolean resetEnabled = true;
@@ -112,7 +116,7 @@ public abstract class HotConfigFactory {
   private class Invokator implements InvocationHandler {
     final Class<?> class1;
     boolean loaded = false;
-    private final Map<String, Object> data = new HashMap<String, Object>();
+    private final Map<String, Object> data = new ConcurrentHashMap<String, Object>();
     
     Invokator(Class<?> class1) {
       this.class1 = class1;

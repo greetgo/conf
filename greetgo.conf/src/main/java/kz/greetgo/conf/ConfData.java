@@ -52,7 +52,9 @@ public class ConfData {
    *           для проброса исключений, чтобы не загромождать код try/catch-ми
    */
   public void readFromFile(File file) throws Exception {
-    readFromStream(new FileInputStream(file));
+    try (FileInputStream in = new FileInputStream(file)) {
+      readFromStream(in);
+    }
   }
   
   /**

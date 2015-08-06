@@ -118,11 +118,11 @@ public class ConfUtil {
       return false;
     }
     if (type == Integer.TYPE || type.isAssignableFrom(Integer.class)) {
-      if (str == null) return new Integer(0);
+      if (str == null) return Integer.valueOf(0);
       return Integer.parseInt(str);
     }
     if (type == Long.TYPE || type.isAssignableFrom(Long.class)) {
-      if (str == null) return new Long(0);
+      if (str == null) return Long.valueOf(0);
       return Long.parseLong(str);
     }
     if (type == Double.TYPE || type.isAssignableFrom(Double.class)) {

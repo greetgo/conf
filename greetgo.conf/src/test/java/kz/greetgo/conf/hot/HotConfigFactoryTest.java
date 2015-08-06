@@ -7,6 +7,9 @@ import java.io.PrintStream;
 
 import org.testng.annotations.Test;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 public class HotConfigFactoryTest {
   @Test
   public void createDefault() throws Exception {
