@@ -1,0 +1,74 @@
+package kz.greetgo.conf;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ConfDir {
+  private static final Map<String, String> dirMap = new HashMap<>();
+  
+  private ConfDir() {}
+  
+  public static String confDir(String sysId) {
+    
+    String value = dirMap.get(sysId);
+    
+    if (value == null) {
+      value = generateConfDir(sysId);
+      dirMap.put(sysId, value);
+    }
+    
+    return value;
+  }
+  
+  private static String generateConfDir(String sysId) {
+    {
+      String value = generateSpecificDir(sysId);
+      if (value != null) return value;
+    }
+    return System.getProperty("user.home") + "/" + sysId + ".d";
+  }
+  
+  private static String generateSpecificDir(String sysId) {
+    String userDir = System.getProperty("user.dir");
+    if (userDir == null) return null;
+    userDir = userDir.toUpperCase().trim();
+    
+    File home = new File(System.getProperty("user.home"));
+    for (File file : home.listFiles()) {
+      if (!file.isDirectory()) continue;
+      if (!file.getName().startsWith(sysId + ".")) continue;
+      if (!file.getName().endsWith(".d")) continue;
+      
+      File idFile = new File(file.getAbsolutePath() + "/id");
+      if (!idFile.exists()) continue;
+      
+      if (userDir.equals(readFile(idFile).toUpperCase().trim())) {
+        return file.getAbsolutePath();
+      }
+    }
+    
+    return null;
+  }
+  
+  private static String readFile(File idFile) {
+    try {
+      try (FileInputStream in = new FileInputStream(idFile)) {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        byte buf[] = new byte[1024 * 4];
+        
+        while (true) {
+          int count = in.read(buf);
+          if (count < 0) return bout.toString("UTF-8");
+          bout.write(buf, 0, count);
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+}
