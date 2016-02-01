@@ -11,3 +11,4 @@
 /war
 /gwt-unitCache
 /*.log
+/target/
