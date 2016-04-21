@@ -1,5 +1,7 @@
 package kz.greetgo.conf.hot;
 
+import static java.util.Collections.synchronizedList;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -41,7 +43,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 public abstract class HotConfigFactory {
-  private final List<Invokator> invokators = new ArrayList<Invokator>();
+  private final List<Invokator> invokators = synchronizedList(new ArrayList<Invokator>());
   private boolean resetEnabled = true;
   
   /**
@@ -119,6 +121,7 @@ public abstract class HotConfigFactory {
     private final Map<String, Object> data = new ConcurrentHashMap<String, Object>();
     
     Invokator(Class<?> class1) {
+      if (class1 == null) throw new IllegalArgumentException("class1 == null");
       this.class1 = class1;
     }
     
