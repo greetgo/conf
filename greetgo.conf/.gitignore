@@ -12,3 +12,6 @@
 /gwt-unitCache
 /*.log
 /target/
+/*.iml
+/*.ipr
+/*.iws

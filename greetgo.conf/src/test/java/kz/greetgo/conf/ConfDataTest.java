@@ -1,15 +1,14 @@
 package kz.greetgo.conf;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 
-import org.testng.annotations.Test;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 public class ConfDataTest {
@@ -18,7 +17,7 @@ public class ConfDataTest {
     String[] pair = ConfData.parseToPair("");
     assertThat(pair).isNull();
   }
-  
+
   @Test
   public void parseToPair_002() throws Exception {
     String[] pair = ConfData.parseToPair("  asd  = qwerty   ");
@@ -26,7 +25,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isEqualTo("qwerty");
   }
-  
+
   @Test
   public void parseToPair_002_1() throws Exception {
     String[] pair = ConfData.parseToPair("  asd  = qwerty  : wow     ");
@@ -34,7 +33,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isEqualTo("qwerty  : wow");
   }
-  
+
   @Test
   public void parseToPair_003() throws Exception {
     String[] pair = ConfData.parseToPair("  asd  : qwerty   ");
@@ -42,7 +41,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isEqualTo(" qwerty   ");
   }
-  
+
   @Test
   public void parseToPair_003_1() throws Exception {
     String[] pair = ConfData.parseToPair("  asd  : qwerty = wow  ");
@@ -50,7 +49,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isEqualTo(" qwerty = wow  ");
   }
-  
+
   @Test
   public void parseToPair_004() throws Exception {
     String[] pair = ConfData.parseToPair("  asd   qwerty   ");
@@ -58,7 +57,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isEqualTo("qwerty");
   }
-  
+
   @Test
   public void parseToPair_005() throws Exception {
     String[] pair = ConfData.parseToPair("  asd   ");
@@ -66,7 +65,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isNull();
   }
-  
+
   @Test
   public void parseToPair_006() throws Exception {
     String[] pair = ConfData.parseToPair("  asd  { ");
@@ -74,7 +73,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("asd");
     assertThat(pair[1]).isEqualTo("{");
   }
-  
+
   @Test
   public void parseToPair_007() throws Exception {
     String[] pair = ConfData.parseToPair("  } ");
@@ -82,7 +81,7 @@ public class ConfDataTest {
     assertThat(pair[0]).isEqualTo("}");
     assertThat(pair[1]).isNull();
   }
-  
+
   @Test
   public void readFromFile() throws Exception {
     Random rnd = new Random();
@@ -109,19 +108,19 @@ public class ConfDataTest {
       out.println("SOS = kolt2      ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     System.out.println(cd.getData());
-    
+
     assertThat(cd.getData().keySet()).hasSize(4);
     assertThat(cd.getData().keySet()).contains("group", "asd", "SOS", "hello");
-    
+
     assertThat(cd.getData().get("SOS").get(0)).isEqualTo("kolt1");
     assertThat(cd.getData().get("SOS").get(1)).isEqualTo("kolt2");
   }
-  
+
   @Test
   public void readFromFile_UTF8() throws Exception {
     Random rnd = new Random();
@@ -134,15 +133,15 @@ public class ConfDataTest {
       out.println("dsa   = สวัสดีชาวโลก  ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     assertThat(cd.getData().get("asd").get(0)).isEqualTo("Привет мир");
     assertThat(cd.getData().get("hello").get(0)).isEqualTo("世界，你好");
     assertThat(cd.getData().get("dsa").get(0)).isEqualTo("สวัสดีชาวโลก");
   }
-  
+
   @Test
   public void str_1() throws Exception {
     Random rnd = new Random();
@@ -157,13 +156,13 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     assertThat(cd.strEx("asd/dsa/status")).isEqualTo("OK");
   }
-  
+
   @Test(expectedExceptions = IndexOutOfBoundsException.class,
       expectedExceptionsMessageRegExp = "No such string index for asd/dsa")
   public void strEx_1() throws Exception {
@@ -179,13 +178,13 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     cd.strEx("asd/dsa");
   }
-  
+
   @Test(expectedExceptions = IllegalArgumentException.class,
       expectedExceptionsMessageRegExp = "No map in wow")
   public void strEx_2() throws Exception {
@@ -201,13 +200,13 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     cd.strEx("wow/asd");
   }
-  
+
   @Test
   public void str_2() throws Exception {
     Random rnd = new Random();
@@ -222,13 +221,13 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     assertThat(cd.str("asd/dsa", "DEF")).isEqualTo("DEF");
   }
-  
+
   @Test
   public void inte_1() throws Exception {
     Random rnd = new Random();
@@ -243,15 +242,15 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     assertThat(cd.inte("asd/dsa/status")).isEqualTo(828);
     assertThat(cd.inte("asd/dsa/status", 111)).isEqualTo(828);
     assertThat(cd.inte("asd1/dsa/status", 111)).isEqualTo(111);
   }
-  
+
   @Test
   public void inte_2() throws Exception {
     Random rnd = new Random();
@@ -270,16 +269,16 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     assertThat(cd.inte("asd/kapusta")).isEqualTo(111);
     assertThat(cd.inte("asd/dsa/status", 111)).isEqualTo(828);
     assertThat(cd.inte("asd/dsa.1/status", 111)).isEqualTo(999);
     assertThat(cd.inte("asd/dsa.2/status", 111)).isEqualTo(111);
   }
-  
+
   @Test
   public void list_1() throws Exception {
     Random rnd = new Random();
@@ -296,16 +295,16 @@ public class ConfDataTest {
       out.println("}                    ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     List<String> list = cd.list("asd/dsa");
-    
+
     assertThat(list).hasSize(3);
     assertThat(list).contains("status", "amil", "sinus");
   }
-  
+
   @Test
   public void list_2() throws Exception {
     Random rnd = new Random();
@@ -318,12 +317,12 @@ public class ConfDataTest {
       out.println("    sinus  = 828     ");
       out.close();
     }
-    
+
     ConfData cd = new ConfData();
     cd.readFromFile(file);
-    
+
     List<String> list = cd.list(null);
-    
+
     assertThat(list).hasSize(3);
     assertThat(list).contains("status", "amil", "sinus");
   }

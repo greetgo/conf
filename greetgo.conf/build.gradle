@@ -1,11 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'idea'
 
 group = 'kz.greetgo'
 
 sourceCompatibility = 1.7
-version = '0.0.16'
+version = '0.0.17'
 
 def nowDate = new Date()
 def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
@@ -13,8 +14,8 @@ def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
 jar {
   manifest {
     attributes 'Implementation-Title': project.name,
-      'Implementation-Version': version, 'Implementation-Vendor': 'greetgo!',
-      'Built-By': System.getProperty("user.name"), 'Built-At': nowFormattedDate
+        'Implementation-Version': version, 'Implementation-Vendor': 'greetgo!',
+        'Built-By': System.getProperty("user.name"), 'Built-At': nowFormattedDate
   }
 }
 
@@ -51,9 +52,9 @@ repositories {
 configurations { repoUpload }
 
 dependencies {
-  testCompile 'org.testng:testng:6.1.1'
+  testCompile 'org.testng:testng:6.5.1'
   testCompile 'org.easytesting:fest-assert-core:2.0M10'
-  
+
   compile 'com.google.code.findbugs:annotations:2.0.1'
 
   // needed for DAV protocol on maven uploads
@@ -81,7 +82,7 @@ uploadArchives {
   repositories.mavenDeployer {
     configuration = configurations.archives
     repository(
-      url: System.getenv('GG_REPO')
+        url: System.getenv('GG_REPO')
     )
 
     pom.project {
