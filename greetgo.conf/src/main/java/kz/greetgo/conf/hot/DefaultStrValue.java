@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Предоставляет значение параметра по умолчанию
+ * Perform default parameter value
  * 
  * @author pompei
  */
@@ -16,9 +16,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultStrValue {
   /**
-   * Предоставляет значение параметра по умолчанию
+   * Perform default parameter value
    * 
-   * @return значение параметра по умолчанию
+   * @return default parameter value
    */
   String value();
 }

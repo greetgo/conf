@@ -57,7 +57,7 @@ public class ConfUtil {
         Field field = class1.getField(name);
         field.set(readTo, convertToType(cd.str(name), field.getType()));
         continue FOR;
-      } catch (NoSuchFieldException e) {}
+      } catch (NoSuchFieldException ignored) {}
     }
   }
   
@@ -118,19 +118,19 @@ public class ConfUtil {
       return false;
     }
     if (type == Integer.TYPE || type.isAssignableFrom(Integer.class)) {
-      if (str == null) return Integer.valueOf(0);
+      if (str == null) return 0;
       return Integer.parseInt(str);
     }
     if (type == Long.TYPE || type.isAssignableFrom(Long.class)) {
-      if (str == null) return Long.valueOf(0);
+      if (str == null) return 0L;
       return Long.parseLong(str);
     }
     if (type == Double.TYPE || type.isAssignableFrom(Double.class)) {
-      if (str == null) return new Double(0);
+      if (str == null) return 0d;
       return Double.parseDouble(str);
     }
     if (type == Float.TYPE || type.isAssignableFrom(Float.class)) {
-      if (str == null) return new Float(0);
+      if (str == null) return 0f;
       return Float.parseFloat(str);
     }
     if (type.isAssignableFrom(BigDecimal.class)) {

@@ -1,28 +1,24 @@
 package kz.greetgo.conf.hot;
 
 /**
- * Предоставляет возможность динамически менять конфигурационные переметры
- * 
+ * Lets change config parameters dynamically in runtime
+ *
  * @author pompei
  */
 public interface HotConfigModifier {
   /**
-   * Активирует/деактивирует работу метода {@link HotConfigFactory#reset()}
-   * 
-   * @param resetEnabled
-   *          <code>true</code> - активировать, иначе - деактивировать
+   * Activates/deactivates resetting behavior through method {@link HotConfigFactory#reset()}
+   *
+   * @param resetEnabled <code>true</code> - to activate, another value - to deactivate
    */
   void setResetEnabled(boolean resetEnabled);
-  
+
   /**
-   * Устанавливает значение параметра
-   * 
-   * @param classs
-   *          конфигурационный интерфейс
-   * @param name
-   *          имя параметра
-   * @param value
-   *          значение параметра
+   * Set parameter value
+   *
+   * @param configInterface config interface
+   * @param name            parameter name
+   * @param value           parameter value
    */
-  void set(Class<?> classs, String name, Object value);
+  void set(Class<?> configInterface, String name, Object value);
 }

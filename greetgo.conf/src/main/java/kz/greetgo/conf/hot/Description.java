@@ -1,29 +1,31 @@
 package kz.greetgo.conf.hot;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+
 /**
- * Предоставляет описание элемента конфига (если стоит у метода) или самого конфига (если стоит у
- * интерфейса)
- * 
+ * <p>
+ * This annotation describes from java about config parameter, if this annotation located above method.
+ * </p>
+ * <p>
+ * This annotation describes from java about config interface, if this annotation located above interface.
+ * </p>
+ *
  * @author pompei
  */
 @Documented
-@Target({ METHOD, TYPE })
+@Target({METHOD, TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Description {
   /**
-   * Предоставляет описание элемента конфига (если стоит у метода) или самого конфига (если стоит у
-   * интерфейса)
-   * 
-   * @return описание элемента конфига (если стоит у метода) или самого конфига (если стоит у
-   *         интерфейса)
+   * Description contents
+   *
+   * @return description contents
    */
   String value();
 }

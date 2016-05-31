@@ -38,7 +38,9 @@ public class ConfDir {
     userDir = userDir.toUpperCase().trim();
     
     File home = new File(System.getProperty("user.home"));
-    for (File file : home.listFiles()) {
+    File[] files = home.listFiles();
+    if (files == null) return null;
+    for (File file : files) {
       if (!file.isDirectory()) continue;
       if (!file.getName().startsWith(sysId + ".")) continue;
       if (!file.getName().endsWith(".d")) continue;
