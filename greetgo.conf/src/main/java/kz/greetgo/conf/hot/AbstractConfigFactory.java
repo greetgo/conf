@@ -262,7 +262,7 @@ public abstract class AbstractConfigFactory {
         {
           DefaultStrValue ann = method.getAnnotation(DefaultStrValue.class);
           if (ann != null) {
-            defValue = ann.value();
+            defValue = replaceParametersInDefaultStrValue(ann.value());
           }
         }
         {
@@ -373,6 +373,18 @@ public abstract class AbstractConfigFactory {
       }
       fileData.put(line.substring(0, eqIndex).trim(), line.substring(eqIndex + 1).trim());
     }
+  }
+
+  /**
+   * Replace parameters in <code>value</code> with what you want and return it
+   *
+   * @param value value containing parameters
+   * @return value without parameters - all parameters was replaced with it's values
+   */
+  protected String replaceParametersInDefaultStrValue(String value) {
+    value = value.replaceAll("\\{user\\.name\\}", System.getProperty("user.name"));
+    value = value.replaceAll("\\{user\\.home\\}", System.getProperty("user.home"));
+    return value;
   }
 
   public boolean strToBool(String str) {

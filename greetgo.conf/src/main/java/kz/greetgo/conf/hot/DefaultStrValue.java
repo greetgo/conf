@@ -1,14 +1,26 @@
 package kz.greetgo.conf.hot;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
- * Perform default parameter value
- * 
+ * <p>Perform default parameter value</p>
+ * <p>You can use following variables:
+ * <table>
+ * <tr>
+ * <td><strong>{user.name}</strong></td>
+ * <td>Current system user name</td>
+ * </tr>
+ * <tr>
+ * <td><strong>{user.home}<strong></td>
+ * <td>Current system user home directory</td>
+ * </tr>
+ * </table>
+ * <p/>
+ * You can extend this list with overriding method
+ * {@link AbstractConfigFactory#replaceParametersInDefaultStrValue(String)}
+ * <p/>
+ * </p>
+ *
  * @author pompei
  */
 @Documented
@@ -17,7 +29,7 @@ import java.lang.annotation.Target;
 public @interface DefaultStrValue {
   /**
    * Perform default parameter value
-   * 
+   *
    * @return default parameter value
    */
   String value();
