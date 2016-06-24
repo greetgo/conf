@@ -1,29 +1,28 @@
 package kz.greetgo.conf;
 
 /**
- * 
- * Адаптер системных параметров. Считывание производится из переменных окружения
+ * The adapter of system parameters. Reading is made from environment variables
  *
  * @author pompei
  */
 public class SysParams {
 
   /**
-   * Получает значение системной переменной по её имени
+   * Receives the value of system variable under its name
    *
-   * @param name имя системной переменной
-   * @return значение системной переменной
+   * @param name name of system variable
+   * @return value of system variable
    */
   public static String get(String name) {
     return get(name, null);
   }
 
   /**
-   * Получает значение системной переменной по её имени с возможностью указания значения по умолчанию
+   * Receives the value of system variable under its name with the ability to specify the default value
    *
-   * @param name         имя системной переменной
-   * @param defaultValue значение по умолчанию
-   * @return значение системной переменной
+   * @param name         name of system variable
+   * @param defaultValue default value
+   * @return value of system variable
    */
   public static String get(String name, String defaultValue) {
     {
@@ -38,234 +37,327 @@ public class SysParams {
   }
 
   /**
-   * Получает хост для коннекта к БД оракла для возможности администрирования БД
+   * receives the host for connection to DB Oracle to allow administration of DB
    *
-   * @return хост для коннекта к БД оракла для возможности администрирования БД
+   * @return the host for connection to DB Oracle to allow administration of DB
    */
   public static String oracleAdminHost() {
     return get(oracleAdminHostKey());
   }
 
   /**
-   * Получает имя системной переменной, где лежит хост для коннекта к БД оракла для возможности
-   * администрирования БД
+   * Receives the name of system variable, where the host is for connection to DB Oracle to allow
+   * administration of DB
    *
-   * @return имя системной переменной, где лежит хост для коннекта к БД оракла для возможности
-   * администрирования БД
+   * @return the name of system variable, where the host is for connection to DB Oracle to allow
+   * administration of DB
    */
   public static String oracleAdminHostKey() {
     return "ORACLE_ADMIN_HOST";
   }
 
   /**
-   * Получает порт для коннекта к БД оракла для возможности администрирования БД
+   * Receives the port for connection to DB Oracle to allow administration of DB
    *
-   * @return порт для коннекта к БД оракла для возможности администрирования БД
+   * @return the port for connection to DB Oracle to allow administration of DB
    */
   public static String oracleAdminPort() {
     return get(oracleAdminPortKey());
   }
 
   /**
-   * Получает имя системной переменной, где лежит порт для коннекта к БД оракла для возможности
-   * администрирования БД
+   * Receives the name of system variable, where the port is for connection to DB Oracle to allow
+   * administration of DB
    *
-   * @return имя системной переменной, где лежит порт для коннекта к БД оракла для возможности
-   * администрирования БД
+   * @return the name of system variable, where the port is for connection to DB Oracle to allow
+   * administration of DB
    */
   public static String oracleAdminPortKey() {
     return "ORACLE_ADMIN_PORT";
   }
 
   /**
-   * Получает SID для коннекта к БД оракла для возможности администрирования БД
+   * Receives SID for connection to DB Oracle to allow administration of DB
    *
-   * @return SID для коннекта к БД оракла для возможности администрирования БД
+   * @return SID for connection to DB Oracle to allow administration of DB
    */
   public static String oracleAdminSid() {
     return get(oracleAdminSidKey());
   }
 
   /**
-   * Получает имя системной переменной, где лежит SID для коннекта к БД оракла для возможности
-   * администрирования БД
+   * Receives the name of system variable, where SID is for connection to DB Oracle to allow
+   * administration of DB
    *
-   * @return имя системной переменной, где лежит SID для коннекта к БД оракла для возможности
-   * администрирования БД
+   * @return the name of system variable, where SID is for connection to DB Oracle to allow
+   * administration of DB
    */
   public static String oracleAdminSidKey() {
     return "ORACLE_ADMIN_SID";
   }
 
   /**
-   * Получает имя пользователя для коннекта к БД оракла для возможности администрирования БД
+   * Receives the user name for connection to DB Oracle to allow administration of DB
    *
-   * @return имя пользователя для коннекта к БД оракла для возможности администрирования БД
+   * @return the user name for connection to DB Oracle to allow administration of DB
    */
   public static String oracleAdminUserid() {
     return get(oracleAdminUseridKey());
   }
 
   /**
-   * Получает имя системной переменной, где лежит имя пользователя для коннекта к БД оракла для
-   * возможности администрирования БД
+   * Receives the name of system variable, where user name is for connection to DB Oracle
+   * to allow administration of DB
    *
-   * @return имя системной переменной, где лежит имя пользователя для коннекта к БД оракла для
-   * возможности администрирования БД
+   * @return the name of system variable, where user name is for connection to DB Oracle
+   * to allow administration of DB
    */
   public static String oracleAdminUseridKey() {
     return "ORACLE_ADMIN_USERID";
   }
 
   /**
-   * Получает пароль для коннекта к БД оракла для возможности администрирования БД
+   * Receives the password for connection to DB Oracle to allow administration of DB
    *
-   * @return пароль для коннекта к БД оракла для возможности администрирования БД
+   * @return the password for connection to DB Oracle to allow administration of DB
    */
   public static String oracleAdminPassword() {
     return get(oracleAdminPasswordKey());
   }
 
   /**
-   * Получает имя системной переменной, где лежит пароль для коннекта к БД оракла для возможности
-   * администрирования БД
+   * Receives the name of system variable, where password is for connection to DB Oracle to allow
+   * administration of DB
    *
-   * @return имя системной переменной, где лежит пароль для коннекта к БД оракла для возможности
-   * администрирования БД
+   * @return the name of system variable, where password is for connection to DB Oracle to allow
+   * administration of DB
    */
   public static String oracleAdminPasswordKey() {
     return "ORACLE_ADMIN_PASSWORD";
   }
 
   /**
-   * Получает URL для коннекта к БД PostgreSQL для возможности администрирования БД
+   * Receives URL for connection to DB PostgreSQL to allow administration of DB
    *
-   * @return URL для коннекта к БД PostgreSQL для возможности администрирования БД
+   * @return URL for connection to DB PostgreSQL to allow administration of DB
    */
   public static String pgAdminUrl() {
     return get(pgAdminUrlKey(), "jdbc:postgresql://localhost/postgres");
   }
 
   /**
-   * Получает имя системной переменной, где лежит URL для коннекта к БД PostgreSQL для возможности
-   * администрирования БД
+   * Receives the name of system variable, where URL is for connection to DB PostgreSQL to allow
+   * administration of DB
    *
-   * @return имя системной переменной, где лежит URL для коннекта к БД PostgreSQL для возможности
-   * администрирования БД
+   * @return the name of system variable, where URL is for connection to DB PostgreSQL to allow
+   * administration of DB
    */
   public static String pgAdminUrlKey() {
     return "PG_ADMIN_URL";
   }
 
   /**
-   * Получает имя пользователя для коннекта к БД PostgreSQL для возможности администрирования БД
+   * Receives the user name for connection to DB PostgreSQL to allow administration of DB
    *
-   * @return имя пользователя для коннекта к БД PostgreSQL для возможности администрирования БД
+   * @return the user name for connection to DB PostgreSQL to allow administration of DB
    */
   public static String pgAdminUserid() {
     return get(pgAdminUseridKey(), "postgres");
   }
 
   /**
-   * Получает имя системной переменной, где лежит имя пользователя для коннекта к БД PostgreSQL для
-   * возможности администрирования БД
+   * Receives the name of system variable, where user name is for connection to DB PostgreSQL
+   * to allow administration of DB
    *
-   * @return имя системной переменной, где лежит имя пользователя для коннекта к БД PostgreSQL для
-   * возможности администрирования БД
+   * @return the name of system variable, where user name is for connection to DB PostgreSQL
+   * to allow administration of DB
    */
   public static String pgAdminUseridKey() {
     return "PG_ADMIN_USERID";
   }
 
   /**
-   * Получает пароль для коннекта к БД PostgreSQL для возможности администрирования БД
+   * Receives the password for connection to DB PostgreSQL to allow administration of DB
    *
-   * @return пароль для коннекта к БД PostgreSQL для возможности администрирования БД
+   * @return the password for connection to DB PostgreSQL to allow administration of DB
    */
   public static String pgAdminPassword() {
     return get(pgAdminPasswordKey(), "");
   }
 
   /**
-   * Получает имя системной переменной, где лежит пароль для коннекта к БД PostgreSQL для
-   * возможности администрирования БД
+   * Receives the name of system variable, where password is for connection to DB PostgreSQL
+   * to allow administration of DB
    *
-   * @return имя системной переменной, где лежит пароль для коннекта к БД PostgreSQL для возможности
-   * администрирования БД
+   * @return the name of system variable, where password is for connection to DB PostgreSQL to allow
+   * administration of DB
    */
   public static String pgAdminPasswordKey() {
     return "PG_ADMIN_PASSWORD";
   }
 
+  /**
+   * Receives the name of system variable, where URL is for connection to DB MySQL
+   * to allow administration of DB
+   *
+   * @return the name of system variable, where password is for connection to DB MySQL to allow
+   * administration of DB
+   */
+
   public static String mysqlAdminUrlKey() {
     return "MYSQL_ADMIN_URL";
   }
 
+  /**
+   * Receives URL for connection to DB MySQL to allow administration of DB
+   *
+   * @return URL for connection to DB MySQL to allow administration of DB
+   */
   public static String mysqlAdminUrl() {
     return get(mysqlAdminUrlKey(), "jdbc:mysql://localhost/mysql");
   }
 
+  /**
+   * Receives the name of system variable, where user name is for connection to DB MySQL
+   * to allow administration of DB
+   *
+   * @return the name of system variable, where user name is for connection to DB MySQL
+   * to allow administration of DB
+   */
   public static String mysqlAdminUseridKey() {
     return "MYSQL_ADMIN_USERID";
   }
+
+  /**
+   * Receives the user name for connection to DB MySQL to allow administration of DB
+   *
+   * @return the user name for connection to DB MySQL to allow administration of DB
+   */
 
   public static String mysqlAdminUserid() {
     return get(mysqlAdminUseridKey(), "root");
   }
 
+  /**
+   * Receives the name of system variable, where password is for connection to DB MySQL
+   * to allow administration of DB
+   *
+   * @return the name of system variable, where password is for connection to DB MySQL to allow
+   * administration of DB
+   */
+
   public static String mysqlAdminPasswordKey() {
     return "MYSQL_ADMIN_PASSWORD";
   }
+
+  /**
+   * Receives the password for connection to DB MySQL to allow administration of DB
+   *
+   * @return the password for connection to DB MySQL to allow administration of DB
+   */
 
   public static String mysqlAdminPassword() {
     return get(mysqlAdminPasswordKey(), "111");
   }
 
+  /**
+   * receives the host for connection to DB MS SQL Server to allow administration of DB
+   *
+   * @return the host for connection to DB MS SQL Server to allow administration of DB
+   */
+
   public static String mssqlAdminHost() {
     return get(mssqlAdminHostKey());
   }
+
+  /**
+   * Receives the name of system variable, where the host is for connection to DB MS SQL Server to allow
+   * administration of DB
+   *
+   * @return the name of system variable, where the host is for connection to DB MS SQL Server to allow
+   * administration of DB
+   */
 
   public static String mssqlAdminHostKey() {
     return "MSSQL_ADMIN_HOST";
   }
 
+  /**
+   * Receives the port for connection to DB MS SQL Server to allow administration of DB
+   *
+   * @return the port for connection to DB MS SQL Server to allow administration of DB
+   */
+
   public static String mssqlAdminPort() {
     return get(mssqlAdminPortKey());
   }
 
+  /**
+   * Receives the name of system variable, where the port is for connection to DB MS SQL Server to allow
+   * administration of DB
+   *
+   * @return the name of system variable, where the port is for connection to DB MS SQL Server to allow
+   * administration of DB
+   */
   public static String mssqlAdminPortKey() {
     return "MSSQL_ADMIN_PORT";
   }
 
+  /**
+   * Receives the name of system variable, where user name is for connection to DB MS SQL Server
+   * to allow administration of DB
+   *
+   * @return the name of system variable, where user name is for connection to DB MS SQL Server
+   * to allow administration of DB
+   */
   public static String mssqlAdminUseridKey() {
     return "MSSQL_ADMIN_USERID";
   }
+
+  /**
+   * Receives the user name for connection to DB MS SQL Server to allow administration of DB
+   *
+   * @return the user name for connection to DB MS SQL Server to allow administration of DB
+   */
 
   public static String mssqlAdminUserid() {
     return get(mssqlAdminUseridKey(), "root");
   }
 
+  /**
+   * Receives the name of system variable, where password is for connection to DB MS SQL Server
+   * to allow administration of DB
+   *
+   * @return the name of system variable, where password is for connection to DB MS SQL Server to allow
+   * administration of DB
+   */
   public static String mssqlAdminPasswordKey() {
     return "MSSQL_ADMIN_PASSWORD";
   }
+
+  /**
+   * Receives the password for connection to DB MS SQL Server to allow administration of DB
+   *
+   * @return the password for connection to DB MS SQL Server to allow administration of DB
+   */
 
   public static String mssqlAdminPassword() {
     return get(mssqlAdminPasswordKey(), "111");
   }
 
   /**
-   * Получает имя системной переменной, где лежит строка доступа к zookeeper-у
+   * Receives the name of system variable, where the string of access to zookeeper is located
    *
-   * @return имя системной переменной, где лежит строка доступа к zookeeper-у
+   * @return the name of system variable, where the string of access to zookeeper is located
    */
   public static String zookeeperConnectStrKey() {
     return "ZOOKEEPER_CONNECT_STR";
   }
 
   /**
-   * Получает строку доступа к zookeeper-у
+   * Receives the string of access to zookeeper
    *
-   * @return строка доступа к zookeeper-у
+   * @return the string of access to zookeeper
    */
   public static String zookeeperConnectStr() {
     return get(zookeeperConnectStrKey(), "localhost:2181");
