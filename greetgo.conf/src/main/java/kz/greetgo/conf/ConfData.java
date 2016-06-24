@@ -36,10 +36,23 @@ public class ConfData {
    *
    * @param file reading file
    */
-  public void readFromFile(File file) throws Exception {
-    try (FileInputStream in = new FileInputStream(file)) {
-      readFromStream(in);
+  public void readFromFile(File file) {
+    try {
+      try (FileInputStream in = new FileInputStream(file)) {
+        readFromStream(in);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * Read data from byte array
+   *
+   * @param byteArray byte array
+   */
+  public void readFromByteArray(byte[] byteArray) {
+    readFromStream(new ByteArrayInputStream(byteArray));
   }
 
   /**
@@ -47,38 +60,45 @@ public class ConfData {
    *
    * @param inputStream reading stream
    */
-  public void readFromStream(InputStream inputStream) throws Exception {
+  public void readFromStream(InputStream inputStream) {
+    try {
+      readFromStream0(inputStream);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void readFromStream0(InputStream inputStream) throws IOException {
     final LinkedList<Map<String, List<Object>>> stack = new LinkedList<>();
     stack.add(data);
 
-    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
+      WHILE:
+      while (true) {
+        String line = br.readLine();
+        if (line == null) break WHILE;
+        line = line.replaceAll("^\\s+", "");
+        if (line.startsWith("#")) continue WHILE;
+        if (line.length() == 0) continue WHILE;
+        String pair[] = parseToPair(line);
+        if (pair == null) continue WHILE;
+        if (pair.length != 2) continue WHILE;
 
-    WHILE:
-    while (true) {
-      String line = br.readLine();
-      if (line == null) break WHILE;
-      line = line.replaceAll("^\\s+", "");
-      if (line.startsWith("#")) continue WHILE;
-      if (line.length() == 0) continue WHILE;
-      String pair[] = parseToPair(line);
-      if (pair == null) continue WHILE;
-      if (pair.length != 2) continue WHILE;
+        if ("{".equals(pair[1])) {
+          Map<String, List<Object>> hash = new HashMap<>();
+          addValue(stack.getLast(), pair[0], hash);
+          stack.add(hash);
+          continue WHILE;
+        }
 
-      if ("{".equals(pair[1])) {
-        Map<String, List<Object>> hash = new HashMap<>();
-        addValue(stack.getLast(), pair[0], hash);
-        stack.add(hash);
-        continue WHILE;
+        if ("}".equals(pair[0])) {
+          stack.removeLast();
+          continue WHILE;
+        }
+
+        addValue(stack.getLast(), pair[0], pair[1]);
       }
-
-      if ("}".equals(pair[0])) {
-        stack.removeLast();
-        continue WHILE;
-      }
-
-      addValue(stack.getLast(), pair[0], pair[1]);
     }
-    br.close();
   }
 
   private static void addValue(Map<String, List<Object>> map, String key, Object value) {
@@ -135,7 +155,7 @@ public class ConfData {
       if (prevPath.length() > 0) prevPath.append('/');
       prevPath.append(step);
       cur = getMap(cur, new Name(step), prevPath);
-      if (cur == null) throw new IllegalArgumentException("No map in " + prevPath);
+      if (cur == null) throw new NoValue(prevPath);
     }
     return getStr(cur, new Name(split[split.length - 1]), prevPath);
   }
@@ -150,7 +170,7 @@ public class ConfData {
   public String str(String path, String defaultValue) {
     try {
       return strEx(path);
-    } catch (Exception e) {
+    } catch (NoValue ignore) {
       return defaultValue;
     }
   }
@@ -161,7 +181,7 @@ public class ConfData {
    * @param path name-path of parameter
    * @return int value of parameter
    */
-  public int inte(String path) {
+  public int asInt(String path) {
     String str = str(path);
     if (str == null) return 0;
     return Integer.parseInt(str);
@@ -174,7 +194,7 @@ public class ConfData {
    * @param defaultValue default value of parameter
    * @return value of parameter converted to int, or default value
    */
-  public int inte(String path, int defaultValue) {
+  public int asInt(String path, int defaultValue) {
     String str = str(path);
     if (str == null) return defaultValue;
     return Integer.parseInt(str);
@@ -183,7 +203,7 @@ public class ConfData {
   public String str(String path) {
     try {
       return strEx(path);
-    } catch (Exception e) {
+    } catch (NoValue e) {
       return null;
     }
   }
@@ -238,7 +258,7 @@ public class ConfData {
     {
       if (prevPath.length() > 0) prevPath.append("/");
       prevPath.append(name.bigName());
-      throw new IndexOutOfBoundsException("No such string index for " + prevPath);
+      throw new NoValue(prevPath);
     }
   }
 
@@ -259,7 +279,7 @@ public class ConfData {
     if (prevPath != null) {
       if (prevPath.length() > 0) prevPath.append("/");
       prevPath.append(name.bigName());
-      throw new IndexOutOfBoundsException("No such map index for " + prevPath);
+      throw new NoValue("No such map index for " + prevPath);
     }
     return null;
   }

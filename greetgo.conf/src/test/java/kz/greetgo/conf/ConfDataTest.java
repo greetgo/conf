@@ -149,11 +149,11 @@ public class ConfDataTest {
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
-      out.println("asd = {              ");
-      out.println("  dsa = {            ");
-      out.println("    status = OK      ");
-      out.println("  }                  ");
-      out.println("}                    ");
+      out.println("asd = {             ");
+      out.println("  dsa = {           ");
+      out.println("    status = OK     ");
+      out.println("  }                 ");
+      out.println("}                   ");
       out.close();
     }
 
@@ -163,19 +163,18 @@ public class ConfDataTest {
     assertThat(cd.strEx("asd/dsa/status")).isEqualTo("OK");
   }
 
-  @Test(expectedExceptions = IndexOutOfBoundsException.class,
-      expectedExceptionsMessageRegExp = "No such string index for asd/dsa")
+  @Test(expectedExceptions = NoValue.class, expectedExceptionsMessageRegExp = "asd/dsa")
   public void strEx_1() throws Exception {
     Random rnd = new Random();
     File file = new File("target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
-      out.println("asd = {              ");
-      out.println("  dsa = {            ");
-      out.println("    status = OK      ");
-      out.println("  }                  ");
-      out.println("}                    ");
+      out.println("asd = {           ");
+      out.println("  dsa = {         ");
+      out.println("    status = OK   ");
+      out.println("  }               ");
+      out.println("}                 ");
       out.close();
     }
 
@@ -185,8 +184,7 @@ public class ConfDataTest {
     cd.strEx("asd/dsa");
   }
 
-  @Test(expectedExceptions = IllegalArgumentException.class,
-      expectedExceptionsMessageRegExp = "No map in wow")
+  @Test(expectedExceptions = NoValue.class, expectedExceptionsMessageRegExp = "wow")
   public void strEx_2() throws Exception {
     Random rnd = new Random();
     File file = new File("target/confData" + rnd.nextInt(1000000000));
@@ -194,8 +192,8 @@ public class ConfDataTest {
     {
       PrintStream out = new PrintStream(file, "UTF-8");
       out.println("asd = {              ");
-      out.println("  dsa = {            ");
-      out.println("    status = OK      ");
+      out.println("  dsa1 = {           ");
+      out.println("    status2 = OK     ");
       out.println("  }                  ");
       out.println("}                    ");
       out.close();
@@ -246,13 +244,13 @@ public class ConfDataTest {
     ConfData cd = new ConfData();
     cd.readFromFile(file);
 
-    assertThat(cd.inte("asd/dsa/status")).isEqualTo(828);
-    assertThat(cd.inte("asd/dsa/status", 111)).isEqualTo(828);
-    assertThat(cd.inte("asd1/dsa/status", 111)).isEqualTo(111);
+    assertThat(cd.asInt("asd/dsa/status")).isEqualTo(828);
+    assertThat(cd.asInt("asd/dsa/status", 111)).isEqualTo(828);
+    assertThat(cd.asInt("asd1/dsa/status", 111)).isEqualTo(111);
   }
 
   @Test
-  public void inte_2() throws Exception {
+  public void asInt_2() throws Exception {
     Random rnd = new Random();
     File file = new File("target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
@@ -262,7 +260,7 @@ public class ConfDataTest {
       out.println("  dsa {              ");
       out.println("    status = 828     ");
       out.println("  }                  ");
-      out.println("  kapusta 111        ");
+      out.println("  wallStreet 111        ");
       out.println("  dsa {              ");
       out.println("    status = 999     ");
       out.println("  }                  ");
@@ -273,10 +271,10 @@ public class ConfDataTest {
     ConfData cd = new ConfData();
     cd.readFromFile(file);
 
-    assertThat(cd.inte("asd/kapusta")).isEqualTo(111);
-    assertThat(cd.inte("asd/dsa/status", 111)).isEqualTo(828);
-    assertThat(cd.inte("asd/dsa.1/status", 111)).isEqualTo(999);
-    assertThat(cd.inte("asd/dsa.2/status", 111)).isEqualTo(111);
+    assertThat(cd.asInt("asd/wallStreet")).isEqualTo(111);
+    assertThat(cd.asInt("asd/dsa/status", 111)).isEqualTo(828);
+    assertThat(cd.asInt("asd/dsa.1/status", 111)).isEqualTo(999);
+    assertThat(cd.asInt("asd/dsa.2/status", 111)).isEqualTo(111);
   }
 
   @Test

@@ -1,6 +1,7 @@
 package kz.greetgo.conf;
 
 /**
+ * 
  * Адаптер системных параметров. Считывание производится из переменных окружения
  *
  * @author pompei
@@ -18,8 +19,7 @@ public class SysParams {
   }
 
   /**
-   * Получает значение системной переменной по её имени с возможностью указания значения по
-   * умолчанию
+   * Получает значение системной переменной по её имени с возможностью указания значения по умолчанию
    *
    * @param name         имя системной переменной
    * @param defaultValue значение по умолчанию
@@ -221,9 +221,8 @@ public class SysParams {
     return get(mysqlAdminPasswordKey(), "111");
   }
 
-  //  ====================MS SQL==============================
   public static String mssqlAdminHost() {
-    return get(oracleAdminHostKey());
+    return get(mssqlAdminHostKey());
   }
 
   public static String mssqlAdminHostKey() {
@@ -231,7 +230,7 @@ public class SysParams {
   }
 
   public static String mssqlAdminPort() {
-    return get(oracleAdminPortKey());
+    return get(mssqlAdminPortKey());
   }
 
   public static String mssqlAdminPortKey() {
@@ -243,7 +242,7 @@ public class SysParams {
   }
 
   public static String mssqlAdminUserid() {
-    return get(mysqlAdminUseridKey(), "root");
+    return get(mssqlAdminUseridKey(), "root");
   }
 
   public static String mssqlAdminPasswordKey() {
@@ -251,13 +250,23 @@ public class SysParams {
   }
 
   public static String mssqlAdminPassword() {
-    return get(mysqlAdminPasswordKey(), "111");
+    return get(mssqlAdminPasswordKey(), "111");
   }
 
+  /**
+   * Получает имя системной переменной, где лежит строка доступа к zookeeper-у
+   *
+   * @return имя системной переменной, где лежит строка доступа к zookeeper-у
+   */
   public static String zookeeperConnectStrKey() {
     return "ZOOKEEPER_CONNECT_STR";
   }
 
+  /**
+   * Получает строку доступа к zookeeper-у
+   *
+   * @return строка доступа к zookeeper-у
+   */
   public static String zookeeperConnectStr() {
     return get(zookeeperConnectStrKey(), "localhost:2181");
   }
