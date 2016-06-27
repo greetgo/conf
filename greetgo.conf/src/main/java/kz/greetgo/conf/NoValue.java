@@ -7,4 +7,9 @@ public class NoValue extends RuntimeException {
     super("" + path);
     this.path = path == null ? null : path.toString();
   }
+
+  @Override
+  public synchronized Throwable fillInStackTrace() {
+    return this;
+  }
 }

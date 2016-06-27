@@ -112,7 +112,7 @@ public class ConfDataTest {
     ConfData cd = new ConfData();
     cd.readFromFile(file);
 
-    System.out.println(cd.getData());
+//    System.out.println(cd.getData());
 
     assertThat(cd.getData().keySet()).hasSize(4);
     assertThat(cd.getData().keySet()).contains("group", "asd", "SOS", "hello");
@@ -203,6 +203,24 @@ public class ConfDataTest {
     cd.readFromFile(file);
 
     cd.strEx("wow/asd");
+  }
+
+  @Test(expectedExceptions = NoValue.class)
+  public void strEx_3() throws Exception {
+    Random rnd = new Random();
+    File file = new File("target/confData" + rnd.nextInt(1000000000));
+    file.getParentFile().mkdirs();
+    {
+      PrintStream out = new PrintStream(file, "UTF-8");
+      out.println("asd = sinus        ");
+      out.println("#asd.wow = boom    ");
+      out.close();
+    }
+
+    ConfData cd = new ConfData();
+    cd.readFromFile(file);
+
+    cd.strEx("asd.wow");
   }
 
   @Test

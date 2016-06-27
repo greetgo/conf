@@ -245,7 +245,7 @@ public class ConfData {
 
   private String getStr(Map<String, List<Object>> map, Name name, StringBuilder prevPath) {
     List<Object> list = map.get(name.name);
-    if (list == null) return null;
+    if (list == null) throw new NoValue(prevPath);
 
     int index = 0;
     for (Object object : list) {
