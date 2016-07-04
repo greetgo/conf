@@ -1,10 +1,14 @@
 package kz.greetgo.conf;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -342,4 +346,146 @@ public class ConfDataTest {
     assertThat(list).hasSize(3);
     assertThat(list).contains("status", "amil", "sinus");
   }
+
+  @Test
+  public void bool() throws Exception {
+
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+    {
+      PrintStream out = new PrintStream(bOut, true, "UTF-8");
+      out.println(" asd1 = 1    ");
+      out.println(" asd2 = y    ");
+      out.println(" asd3 = yes  ");
+      out.println(" asd4 = On   ");
+      out.println(" asd5 = Да   ");
+      out.println(" asd6 = True ");
+      out.println(" asd7 = t    ");
+      out.println(" asd8 = 真相 ");
+      out.close();
+    }
+
+    ConfData cd = new ConfData();
+    cd.readFromByteArray(bOut.toByteArray());
+
+    assertThat(cd.bool("asd1")).isTrue();
+    assertThat(cd.bool("asd2")).isTrue();
+    assertThat(cd.bool("asd3")).isTrue();
+    assertThat(cd.bool("asd4")).isTrue();
+    assertThat(cd.bool("asd5")).isTrue();
+    assertThat(cd.bool("asd6")).isTrue();
+    assertThat(cd.bool("asd7")).isTrue();
+    assertThat(cd.bool("asd8")).isTrue();
+
+    assertThat(cd.bool("wow")).isFalse();
+
+    assertThat(cd.bool("wow", true)).isTrue();
+  }
+
+  @Test(expectedExceptions = NoValue.class, expectedExceptionsMessageRegExp = "asd")
+  public void boolEx() throws Exception {
+    new ConfData().boolEx("asd");
+  }
+
+  @Test(expectedExceptions = NoValue.class, expectedExceptionsMessageRegExp = "asd")
+  public void dateEx3() throws Exception {
+    new ConfData().dateEx("asd");
+  }
+
+  @DataProvider
+  public Object[][] date_DataProvider() {
+    return new Object[][]{
+
+        new Object[]{"yyyy-MM-dd'T'HH:mm:ss.SSS", "1980-11-23T23:11:18.123"},
+        new Object[]{"yyyy-MM-dd'T'HH:mm:ss", "1980-11-23T23:11:18"},
+        new Object[]{"yyyy-MM-dd'T'HH:mm", "1980-11-23T23:11"},
+        new Object[]{"yyyy-MM-dd", "1980-11-23"},
+        new Object[]{"yyyy-MM-dd HH:mm:ss.SSS", "1980-11-23 23:11:18.123"},
+        new Object[]{"yyyy-MM-dd HH:mm:ss", "1980-11-23 23:11:18"},
+        new Object[]{"yyyy-MM-dd HH:mm", "1980-11-23 23:11"},
+
+        new Object[]{"dd/MM/yyyy HH:mm:ss.SSS", "23/11/1980 23:11:18.123"},
+        new Object[]{"dd/MM/yyyy HH:mm:ss", "23/11/1980 23:11:18"},
+        new Object[]{"dd/MM/yyyy HH:mm", "23/11/1980 23:11"},
+
+    };
+  }
+
+  @Test(dataProvider = "date_DataProvider")
+  public void dateEx1(String format, String value) throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=" + value);
+
+    Date expectedValue = new SimpleDateFormat(format).parse(value);
+
+    assertThat(cd.dateEx("asd", format)).isEqualTo(expectedValue);
+  }
+
+  @Test(dataProvider = "date_DataProvider")
+  public void dateEx2(String format, String value) throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=" + value);
+
+    Date expectedValue = new SimpleDateFormat(format).parse(value);
+
+    assertThat(cd.dateEx("asd")).isEqualTo(expectedValue);
+  }
+
+  @Test(dataProvider = "date_DataProvider")
+  public void date(String format, String value) throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=" + value);
+
+    Date expectedValue = new SimpleDateFormat(format).parse(value);
+
+    assertThat(cd.date("asd")).isEqualTo(expectedValue);
+  }
+
+  @Test
+  public void date2() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=1990-01-02");
+
+    Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("02/01/1990");
+
+    assertThat(cd.date("asd")).isEqualTo(expectedValue);
+  }
+
+  @Test
+  public void date3() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=1990-01-02");
+
+    Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("02/01/1990");
+
+    assertThat(cd.date("asd", "yyyy-MM-dd")).isEqualTo(expectedValue);
+  }
+
+  @Test
+  public void date4() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=1990-01-02");
+
+    Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("02/01/1990");
+
+    assertThat(cd.date("asd", " dd/MM/yyyy ;; yyyy-MM-dd ; ")).isEqualTo(expectedValue);
+  }
+
+  @Test
+  public void date_null() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=#1990-01-02");
+
+    assertThat(cd.date("asd", " dd/MM/yyyy ;; yyyy-MM-dd ; ")).isNull();
+  }
+
+  @Test
+  public void date_defaultValue() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=1990-01-02");
+
+    Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("12/03/1990");
+
+    assertThat(cd.date("asd", expectedValue, " dd/MM/yyyy ;; dd/MM/yyyy HH:mm ; ")).isEqualTo(expectedValue);
+  }
+
 }
