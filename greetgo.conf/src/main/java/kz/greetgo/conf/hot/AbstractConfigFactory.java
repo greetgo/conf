@@ -8,6 +8,7 @@ import java.lang.reflect.Proxy;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Collections.synchronizedList;
 
@@ -46,7 +47,7 @@ public abstract class AbstractConfigFactory {
     if (!resetEnabled) return;
 
     for (Invokator i : invokators) {
-      i.loaded = false;
+      i.loaded.set(false);
     }
   }
 
@@ -103,7 +104,7 @@ public abstract class AbstractConfigFactory {
 
   private class Invokator implements InvocationHandler {
     final Class<?> class1;
-    boolean loaded = false;
+    final AtomicBoolean loaded = new AtomicBoolean(false);
     private final Map<String, Object> data = new ConcurrentHashMap<>();
 
     Invokator(Class<?> class1) {
@@ -113,11 +114,12 @@ public abstract class AbstractConfigFactory {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-      if (!loaded) load();
+      if (!loaded.get()) load();
       return data.get(method.getName());
     }
 
-    void load() {
+    synchronized void load() {
+      if (loaded.get()) return;
       try {
         loadInner();
       } catch (Exception e) {
@@ -236,7 +238,7 @@ public abstract class AbstractConfigFactory {
       {
         data.clear();
         data.putAll(readData);
-        loaded = true;
+        loaded.set(true);
       }
     }
 
