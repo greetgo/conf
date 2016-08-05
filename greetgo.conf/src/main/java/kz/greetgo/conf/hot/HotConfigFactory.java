@@ -1,11 +1,9 @@
 package kz.greetgo.conf.hot;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import kz.greetgo.conf.ConfUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * Creates proxy-instances to access to config data with method {@link #createConfig(Class)}
@@ -23,7 +21,7 @@ import java.io.OutputStream;
  * @author pompei
  */
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-public abstract class HotConfigFactory extends AbstractConfigFactoryOld {
+public abstract class HotConfigFactory extends AbstractConfigFactory {
   /**
    * Returns folder path where config files will create
    *
@@ -31,25 +29,40 @@ public abstract class HotConfigFactory extends AbstractConfigFactoryOld {
    */
   protected abstract String getBaseDir();
 
-  private File configStorageFile(Class<?> configInterface) {
-    return new File(getBaseDir() + File.separator + configInterface.getSimpleName() + getConfigFileExt());
+  @Override
+  protected <T> String configLocationFor(Class<T> configInterface) {
+    return configInterface.getSimpleName() + getConfigFileExt();
+  }
+
+  private File configStorageFile(String configLocation) {
+    return new File(getBaseDir() + File.separator + configLocation);
   }
 
   protected String getConfigFileExt() {
     return ".hotconfig";
   }
 
-  protected InputStream getConfigStorageInputStream(Class<?> configInterface) throws Exception {
-    return configStorageFile(configInterface).toURI().toURL().openStream();
-  }
+  private final ConfigStorage configStorage = new ConfigStorage() {
+    @Override
+    public String loadConfigContent(String configLocation) throws Exception {
+      return ConfUtil.readFile(configStorageFile(configLocation));
+    }
 
-  protected boolean isConfigStorageExists(Class<?> configInterface) {
-    return configStorageFile(configInterface).exists();
-  }
+    @Override
+    public boolean isConfigContentExists(String configLocation) throws Exception {
+      return configStorageFile(configLocation).exists();
+    }
 
-  protected OutputStream getConfigStorageAppendingOutputStream(Class<?> configInterface) throws Exception {
-    File file = configStorageFile(configInterface);
-    file.getParentFile().mkdirs();
-    return new FileOutputStream(file, true);
+    @Override
+    public void saveConfigContent(String configLocation, String configContent) throws Exception {
+      File file = configStorageFile(configLocation);
+      file.getParentFile().mkdirs();
+      ConfUtil.writeFile(file, configContent);
+    }
+  };
+
+  @Override
+  protected ConfigStorage getConfigContent() {
+    return configStorage;
   }
 }

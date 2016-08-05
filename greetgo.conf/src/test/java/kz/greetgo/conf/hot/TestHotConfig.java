@@ -2,20 +2,10 @@ package kz.greetgo.conf.hot;
 
 public class TestHotConfig {
   public static void main(String[] args) {
-    TestHotconfigFab fab = new TestHotconfigFab("build/hotasd", ".hotconfig");
-    
-    HotConfigModifier m = fab.createModifier();
-    
-    fab.createConfig1();
-    m.set(HotConfig1.class, "strExampleValue", "oooooooooooo");
+    TestHotconfigFab fab = new TestHotconfigFab("build/hotAsd", ".hotconfig");
     
     HotConfig1 config1 = fab.createConfig1();
     HotConfig2 config2 = fab.createConfig2();
-    
-    printValues(config1, config2);
-    
-    m.set(HotConfig1.class, "strExampleValue", "aaaaaaaaaaaaaaaaa");
-    m.set(HotConfig2.class, "asd", "Hello world!!!");
     
     printValues(config1, config2);
   }

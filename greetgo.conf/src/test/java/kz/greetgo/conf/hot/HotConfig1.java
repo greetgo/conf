@@ -4,7 +4,7 @@ package kz.greetgo.conf.hot;
     + "Начинается новый день\n" //
     + "И машины туда-сюда")
 public interface HotConfig1 {
-  @Description("Пример описания gfbfhfhdf")
+  @Description("Пример описания")
   @DefaultStrValue(value = "def value for strExampleValue")
   String strExampleValue();
   

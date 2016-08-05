@@ -23,7 +23,7 @@ public abstract class AbstractConfigFactory {
    * @param configInterface config interface
    * @return config location
    */
-  protected abstract <T> String configLocationBy(Class<T> configInterface);
+  protected abstract <T> String configLocationFor(Class<T> configInterface);
 
   /**
    * Marks all configs to reread from storage
@@ -146,13 +146,12 @@ public abstract class AbstractConfigFactory {
   }
 
   private <T> InvocationHandler createInvocationHandlerFor(Class<T> configInterface) {
-    String configLocation = configLocationBy(configInterface);
+    String configLocation = configLocationFor(configInterface);
 
     {
       HotConfig hotConfig = workingConfigs.get(configLocation);
       if (hotConfig != null) return createInvocationHandlerOnHotConfig(hotConfig);
     }
-
 
     return createInvocationHandlerOnHotConfig(
         getOrCreateConfig(createHotConfigDefinition(configLocation, configInterface))
@@ -173,7 +172,13 @@ public abstract class AbstractConfigFactory {
     for (Method method : configInterface.getDeclaredMethods()) {
       elementDefinitions.add(createHotElementDefinition(method));
     }
-    return new HotConfigDefinitionImpl(configLocation, elementDefinitions);
+    return new HotConfigDefinitionModel(configLocation, extractDescription(configInterface), elementDefinitions);
+  }
+
+  private <T> String extractDescription(Class<T> configInterface) {
+    Description a = configInterface.getAnnotation(Description.class);
+    if (a == null) return null;
+    return a.value();
   }
 
   private HotElementDefinition createHotElementDefinition(Method method) {

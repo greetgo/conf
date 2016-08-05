@@ -13,8 +13,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_createsNew() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Arrays.asList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Arrays.asList(
         new HotElementDefinition("intElement", int.class, 100, "int element description\nin two lines"),
         new HotElementDefinition("strElement", String.class, "asd", "str element description\nin two lines"),
         new HotElementDefinition("boolElement", boolean.class, true, "bool element description\nin two lines")
@@ -41,6 +41,9 @@ public class AbstractConfigFactoryUtilTest {
         "#\n" +
         "# Created at 2016-01-01 12:09:11.345\n" +
         "#\n" +
+        "# hello world\n" +
+        "# single\n" +
+        "#\n" +
         "\n" +
         "# int element description\n" +
         "# in two lines\n" +
@@ -58,8 +61,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_appendMore() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Collections.singletonList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
         new HotElementDefinition("intElement", int.class, 123, "int element description\nin two lines")
     ));
 
@@ -96,8 +99,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_appendMore2() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Arrays.asList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Arrays.asList(
         new HotElementDefinition("intElement1", int.class, 123, "int element 1 description\nin two lines"),
         new HotElementDefinition("intElement2", int.class, 567, "int element 2 description\nin two lines")
     ));
@@ -136,8 +139,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_appendMore3() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Arrays.asList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Arrays.asList(
         new HotElementDefinition("intElement1", int.class, 876, "int element 1 description\nin two lines"),
         new HotElementDefinition("intElement2", int.class, 543, "int element 2 description\nin two lines")
     ));
@@ -176,8 +179,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_allExists() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Arrays.asList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Arrays.asList(
         new HotElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines"),
         new HotElementDefinition("intElement2", Integer.class, 544, "int element 2 description\nin two lines")
     ));
@@ -208,8 +211,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_commentedIsExists() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Collections.singletonList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
         new HotElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines")
     ));
 
@@ -238,8 +241,8 @@ public class AbstractConfigFactoryUtilTest {
   @Test
   public void loadConfigDataTo_doubleCommentedIsExists() throws Exception {
     Map<String, Object> target = new HashMap<>();
-    HotConfigDefinitionImpl configDefinition = new HotConfigDefinitionImpl(
-        "hello/asd.txt", Collections.singletonList(
+    HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
+        "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
         new HotElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines")
     ));
 

@@ -1,9 +1,6 @@
 package kz.greetgo.conf;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,29 +45,12 @@ public class ConfDir {
       File idFile = new File(file.getAbsolutePath() + "/id");
       if (!idFile.exists()) continue;
       
-      if (userDir.equals(readFile(idFile).toUpperCase().trim())) {
+      if (userDir.equals(ConfUtil.readFile(idFile).toUpperCase().trim())) {
         return file.getAbsolutePath();
       }
     }
     
     return null;
   }
-  
-  private static String readFile(File idFile) {
-    try {
-      try (FileInputStream in = new FileInputStream(idFile)) {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        byte buf[] = new byte[1024 * 4];
-        
-        while (true) {
-          int count = in.read(buf);
-          if (count < 0) return bout.toString("UTF-8");
-          bout.write(buf, 0, count);
-        }
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-  
+
 }

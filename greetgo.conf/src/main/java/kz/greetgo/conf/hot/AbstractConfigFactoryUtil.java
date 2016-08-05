@@ -72,6 +72,13 @@ public class AbstractConfigFactoryUtil {
     lines.add("# " + (isNew ? "Created" : "Added") + " at " + sdf.format(now));
     lines.add("#");
 
+    if (isNew && configDefinition.description() != null) {
+      for (String s : configDefinition.description().split("\n")) {
+        lines.add("# " + s.trim());
+      }
+      lines.add("#");
+    }
+
     for (Map.Entry<String, HotElementDefinition> e : defValues.entrySet()) {
       lines.add("");
       String description = e.getValue().description;

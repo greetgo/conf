@@ -4,20 +4,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class HotConfigDefinitionImpl implements HotConfigDefinition {
+public class HotConfigDefinitionModel implements HotConfigDefinition {
 
   private final List<HotElementDefinition> elementDefinitions = new ArrayList<>();
-  private final String location;
+  private final String location, description;
 
-  public HotConfigDefinitionImpl(String location, List<HotElementDefinition> elementDefinitions) {
+  public HotConfigDefinitionModel(String location, String description, List<HotElementDefinition> elementDefinitions) {
     this.location = location;
+    this.description = description;
     this.elementDefinitions.addAll(elementDefinitions);
-
   }
 
   @Override
   public String location() {
     return location;
+  }
+
+  @Override
+  public String description() {
+    return description;
   }
 
   @Override
