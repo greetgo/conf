@@ -17,7 +17,7 @@ import java.lang.annotation.*;
  * </table>
  * <p/>
  * You can extend this list with overriding method
- * {@link AbstractConfigFactory#replaceParametersInDefaultStrValue(String)}
+ * {@link AbstractConfigFactoryOld#replaceParametersInDefaultStrValue(String)}
  * <p/>
  * </p>
  *

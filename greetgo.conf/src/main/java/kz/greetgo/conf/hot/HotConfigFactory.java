@@ -23,7 +23,7 @@ import java.io.OutputStream;
  * @author pompei
  */
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-public abstract class HotConfigFactory extends AbstractConfigFactory {
+public abstract class HotConfigFactory extends AbstractConfigFactoryOld {
   /**
    * Returns folder path where config files will create
    *
