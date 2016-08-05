@@ -10,7 +10,7 @@ public interface HotConfig {
    * @param elementName config element name
    * @return config element value
    */
-  Object getElementValue(String elementName);
+  <T> T getElementValue(String elementName);
 
   /**
    * Check existence of config element
