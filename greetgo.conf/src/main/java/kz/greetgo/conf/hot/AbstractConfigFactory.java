@@ -15,7 +15,7 @@ public abstract class AbstractConfigFactory {
    *
    * @return config storage
    */
-  protected abstract ConfigStorage getConfigContent();
+  protected abstract ConfigStorage getConfigStorage();
 
   /**
    * Calculates config location for config interface
@@ -57,7 +57,7 @@ public abstract class AbstractConfigFactory {
         }
         {
           Map<String, Object> newData = new HashMap<>();
-          loadConfigDataTo(newData, configDefinition, getConfigContent(), new Date());
+          loadConfigDataTo(newData, configDefinition, getConfigStorage(), new Date());
           newData = Collections.unmodifiableMap(newData);
           data.set(newData);
           return newData;

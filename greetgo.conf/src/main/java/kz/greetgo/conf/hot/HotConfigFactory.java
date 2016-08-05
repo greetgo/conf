@@ -62,7 +62,7 @@ public abstract class HotConfigFactory extends AbstractConfigFactory {
   };
 
   @Override
-  protected ConfigStorage getConfigContent() {
+  protected ConfigStorage getConfigStorage() {
     return configStorage;
   }
 }

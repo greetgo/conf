@@ -12,7 +12,7 @@ public class AbstractConfigFactoryTest {
     final ConfigStorageForTests cs = new ConfigStorageForTests();
 
     @Override
-    protected ConfigStorage getConfigContent() {
+    protected ConfigStorage getConfigStorage() {
       return cs;
     }
 
