@@ -6,7 +6,7 @@ apply plugin: 'idea'
 group = 'kz.greetgo'
 
 sourceCompatibility = 1.7
-version = '0.1.2'
+version = '0.1.3'
 
 def nowDate = new Date()
 def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")

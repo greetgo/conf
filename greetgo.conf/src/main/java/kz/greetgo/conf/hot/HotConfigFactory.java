@@ -38,6 +38,10 @@ public abstract class HotConfigFactory extends AbstractConfigFactory {
     return new File(getBaseDir() + File.separator + configLocation);
   }
 
+  public File storageFileFor(Class<?> configInterface) {
+    return configStorageFile(configLocationFor(configInterface));
+  }
+
   protected String getConfigFileExt() {
     return ".hotconfig";
   }
