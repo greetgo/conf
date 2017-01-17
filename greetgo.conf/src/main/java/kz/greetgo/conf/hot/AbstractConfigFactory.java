@@ -3,7 +3,12 @@ package kz.greetgo.conf.hot;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -109,7 +114,7 @@ public abstract class AbstractConfigFactory {
   @SuppressWarnings("unchecked")
   public <T> T createConfig(Class<T> configInterface) {
     return (T) Proxy.newProxyInstance(
-        getClass().getClassLoader(), new Class<?>[]{configInterface}, getInvocationHandler(configInterface)
+      getClass().getClassLoader(), new Class<?>[]{configInterface}, getInvocationHandler(configInterface)
     );
   }
 
@@ -154,7 +159,7 @@ public abstract class AbstractConfigFactory {
     }
 
     return createInvocationHandlerOnHotConfig(
-        getOrCreateConfig(createHotConfigDefinition(configLocation, configInterface))
+      getOrCreateConfig(createHotConfigDefinition(configLocation, configInterface))
     );
   }
 
@@ -169,7 +174,7 @@ public abstract class AbstractConfigFactory {
 
   private <T> HotConfigDefinition createHotConfigDefinition(String configLocation, Class<T> configInterface) {
     List<HotElementDefinition> elementDefinitions = new ArrayList<>();
-    for (Method method : configInterface.getDeclaredMethods()) {
+    for (Method method : configInterface.getMethods()) {
       elementDefinitions.add(createHotElementDefinition(method));
     }
     return new HotConfigDefinitionModel(configLocation, extractDescription(configInterface), elementDefinitions);
