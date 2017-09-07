@@ -86,3 +86,17 @@ uploadArchives {
     }
   }
 }
+
+uploadArchivesToMaven(type: Upload) {
+  repositories.mavenDeployer {
+    configuration = configurations.archives
+    repository(
+        url: "maven repo place here!"
+    )
+
+    pom.project {
+      name project.name
+      packaging 'jar'
+    }
+  }
+}
