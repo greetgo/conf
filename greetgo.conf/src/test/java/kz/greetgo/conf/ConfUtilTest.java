@@ -5,6 +5,8 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import static kz.greetgo.conf.ConfUtil.convertToType;
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -101,6 +104,7 @@ public class ConfUtilTest {
     assertThat(convertToType("gfghfgfd", Boolean.class)).isEqualTo(false);
   }
 
+  @Test
   public void convertToType_bool2_true() throws Exception {
     assertThat(convertToType("true", Boolean.TYPE)).isEqualTo(true);
     assertThat(convertToType("TRUE", Boolean.TYPE)).isEqualTo(true);
@@ -172,6 +176,7 @@ public class ConfUtilTest {
       return intField3;
     }
 
+    @SuppressWarnings("unused")
     public void setIntField3(int intField3) {
       this.intField3 = intField3;
     }
@@ -194,5 +199,33 @@ public class ConfUtilTest {
     assertThat(asd.intField1).isEqualTo(678);
     assertThat(asd.intField2).isEqualTo(876);
     assertThat(asd.getIntField3()).isEqualTo(111);
+  }
+
+  @Test
+  public void readFromFile() throws Exception {
+    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    {
+      PrintStream out = new PrintStream(bout, true, "UTF-8");
+      out.println("intField1 6782");
+      out.println("intField2 8762");
+      out.println("intField3 1112");
+      out.close();
+    }
+
+    File file = new File("build/tmp/test_file." + new Random().nextLong() + ".txt");
+    file.deleteOnExit();
+
+    file.getParentFile().mkdirs();
+    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+      fileOutputStream.write(bout.toByteArray());
+    }
+
+    Asd asd = new Asd();
+    ConfUtil.readFromFile(asd, file.getAbsolutePath());
+
+    assertThat(asd.intField1).isEqualTo(6782);
+    assertThat(asd.intField2).isEqualTo(8762);
+    assertThat(asd.getIntField3()).isEqualTo(1112);
+
   }
 }

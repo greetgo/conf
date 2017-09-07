@@ -43,10 +43,11 @@ project.eclipse.classpath.file.whenMerged { cp ->
 }
 
 repositories {
-  maven {
-    name 'Our repository'
-    url System.getenv('GG_REPO')
+  mavenLocal()
+  if (System.getenv('GG_REPO') != null && System.getenv('GG_REPO').length() > 0) {
+    maven { url System.getenv('GG_REPO') }
   }
+  mavenCentral()
 }
 
 configurations { repoUpload }

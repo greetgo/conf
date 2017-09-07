@@ -243,9 +243,10 @@ public class ConfDataTest {
     }
 
     ConfData cd = new ConfData();
-    cd.readFromFile(file);
+    cd.readFromFile(file.getAbsolutePath());
 
     assertThat(cd.str("asd/dsa", "DEF")).isEqualTo("DEF");
+    assertThat(cd.str("asd/wow", "ASD")).isEqualTo("ASD");
   }
 
   @Test
@@ -268,7 +269,7 @@ public class ConfDataTest {
 
     assertThat(cd.asInt("asd/dsa/status")).isEqualTo(828);
     assertThat(cd.asInt("asd/dsa/status", 111)).isEqualTo(828);
-    assertThat(cd.asInt("asd1/dsa/status", 111)).isEqualTo(111);
+    assertThat(cd.asInt("asd1/dsa/status", 1111)).isEqualTo(1111);
   }
 
   @Test
@@ -395,17 +396,17 @@ public class ConfDataTest {
   public Object[][] date_DataProvider() {
     return new Object[][]{
 
-        new Object[]{"yyyy-MM-dd'T'HH:mm:ss.SSS", "1980-11-23T23:11:18.123"},
-        new Object[]{"yyyy-MM-dd'T'HH:mm:ss", "1980-11-23T23:11:18"},
-        new Object[]{"yyyy-MM-dd'T'HH:mm", "1980-11-23T23:11"},
-        new Object[]{"yyyy-MM-dd", "1980-11-23"},
-        new Object[]{"yyyy-MM-dd HH:mm:ss.SSS", "1980-11-23 23:11:18.123"},
-        new Object[]{"yyyy-MM-dd HH:mm:ss", "1980-11-23 23:11:18"},
-        new Object[]{"yyyy-MM-dd HH:mm", "1980-11-23 23:11"},
+      new Object[]{"yyyy-MM-dd'T'HH:mm:ss.SSS", "1980-11-23T23:11:18.123"},
+      new Object[]{"yyyy-MM-dd'T'HH:mm:ss", "1980-11-23T23:11:18"},
+      new Object[]{"yyyy-MM-dd'T'HH:mm", "1980-11-23T23:11"},
+      new Object[]{"yyyy-MM-dd", "1980-11-23"},
+      new Object[]{"yyyy-MM-dd HH:mm:ss.SSS", "1980-11-23 23:11:18.123"},
+      new Object[]{"yyyy-MM-dd HH:mm:ss", "1980-11-23 23:11:18"},
+      new Object[]{"yyyy-MM-dd HH:mm", "1980-11-23 23:11"},
 
-        new Object[]{"dd/MM/yyyy HH:mm:ss.SSS", "23/11/1980 23:11:18.123"},
-        new Object[]{"dd/MM/yyyy HH:mm:ss", "23/11/1980 23:11:18"},
-        new Object[]{"dd/MM/yyyy HH:mm", "23/11/1980 23:11"},
+      new Object[]{"dd/MM/yyyy HH:mm:ss.SSS", "23/11/1980 23:11:18.123"},
+      new Object[]{"dd/MM/yyyy HH:mm:ss", "23/11/1980 23:11:18"},
+      new Object[]{"dd/MM/yyyy HH:mm", "23/11/1980 23:11"},
 
     };
   }
@@ -443,21 +444,21 @@ public class ConfDataTest {
   @Test
   public void date2() throws Exception {
     ConfData cd = new ConfData();
-    cd.readFromCharSequence("asd=1990-01-02");
+    cd.readFromCharSequence("asd1=1990-01-02");
 
     Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("02/01/1990");
 
-    assertThat(cd.date("asd")).isEqualTo(expectedValue);
+    assertThat(cd.date("asd1")).isEqualTo(expectedValue);
   }
 
   @Test
   public void date3() throws Exception {
     ConfData cd = new ConfData();
-    cd.readFromCharSequence("asd=1990-01-02");
+    cd.readFromCharSequence("asd2=1990-01-02");
 
     Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("02/01/1990");
 
-    assertThat(cd.date("asd", "yyyy-MM-dd")).isEqualTo(expectedValue);
+    assertThat(cd.date("asd2", "yyyy-MM-dd")).isEqualTo(expectedValue);
   }
 
   @Test
@@ -481,11 +482,66 @@ public class ConfDataTest {
   @Test
   public void date_defaultValue() throws Exception {
     ConfData cd = new ConfData();
-    cd.readFromCharSequence("asd=1990-01-02");
+    cd.readFromCharSequence("asd1=1990-01-02");
 
     Date expectedValue = new SimpleDateFormat("dd/MM/yyyy").parse("12/03/1990");
 
-    assertThat(cd.date("asd", expectedValue, " dd/MM/yyyy ;; dd/MM/yyyy HH:mm ; ")).isEqualTo(expectedValue);
+    assertThat(cd.date("asd1", expectedValue, " dd/MM/yyyy ;; dd/MM/yyyy HH:mm ; ")).isEqualTo(expectedValue);
   }
 
+  @Test(expectedExceptions = NoValue.class)
+  public void asIntEx_NoValue() throws Exception {
+    ConfData cd = new ConfData();
+
+    cd.asIntEx("asd2");
+  }
+
+  @Test(expectedExceptions = NoValue.class)
+  public void asLongEx_NoValue() throws Exception {
+    ConfData cd = new ConfData();
+
+    cd.asLongEx("asd");
+  }
+
+  @Test
+  public void asLongEx_ok() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("dsa=345345");
+
+    assertThat(cd.asLongEx("dsa")).isEqualTo(345345);
+  }
+
+  @Test
+  public void asIntEx_ok() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=123");
+
+    assertThat(cd.asIntEx("asd")).isEqualTo(123);
+  }
+
+  @Test
+  public void asLong() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=123");
+
+    assertThat(cd.asLong("asd")).isEqualTo(123);
+    assertThat(cd.asLong("dsa")).isEqualTo(0);
+  }
+
+  @Test(expectedExceptions = java.lang.NumberFormatException.class)
+  public void asLong_leftValue() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=a123");
+
+    cd.asLong("asd");
+  }
+
+  @Test
+  public void asLong_leftValue_default() throws Exception {
+    ConfData cd = new ConfData();
+    cd.readFromCharSequence("asd=a123");
+
+    assertThat(cd.asLong("asd", 333)).isEqualTo(333);
+    assertThat(cd.asLong("dsa", 777)).isEqualTo(777);
+  }
 }

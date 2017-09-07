@@ -23,9 +23,9 @@ import java.io.File;
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 public abstract class HotConfigFactory extends AbstractConfigFactory {
   /**
-   * Returns folder path where config files will create
+   * Returns folder path where config files will be created
    *
-   * @return folder path where config files will create
+   * @return folder path where config files will be created
    */
   protected abstract String getBaseDir();
 
