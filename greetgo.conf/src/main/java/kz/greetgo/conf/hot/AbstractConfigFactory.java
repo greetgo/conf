@@ -155,18 +155,26 @@ public abstract class AbstractConfigFactory {
 
     {
       HotConfig hotConfig = workingConfigs.get(configLocation);
-      if (hotConfig != null) return createInvocationHandlerOnHotConfig(hotConfig);
+      if (hotConfig != null) return createInvocationHandlerOnHotConfig(hotConfig, configInterface);
     }
 
     return createInvocationHandlerOnHotConfig(
-      getOrCreateConfig(createHotConfigDefinition(configLocation, configInterface))
+      getOrCreateConfig(createHotConfigDefinition(configLocation, configInterface)),
+      configInterface
     );
   }
 
-  private InvocationHandler createInvocationHandlerOnHotConfig(final HotConfig hotConfig) {
+  private InvocationHandler createInvocationHandlerOnHotConfig(final HotConfig hotConfig, final Class<?> configInterface) {
     return new InvocationHandler() {
       @Override
       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+        if (method.getParameterTypes().length > 0) return null;
+
+        if ("toString".equals(method.getName())) {
+          return "Hot config for " + configInterface.getName();
+        }
+
         return hotConfig.getElementValue(method.getName());
       }
     };

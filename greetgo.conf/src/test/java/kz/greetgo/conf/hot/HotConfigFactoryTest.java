@@ -119,11 +119,11 @@ public class HotConfigFactoryTest {
     int concreteInt();
   }
 
+  Random rnd = new Random();
 
   @Test
   public void parentingOfHotConfigs() throws Exception {
 
-    Random rnd = new Random();
 
     final String baseDir = "build/parentingOfHotConfigs_baseDir/" + rnd.nextInt(10_000_000);
 
@@ -151,7 +151,27 @@ public class HotConfigFactoryTest {
     assertThat(config).isNotNull();
     assertThat(config.concreteInt()).isEqualTo(1874);
     assertThat(config.parentInt()).isEqualTo(617283);
-    
+
+
+  }
+
+  @Test
+  public void testingMethod_toString_inConfig() throws Exception {
+    final String baseDir = "build/testingMethod_toString_inConfig/" + rnd.nextInt(10_000_000);
+
+    HotConfigFactory hotConfigFactory = new HotConfigFactory() {
+      @Override
+      protected String getBaseDir() {
+        return baseDir;
+      }
+    };
+
+    ConcreteHotConfig config = hotConfigFactory.createConfig(ConcreteHotConfig.class);
+
+
+    assertThat(config.toString()).isNotNull();
+    assertThat(config.toString()).isNotEqualTo("null");
+    assertThat(config.toString()).contains(ConcreteHotConfig.class.getName());
 
   }
 }
