@@ -1,63 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
-apply plugin: 'idea'
 apply plugin: 'signing'
-
-
-group = 'kz.greetgo'
-
-sourceCompatibility = 1.7
-version = '0.1.5'
-
-def nowDate = new Date()
-def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
-
-jar {
-  manifest {
-    attributes 'Implementation-Title': project.name,
-        'Implementation-Version': version, 'Implementation-Vendor': 'greetgo!',
-        'Built-By': System.getProperty("user.name"), 'Built-At': nowFormattedDate
-  }
-}
-
-eclipse.project.natures 'org.springsource.ide.eclipse.gradle.core.nature'
-
-eclipse {
-  jdt {
-    //
-    // if you want to alter the java versions (by default they are configured with
-    // gradle java plugin settings):
-    //
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-  }
-}
-
-project.eclipse.classpath.file.whenMerged { cp ->
-  if (project.hasProperty("sourceCompatibility")) {
-    cp.entries.findAll { it.path.contains('JRE_CONTAINER') }.each {
-
-      it.path += "/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/" +
-          "JavaSE-$project.sourceCompatibility"
-    }
-  }
-}
-
-repositories {
-  mavenLocal()
-  if (System.getenv('GG_REPO') != null && System.getenv('GG_REPO').length() > 0) {
-    maven { url System.getenv('GG_REPO') }
-  }
-  mavenCentral()
-}
 
 configurations { repoUpload }
 
 dependencies {
-  testCompile 'org.testng:testng:6.11'
-  testCompile 'org.easytesting:fest-assert-core:2.0M10'
-
   compile 'com.google.code.findbugs:annotations:2.0.1'
 
   // needed for DAV protocol on maven uploads
@@ -71,20 +16,6 @@ task sourcesJar(type: Jar) {
   classifier = 'sources'
 }
 
-uploadArchives {
-  repositories.mavenDeployer {
-    configuration = configurations.archives
-    repository(
-        url: System.getenv('GG_REPO')
-    )
-
-    pom.project {
-      name project.name
-      packaging 'jar'
-    }
-  }
-}
-
 task javadocJar(type: Jar) {
   classifier = 'javadoc'
   from javadoc
@@ -92,6 +23,20 @@ task javadocJar(type: Jar) {
 
 artifacts {
   archives javadocJar, sourcesJar
+}
+
+uploadArchives {
+  repositories.mavenDeployer {
+    configuration = configurations.archives
+    repository(
+      url: System.getenv('GG_REPO')
+    )
+
+    pom.project {
+      name project.name
+      packaging 'jar'
+    }
+  }
 }
 
 if (System.getenv('LIB_SIGN_GPG_KEY_ID') != null && System.getenv('LIB_SIGN_GPG_KEY_ID').length() > 0) {
@@ -124,15 +69,15 @@ project.tasks.create('uploadToMavenCentral', Upload.class) {
 
       repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
         authentication(
-            userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
-            password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
+          userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
+          password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
         )
       }
 
       snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
         authentication(
-            userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
-            password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
+          userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
+          password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
         )
       }
 

@@ -1,0 +1,61 @@
+plugins {
+  id 'org.ajoberstar.grgit' version '2.1.0'
+}
+apply plugin: 'org.ajoberstar.grgit'
+
+def nowDate = new Date()
+def nowFormattedDate = nowDate.format("yyyy-MM-dd/HH:mm:ss")
+def vendorName = "greetgo!"
+def ggRepo = System.getenv('GG_REPO')
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'maven'
+  apply plugin: 'idea'
+
+  version = rootProject.file('version.txt').text.trim()
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  group = "kz.greetgo.conf"
+
+  repositories {
+    mavenLocal()
+    if (ggRepo?.trim()) maven { url ggRepo.trim() }
+    jcenter()
+  }
+}
+
+subprojects {
+  dependencies {
+    ext.servletApiVersion = '3.1.0';
+
+    testCompile 'org.testng:testng:6.11'
+    compile 'org.easytesting:fest-assert-core:2.0M10'
+  }
+
+  jar {
+    manifest {
+      attributes(
+        'Specification-Title': project.name,
+        'Specification-Version': version,
+        'Specification-Vendor': vendorName,
+        'Implementation-Version': grgit.head().id,
+        'Created-By': System.getProperty("user.name"),
+        'Created-At': nowFormattedDate
+      )
+    }
+  }
+
+  compileJava.options.encoding = 'UTF-8'
+  compileTestJava.options.encoding = 'UTF-8'
+
+  sourceSets.main.java.srcDirs = ["src"]
+  sourceSets.main.resources.srcDirs = ["src", "src_resources"]
+  sourceSets.test.java.srcDirs = ["test_src"]
+  sourceSets.test.resources.srcDirs = ["test_src", "test_resources"]
+
+  //noinspection GroovyMissingReturnStatement
+  test { useTestNG() }
+}

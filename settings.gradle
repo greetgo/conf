@@ -1,0 +1,3 @@
+rootProject.name = 'greetgo.conf.root'
+
+include "greetgo.conf"
