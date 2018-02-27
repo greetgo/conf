@@ -3,7 +3,12 @@ package kz.greetgo.conf;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,13 +122,7 @@ public class ConfData {
   }
 
   private static void addValue(Map<String, List<Object>> map, String key, Object value) {
-    List<Object> list = map.get(key);
-    if (list == null) {
-      list = new ArrayList<>();
-      map.put(key, list);
-    }
-
-    list.add(value);
+    map.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
   }
 
   static String[] parseToPair(String line) {
@@ -380,20 +379,20 @@ public class ConfData {
    */
   public Date dateEx(String path) {
     return dateEx(path,
-        "yyyy-MM-dd'T'HH:mm:ss.SSS",
-        "yyyy-MM-dd'T'HH:mm:ss",
-        "yyyy-MM-dd'T'HH:mm",
-        "yyyy-MM-dd HH:mm:ss.SSS",
-        "yyyy-MM-dd HH:mm:ss",
-        "yyyy-MM-dd HH:mm",
-        "yyyy-MM-dd",
-        "dd/MM/yyyy HH:mm:ss.SSS",
-        "dd/MM/yyyy HH:mm:ss",
-        "dd/MM/yyyy HH:mm",
-        "dd/MM/yyyy",
-        "HH:mm:ss.SSS",
-        "HH:mm:ss",
-        "HH:mm"
+      "yyyy-MM-dd'T'HH:mm:ss.SSS",
+      "yyyy-MM-dd'T'HH:mm:ss",
+      "yyyy-MM-dd'T'HH:mm",
+      "yyyy-MM-dd HH:mm:ss.SSS",
+      "yyyy-MM-dd HH:mm:ss",
+      "yyyy-MM-dd HH:mm",
+      "yyyy-MM-dd",
+      "dd/MM/yyyy HH:mm:ss.SSS",
+      "dd/MM/yyyy HH:mm:ss",
+      "dd/MM/yyyy HH:mm",
+      "dd/MM/yyyy",
+      "HH:mm:ss.SSS",
+      "HH:mm:ss",
+      "HH:mm"
     );
   }
 

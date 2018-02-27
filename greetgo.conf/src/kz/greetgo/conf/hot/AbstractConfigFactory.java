@@ -1,18 +1,15 @@
 package kz.greetgo.conf.hot;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static kz.greetgo.conf.hot.AbstractConfigFactoryUtil.loadConfigDataTo;
+import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
 
 public abstract class AbstractConfigFactory {
   /**
@@ -35,7 +32,7 @@ public abstract class AbstractConfigFactory {
    */
   public void reset() {
     for (HotConfigImpl mediator : workingConfigs.values()) {
-      mediator.data.set(null);
+      mediator.reset();
     }
   }
 
@@ -49,13 +46,17 @@ public abstract class AbstractConfigFactory {
       this.configDefinition = configDefinition;
     }
 
+    void reset() {
+      data.set(null);
+    }
+
     Map<String, Object> getData() {
       {
         Map<String, Object> x = data.get();
         if (x != null) return x;
       }
 
-      synchronized (this) {
+      synchronized (workingConfigs) {
         {
           Map<String, Object> x = data.get();
           if (x != null) return x;
@@ -71,6 +72,7 @@ public abstract class AbstractConfigFactory {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object getElementValue(String elementName) {
       return getData().get(elementName);
     }
@@ -126,8 +128,8 @@ public abstract class AbstractConfigFactory {
    * @return value without parameters - all parameters was replaced with it's values
    */
   protected String replaceParametersInDefaultStrValue(String value) {
-    value = value.replaceAll("\\{user\\.name\\}", System.getProperty("user.name"));
-    value = value.replaceAll("\\{user\\.home\\}", System.getProperty("user.home"));
+    value = value.replaceAll("\\{user\\.name}", System.getProperty("user.name"));
+    value = value.replaceAll("\\{user\\.home}", System.getProperty("user.home"));
     return value;
   }
 
@@ -159,74 +161,24 @@ public abstract class AbstractConfigFactory {
     }
 
     return createInvocationHandlerOnHotConfig(
-      getOrCreateConfig(createHotConfigDefinition(configLocation, configInterface)),
+      getOrCreateConfig(DefinitionCreator.createDefinition(
+        configLocation, configInterface, this::replaceParametersInDefaultStrValue
+      )),
       configInterface
     );
   }
 
-  private InvocationHandler createInvocationHandlerOnHotConfig(final HotConfig hotConfig, final Class<?> configInterface) {
-    return new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+  private InvocationHandler createInvocationHandlerOnHotConfig(final HotConfig hotConfig,
+                                                               final Class<?> configInterface) {
+    return (proxy, method, args) -> {
 
-        if (method.getParameterTypes().length > 0) return null;
+      if (method.getParameterTypes().length > 0) return null;
 
-        if ("toString".equals(method.getName())) {
-          return "Hot config for " + configInterface.getName();
-        }
-
-        return hotConfig.getElementValue(method.getName());
+      if ("toString".equals(method.getName())) {
+        return "[Hot config for <" + configInterface.getName() + ">]";
       }
+
+      return hotConfig.getElementValue(method.getName());
     };
-  }
-
-  private <T> HotConfigDefinition createHotConfigDefinition(String configLocation, Class<T> configInterface) {
-    List<HotElementDefinition> elementDefinitions = new ArrayList<>();
-    for (Method method : configInterface.getMethods()) {
-      elementDefinitions.add(createHotElementDefinition(method));
-    }
-    return new HotConfigDefinitionModel(configLocation, extractDescription(configInterface), elementDefinitions);
-  }
-
-  private <T> String extractDescription(Class<T> configInterface) {
-    Description a = configInterface.getAnnotation(Description.class);
-    if (a == null) return null;
-    return a.value();
-  }
-
-  private HotElementDefinition createHotElementDefinition(Method method) {
-    String name = method.getName();
-    Class<?> type = method.getReturnType();
-    Object defaultValue = extractDefaultValue(method);
-    String description = extractDescription(method);
-    return new HotElementDefinition(name, type, defaultValue, description);
-  }
-
-  private String extractDescription(Method method) {
-    Description a = method.getAnnotation(Description.class);
-    if (a == null) return null;
-    return a.value();
-  }
-
-  private Object extractDefaultValue(Method method) {
-    {
-      DefaultStrValue a = method.getAnnotation(DefaultStrValue.class);
-      if (a != null) return replaceParametersInDefaultStrValue(a.value());
-    }
-    {
-      DefaultIntValue a = method.getAnnotation(DefaultIntValue.class);
-      if (a != null) return a.value();
-    }
-    {
-      DefaultBoolValue a = method.getAnnotation(DefaultBoolValue.class);
-      if (a != null) return a.value();
-    }
-    {
-      Class<?> returnType = method.getReturnType();
-      if (returnType == int.class) return 0;
-      if (returnType == long.class) return 0L;
-      if (returnType == boolean.class) return false;
-    }
-    return null;
   }
 }

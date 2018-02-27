@@ -32,23 +32,20 @@ public class AbstractConfigFactoryTest {
     final AtomicBoolean reading = new AtomicBoolean(true);
 
     for (int i = 0; i < tt.length; i++) {
-      tt[i] = new Thread() {
-        @Override
-        public void run() {
-          HotConfig1 config1 = testing.createConfig(HotConfig1.class);
-          HotConfig2 config2 = testing.createConfig(HotConfig2.class);
+      tt[i] = new Thread(() -> {
+        HotConfig1 config1 = testing.createConfig(HotConfig1.class);
+        HotConfig2 config2 = testing.createConfig(HotConfig2.class);
 
-          while (reading.get()) {
-            config1.boolExampleValue();
-            config1.intExampleValue();
-            config1.intExampleValue2();
-            config1.strExampleValue();
+        while (reading.get()) {
+          config1.boolExampleValue();
+          config1.intExampleValue();
+          config1.intExampleValue2();
+          config1.strExampleValue();
 
-            config2.asd();
-            config2.intAsd();
-          }
+          config2.asd();
+          config2.intAsd();
         }
-      };
+      });
     }
 
     for (Thread t : tt) {

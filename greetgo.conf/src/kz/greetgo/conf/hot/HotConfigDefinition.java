@@ -1,9 +1,11 @@
 package kz.greetgo.conf.hot;
 
+import java.util.List;
+
 /**
  * Defines hot config infrastructure
  */
-public interface HotConfigDefinition extends Iterable<HotElementDefinition> {
+public interface HotConfigDefinition {
   /**
    * Hot config location
    *
@@ -19,17 +21,9 @@ public interface HotConfigDefinition extends Iterable<HotElementDefinition> {
   String description();
 
   /**
-   * Determine config element count
+   * Returns config element definition list
    *
-   * @return config element count
+   * @return config element definition list
    */
-  int elementCount();
-
-  /**
-   * Returns config element
-   *
-   * @param index index of config element
-   * @return config element definition
-   */
-  HotElementDefinition element(int index);
+  List<ElementDefinition> elementList();
 }

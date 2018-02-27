@@ -1,9 +1,16 @@
 package kz.greetgo.conf.hot;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class AbstractConfigFactoryUtil {
+import static kz.greetgo.conf.ConfUtil.strToBool;
+
+public class ConfigDataLoader {
   static void loadConfigDataTo(Map<String, Object> target,
                                HotConfigDefinition configDefinition,
                                ConfigStorage configStorage, Date now) {
@@ -28,9 +35,9 @@ public class AbstractConfigFactoryUtil {
       Collections.addAll(lines, configStorage.loadConfigContent(configDefinition.location()).split("\n"));
     }
 
-    Map<String, HotElementDefinition> defValues = new LinkedHashMap<>();
+    Map<String, ElementDefinition> defValues = new LinkedHashMap<>();
 
-    for (HotElementDefinition hed : configDefinition) {
+    for (ElementDefinition hed : configDefinition.elementList()) {
       defValues.put(hed.name, hed);
     }
 
@@ -50,7 +57,7 @@ public class AbstractConfigFactoryUtil {
         commented = true;
       }
 
-      HotElementDefinition hed = defValues.remove(key);
+      ElementDefinition hed = defValues.remove(key);
       if (hed == null) continue;
 
       if (commented) {
@@ -79,7 +86,7 @@ public class AbstractConfigFactoryUtil {
       lines.add("#");
     }
 
-    for (Map.Entry<String, HotElementDefinition> e : defValues.entrySet()) {
+    for (Map.Entry<String, ElementDefinition> e : defValues.entrySet()) {
       lines.add("");
       String description = e.getValue().description;
       if (description != null) {
@@ -125,25 +132,5 @@ public class AbstractConfigFactoryUtil {
     }
 
     throw new IllegalArgumentException("Unknown type for config " + type);
-  }
-
-  public static boolean strToBool(String str) {
-    if (str == null) return false;
-
-    str = str.trim().toUpperCase();
-
-    if ("T".equals(str)) return true;
-    if ("TRUE".equals(str)) return true;
-    if ("ON".equals(str)) return true;
-    if ("1".equals(str)) return true;
-    if ("Y".equals(str)) return true;
-    if ("YES".equals(str)) return true;
-    if ("И".equals(str)) return true;
-    if ("ИСТИНА".equals(str)) return true;
-    if ("ДА".equals(str)) return true;
-    if ("Д".equals(str)) return true;
-    if ("是的".equals(str)) return true;
-
-    return false;
   }
 }

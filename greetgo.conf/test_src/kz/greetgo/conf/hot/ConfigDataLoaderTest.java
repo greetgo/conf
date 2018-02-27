@@ -8,16 +8,16 @@ import java.util.*;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class AbstractConfigFactoryUtilTest {
+public class ConfigDataLoaderTest {
 
   @Test
   public void loadConfigDataTo_createsNew() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Arrays.asList(
-        new HotElementDefinition("intElement", int.class, 100, "int element description\nin two lines"),
-        new HotElementDefinition("strElement", String.class, "asd", "str element description\nin two lines"),
-        new HotElementDefinition("boolElement", boolean.class, true, "bool element description\nin two lines")
+        new ElementDefinition("intElement", int.class, 100, "int element description\nin two lines"),
+        new ElementDefinition("strElement", String.class, "asd", "str element description\nin two lines"),
+        new ElementDefinition("boolElement", boolean.class, true, "bool element description\nin two lines")
     ));
     ConfigStorageForTests configContent = new ConfigStorageForTests();
 
@@ -27,7 +27,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 
@@ -63,7 +63,7 @@ public class AbstractConfigFactoryUtilTest {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
-        new HotElementDefinition("intElement", int.class, 123, "int element description\nin two lines")
+        new ElementDefinition("intElement", int.class, 123, "int element description\nin two lines")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -75,7 +75,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 
@@ -101,8 +101,8 @@ public class AbstractConfigFactoryUtilTest {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Arrays.asList(
-        new HotElementDefinition("intElement1", int.class, 123, "int element 1 description\nin two lines"),
-        new HotElementDefinition("intElement2", int.class, 567, "int element 2 description\nin two lines")
+        new ElementDefinition("intElement1", int.class, 123, "int element 1 description\nin two lines"),
+        new ElementDefinition("intElement2", int.class, 567, "int element 2 description\nin two lines")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -114,7 +114,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 
@@ -141,8 +141,8 @@ public class AbstractConfigFactoryUtilTest {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Arrays.asList(
-        new HotElementDefinition("intElement1", int.class, 876, "int element 1 description\nin two lines"),
-        new HotElementDefinition("intElement2", int.class, 543, "int element 2 description\nin two lines")
+        new ElementDefinition("intElement1", int.class, 876, "int element 1 description\nin two lines"),
+        new ElementDefinition("intElement2", int.class, 543, "int element 2 description\nin two lines")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -154,7 +154,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 
@@ -181,8 +181,8 @@ public class AbstractConfigFactoryUtilTest {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Arrays.asList(
-        new HotElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines"),
-        new HotElementDefinition("intElement2", Integer.class, 544, "int element 2 description\nin two lines")
+        new ElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines"),
+        new ElementDefinition("intElement2", Integer.class, 544, "int element 2 description\nin two lines")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -195,7 +195,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 
@@ -213,7 +213,7 @@ public class AbstractConfigFactoryUtilTest {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
-        new HotElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines")
+        new ElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -226,7 +226,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 
@@ -243,7 +243,7 @@ public class AbstractConfigFactoryUtilTest {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
         "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
-        new HotElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines")
+        new ElementDefinition("intElement1", int.class, 311, "int element 1 description\nin two lines")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -255,7 +255,7 @@ public class AbstractConfigFactoryUtilTest {
 
     //
     //
-    AbstractConfigFactoryUtil.loadConfigDataTo(target, configDefinition, configContent, now);
+    ConfigDataLoader.loadConfigDataTo(target, configDefinition, configContent, now);
     //
     //
 

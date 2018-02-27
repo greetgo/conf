@@ -1,18 +1,17 @@
 package kz.greetgo.conf.hot;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 public class HotConfigDefinitionModel implements HotConfigDefinition {
 
-  private final List<HotElementDefinition> elementDefinitions = new ArrayList<>();
+  private final List<ElementDefinition> elementDefinitions;
   private final String location, description;
 
-  public HotConfigDefinitionModel(String location, String description, List<HotElementDefinition> elementDefinitions) {
+  public HotConfigDefinitionModel(String location, String description, List<ElementDefinition> elementDefinitions) {
     this.location = location;
     this.description = description;
-    this.elementDefinitions.addAll(elementDefinitions);
+    this.elementDefinitions = Collections.unmodifiableList(elementDefinitions);
   }
 
   @Override
@@ -26,17 +25,7 @@ public class HotConfigDefinitionModel implements HotConfigDefinition {
   }
 
   @Override
-  public int elementCount() {
-    return elementDefinitions.size();
-  }
-
-  @Override
-  public HotElementDefinition element(int index) {
-    return elementDefinitions.get(index);
-  }
-
-  @Override
-  public Iterator<HotElementDefinition> iterator() {
-    return elementDefinitions.iterator();
+  public List<ElementDefinition> elementList() {
+    return elementDefinitions;
   }
 }
