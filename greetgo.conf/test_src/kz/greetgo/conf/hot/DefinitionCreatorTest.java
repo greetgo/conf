@@ -46,104 +46,80 @@ public class DefinitionCreatorTest {
 
   private static final String ForCheckDefaultValue_DESCRIPTION = "ForCheckDefaultValue DESCRIPTION";
 
+  @SuppressWarnings("unused")
   @Description(ForCheckDefaultValue_DESCRIPTION)
   interface ForCheckDefaultValue {
-    @SuppressWarnings("unused")
+
     String f00();
 
-    @SuppressWarnings("unused")
     @DefaultStrValue(DEF1)
     String f01();
 
-    @SuppressWarnings("unused")
     @DefaultIntValue(DEF2)
     String f02();
 
-    @SuppressWarnings("unused")
     @DefaultLongValue(DEF3)
     String f03();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF4)
     String f04();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF5)
     String f05();
 
 
-    @SuppressWarnings("unused")
     int f06();
 
-    @SuppressWarnings("unused")
     @DefaultIntValue(DEF7)
     int f07();
 
-    @SuppressWarnings("unused")
     @DefaultLongValue(DEF8)
     int f08();
 
-    @SuppressWarnings("unused")
     @DefaultStrValue(DEF9)
     int f09();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF10)
     int f10();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF11)
     int f11();
 
-    @SuppressWarnings("unused")
     Integer f12();
 
 
-    @SuppressWarnings("unused")
     long f13();
 
-    @SuppressWarnings("unused")
     @DefaultIntValue(DEF14)
     long f14();
 
-    @SuppressWarnings("unused")
     @DefaultLongValue(DEF15)
     long f15();
 
-    @SuppressWarnings("unused")
     @DefaultStrValue(DEF16)
     long f16();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF17)
     long f17();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF18)
     long f18();
 
-    @SuppressWarnings("unused")
     Long f19();
 
-    @SuppressWarnings("unused")
     boolean f20();
 
-    @SuppressWarnings("unused")
     Boolean f21();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF22)
     boolean f22();
 
-    @SuppressWarnings("unused")
     @DefaultBoolValue(DEF23)
     boolean f23();
 
-    @SuppressWarnings("unused")
     @DefaultStrValue("" + DEF24)
     boolean f24();
 
-    @SuppressWarnings("unused")
     @DefaultStrValue("" + DEF25)
     boolean f25();
   }
@@ -168,7 +144,6 @@ public class DefinitionCreatorTest {
       {11, DEF11 ? 1 : 0},
       {12, DEF12},
 
-
       {13, DEF13},
       {14, (long) DEF14},
       {15, DEF15},
@@ -176,7 +151,6 @@ public class DefinitionCreatorTest {
       {17, DEF17 ? 1L : 0L},
       {18, DEF18 ? 1L : 0L},
       {19, DEF19},
-
 
       {20, DEF20},
       {21, DEF21},
@@ -209,5 +183,83 @@ public class DefinitionCreatorTest {
     assertThat(elem.defaultValue)
       .describedAs("index = " + index + ", method name = " + elem.name)
       .isEqualTo(defaultValue);
+  }
+
+  interface ForReplacer {
+    @SuppressWarnings("unused")
+    @DefaultStrValue("Default value WOW")
+    String asd();
+  }
+
+  @Test
+  public void createDefinition_replacer() throws Exception {
+    Function<String, String> replacer = s -> s.replaceAll("WOW", "SIN");
+
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", ForReplacer.class, replacer);
+    //
+    //
+
+    assertThat(definition.elementList().get(0).defaultValue).isEqualTo("Default value SIN");
+  }
+
+  private static final String ForDescription_1 = "ForDescription 1";
+  private static final String ForDescription_2 = "ForDescription 2";
+
+  @Description(ForDescription_1)
+  interface ForDescription {
+    @SuppressWarnings("unused")
+    @Description(ForDescription_2)
+    String fieldNameHelloWorld();
+  }
+
+  @Test
+  public void createDefinition_description_name() throws Exception {
+
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", ForDescription.class, Function.identity());
+    //
+    //
+
+    assertThat(definition.description()).isEqualTo(ForDescription_1);
+    assertThat(definition.elementList().get(0).description).isEqualTo(ForDescription_2);
+    assertThat(definition.elementList().get(0).name).isEqualTo("fieldNameHelloWorld");
+  }
+
+  class LeftType {}
+
+  interface ForLeftType {
+    @SuppressWarnings("unused")
+    LeftType asd();
+  }
+
+  @Test(expectedExceptions = CannotGenerateDefaultValue.class)
+  public void createDefinition_ForLeftType() throws Exception {
+    //
+    //
+    createDefinition("", ForLeftType.class, Function.identity());
+    //
+    //
+  }
+
+  interface ForLocation {
+    @SuppressWarnings("unused")
+    int a();
+  }
+
+  @Test
+  public void createDefinition_location() throws Exception {
+
+    String location = ConfUtil.rndStr(10);
+
+    //
+    //
+    HotConfigDefinition definition = createDefinition(location, ForLocation.class, Function.identity());
+    //
+    //
+
+    assertThat(definition.location()).isEqualTo(location);
   }
 }

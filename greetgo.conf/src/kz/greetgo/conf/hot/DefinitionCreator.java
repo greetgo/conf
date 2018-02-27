@@ -16,6 +16,8 @@ class DefinitionCreator<T> {
 
   private HotConfigDefinitionModel result;
 
+  private DefinitionCreator() {}
+
   static <T> HotConfigDefinition createDefinition(String configLocation,
                                                   Class<T> configInterface,
                                                   Function<String, String> parameterReplacer) {
@@ -40,14 +42,13 @@ class DefinitionCreator<T> {
 
   }
 
-  private <T> String extractDescription(Class<T> configInterface) {
+  private String extractDescription(Class<T> configInterface) {
     Description a = configInterface.getAnnotation(Description.class);
     if (a == null) return null;
     return a.value();
   }
 
-  private ElementDefinition createHotElementDefinition(Method method,
-                                                       Function<String, String> parameterReplacer) {
+  private ElementDefinition createHotElementDefinition(Method method, Function<String, String> parameterReplacer) {
     String name = method.getName();
     Class<?> type = method.getReturnType();
     Object defaultValue = extractDefaultValue(method, parameterReplacer);
@@ -55,7 +56,7 @@ class DefinitionCreator<T> {
     return new ElementDefinition(name, type, defaultValue, description);
   }
 
-  private String extractDescription(Method method) {
+  private static String extractDescription(Method method) {
     Description a = method.getAnnotation(Description.class);
     if (a == null) return null;
     return a.value();
@@ -139,6 +140,6 @@ class DefinitionCreator<T> {
       return type == boolean.class ? false : null;
     }
 
-    throw new RuntimeException("Cannot generate default value for type " + type);
+    throw new CannotGenerateDefaultValue(type, configInterface, method);
   }
 }
