@@ -3,8 +3,6 @@ apply plugin: 'signing'
 configurations { repoUpload }
 
 dependencies {
-  compile 'com.google.code.findbugs:annotations:2.0.1'
-
   // needed for DAV protocol on maven uploads
   repoUpload "org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6"
 }

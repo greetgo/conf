@@ -11,6 +11,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
 
+/**
+ * Factory for hot config implementations
+ */
 public abstract class AbstractConfigFactory {
   /**
    * Gets config storage
@@ -175,7 +178,7 @@ public abstract class AbstractConfigFactory {
       if (method.getParameterTypes().length > 0) return null;
 
       if ("toString".equals(method.getName())) {
-        return "[Hot config for <" + configInterface.getName() + ">]";
+        return "[Hot config for <" + configInterface.getName() + ">@" + System.identityHashCode(this) + "]";
       }
 
       return hotConfig.getElementValue(method.getName());

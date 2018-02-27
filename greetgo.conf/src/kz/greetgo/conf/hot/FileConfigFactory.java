@@ -1,6 +1,5 @@
 package kz.greetgo.conf.hot;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import kz.greetgo.conf.ConfUtil;
 
 import java.io.File;
@@ -20,8 +19,7 @@ import java.io.File;
  *
  * @author pompei
  */
-@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-public abstract class HotConfigFactory extends AbstractConfigFactory {
+public abstract class FileConfigFactory extends AbstractConfigFactory {
   /**
    * Returns folder path where config files will be created
    *

@@ -1,6 +1,5 @@
 package kz.greetgo.conf.hot;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -9,8 +8,7 @@ import java.util.Random;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
-public class HotConfigFactoryTest {
+public class FileConfigFactoryTest {
   @Test
   public void createDefault() throws Exception {
     {
@@ -127,7 +125,7 @@ public class HotConfigFactoryTest {
 
     final String baseDir = "build/parentingOfHotConfigs_baseDir/" + rnd.nextInt(10_000_000);
 
-    HotConfigFactory hotConfigFactory = new HotConfigFactory() {
+    FileConfigFactory fileConfigFactory = new FileConfigFactory() {
       @Override
       protected String getBaseDir() {
         return baseDir;
@@ -135,7 +133,7 @@ public class HotConfigFactoryTest {
     };
 
     {
-      File file = hotConfigFactory.storageFileFor(ConcreteHotConfig.class);
+      File file = fileConfigFactory.storageFileFor(ConcreteHotConfig.class);
 
       if (file.exists()) file.delete();
       file.getParentFile().mkdirs();
@@ -146,7 +144,7 @@ public class HotConfigFactoryTest {
     }
 
 
-    ConcreteHotConfig config = hotConfigFactory.createConfig(ConcreteHotConfig.class);
+    ConcreteHotConfig config = fileConfigFactory.createConfig(ConcreteHotConfig.class);
 
     assertThat(config).isNotNull();
     assertThat(config.concreteInt()).isEqualTo(1874);
@@ -159,14 +157,14 @@ public class HotConfigFactoryTest {
   public void testingMethod_toString_inConfig() throws Exception {
     final String baseDir = "build/testingMethod_toString_inConfig/" + rnd.nextInt(10_000_000);
 
-    HotConfigFactory hotConfigFactory = new HotConfigFactory() {
+    FileConfigFactory fileConfigFactory = new FileConfigFactory() {
       @Override
       protected String getBaseDir() {
         return baseDir;
       }
     };
 
-    ConcreteHotConfig config = hotConfigFactory.createConfig(ConcreteHotConfig.class);
+    ConcreteHotConfig config = fileConfigFactory.createConfig(ConcreteHotConfig.class);
 
 
     assertThat(config.toString()).isNotNull();

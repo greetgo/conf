@@ -1,6 +1,5 @@
 package kz.greetgo.conf;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -14,7 +13,6 @@ import java.util.Random;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-@SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
 public class ConfDataTest {
   @Test
   public void parseToPair_001() throws Exception {

@@ -1,6 +1,6 @@
 package kz.greetgo.conf.hot;
 
-public class TestHotconfigFab extends HotConfigFactory {
+public class TestHotconfigFab extends FileConfigFactory {
   
   private final String baseDir;
   private final String configFileExt;
