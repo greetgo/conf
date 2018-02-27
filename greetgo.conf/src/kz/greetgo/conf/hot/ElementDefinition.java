@@ -7,24 +7,22 @@ public class ElementDefinition {
   /**
    * Config element name
    */
-  public String name;
+  public final String name;
 
   /**
    * Config element type
    */
-  public Class<?> type;
+  public final Class<?> type;
 
   /**
    * Config element default value
    */
-  public Object defaultValue;
+  public final Object defaultValue;
 
   /**
    * Description of config element
    */
-  public String description;
-
-  public ElementDefinition() {}
+  public final String description;
 
   public ElementDefinition(String name, Class<?> type, Object defaultValue, String description) {
     this.name = name;

@@ -16,7 +16,7 @@ public class FileConfigFactoryTest {
       if (f.exists()) f.delete();
     }
 
-    TestHotconfigFab fab = new TestHotconfigFab("build/asd", ".hot");
+    TestHotConfigFab fab = new TestHotConfigFab("build/asd", ".hot");
     HotConfig1 conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(0);
@@ -36,7 +36,7 @@ public class FileConfigFactoryTest {
       out.close();
     }
 
-    TestHotconfigFab fab = new TestHotconfigFab("build/asd", ".hot");
+    TestHotConfigFab fab = new TestHotConfigFab("build/asd", ".hot");
     HotConfig1 conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(711);
@@ -59,7 +59,7 @@ public class FileConfigFactoryTest {
       }
     }
 
-    TestHotconfigFab fab = new TestHotconfigFab("build/asd", ".hot");
+    TestHotConfigFab fab = new TestHotConfigFab("build/asd", ".hot");
     HotConfig1 conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(7111);
@@ -83,7 +83,7 @@ public class FileConfigFactoryTest {
       out.close();
     }
 
-    TestHotconfigFab fab = new TestHotconfigFab("build/asd", ".hot");
+    TestHotConfigFab fab = new TestHotConfigFab("build/asd", ".hot");
     HotConfig1 conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(7111);
