@@ -1,6 +1,12 @@
 package kz.greetgo.conf.hot;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 
 /**
  * <p>Perform default parameter value</p>
@@ -17,14 +23,14 @@ import java.lang.annotation.*;
  * </table>
  * <p/>
  * You can extend this list with overriding method
- * {@link AbstractConfigFactoryOld#replaceParametersInDefaultStrValue(String)}
+ * {@link AbstractConfigFactory#replaceParametersInDefaultStrValue(String)}
  * <p/>
  * </p>
  *
  * @author pompei
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target({METHOD, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultStrValue {
   /**

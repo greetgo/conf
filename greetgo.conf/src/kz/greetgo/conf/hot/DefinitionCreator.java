@@ -1,6 +1,8 @@
 package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.type_manager.TypeManager;
+import kz.greetgo.conf.type_manager.TypeManagerCache;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -138,6 +140,13 @@ class DefinitionCreator<T> {
       }
 
       return type == boolean.class ? false : null;
+    }
+
+    {
+      TypeManager typeManager = TypeManagerCache.getOrCreate(type);
+      if (typeManager != null) {
+        return typeManager.newDefaultValue();
+      }
     }
 
     throw new CannotGenerateDefaultValue(type, configInterface, method);

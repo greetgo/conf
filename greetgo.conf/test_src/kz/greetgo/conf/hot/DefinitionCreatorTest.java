@@ -228,7 +228,7 @@ public class DefinitionCreatorTest {
     assertThat(definition.elementList().get(0).name).isEqualTo("fieldNameHelloWorld");
   }
 
-  class LeftType {}
+  abstract class LeftType {}
 
   interface ForLeftType {
     @SuppressWarnings("unused")
@@ -261,5 +261,48 @@ public class DefinitionCreatorTest {
     //
 
     assertThat(definition.location()).isEqualTo(location);
+  }
+
+  @SuppressWarnings("unused")
+  public static class ElemClass {
+
+    @DefaultLongValue(2344324L)
+    long longField;
+
+    @DefaultIntValue(234)
+    int intField;
+
+    @DefaultStrValue("HI dsa2343ddf4")
+    String strField;
+
+    @DefaultBoolValue(true)
+    boolean boolField;
+
+  }
+
+  interface ElemClassConfig {
+
+    @SuppressWarnings("unused")
+    ElemClass field();
+
+  }
+
+  @Test
+  public void createDefinition_ElemClass_defaultValue() throws Exception {
+
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", ElemClassConfig.class, Function.identity());
+    //
+    //
+
+    assertThat(definition.elementList().get(0).defaultValue).isInstanceOf(ElemClass.class);
+
+    ElemClass defaultValue = (ElemClass) definition.elementList().get(0).defaultValue;
+
+    assertThat(defaultValue.longField).isEqualTo(2344324L);
+    assertThat(defaultValue.intField).isEqualTo(234);
+    assertThat(defaultValue.strField).isEqualTo("HI dsa2343ddf4");
+    assertThat(defaultValue.boolField).isTrue();
   }
 }

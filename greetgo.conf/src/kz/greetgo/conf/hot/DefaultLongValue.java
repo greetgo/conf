@@ -1,10 +1,12 @@
 package kz.greetgo.conf.hot;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 
 /**
  * Perform default parameter value
@@ -12,7 +14,7 @@ import java.lang.annotation.Target;
  * @author pompei
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target({METHOD, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultLongValue {
   /**
