@@ -41,7 +41,7 @@ public class ConfigDataLoader {
   }
 
 
-  private void loadNew() throws Exception {
+  private void load() throws Exception {
 
     for (ElementDefinition ed : configDefinition.elementList()) {
       loadingLines.putDefinition(ed);
@@ -72,7 +72,7 @@ public class ConfigDataLoader {
     }
   }
 
-  private void load() throws Exception {
+  private void loadOld() throws Exception {
 
     final List<String> lines = new ArrayList<>();
     boolean isNew = true;

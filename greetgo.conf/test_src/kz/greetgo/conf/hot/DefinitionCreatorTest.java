@@ -1,12 +1,12 @@
 package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.ConfUtil;
-import kz.greetgo.conf.type_manager.TypeManager;
 import org.fest.assertions.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -311,5 +311,37 @@ public class DefinitionCreatorTest {
     assertThat(defaultValue.intField).isEqualTo(234);
     assertThat(defaultValue.strField).isEqualTo("HI dsa2343ddf4");
     assertThat(defaultValue.boolField).isTrue();
+  }
+
+  interface ForTooManyDefaultAnnotations {
+
+    @DefaultStrValue("csa23")
+    @DefaultIntValue(123)
+    @DefaultLongValue(234L)
+    int fieldA367283();
+  }
+
+  @Test
+  @SuppressWarnings("ConstantConditions")
+  public void createDefinition_TooManyDefaultAnnotations() throws Exception {
+
+    try {
+      //
+      //
+      createDefinition("", ForTooManyDefaultAnnotations.class, Function.identity());
+      //
+      //
+
+      Assertions.fail("Must was error");
+    } catch (TooManyDefaultAnnotations e) {
+      assertThat(e.annotations).isEqualTo(Arrays.asList(
+        "DefaultStrValue(csa23)", "DefaultIntValue(123)", "DefaultLongValue(234)"
+      ));
+      assertThat(e.configInterface).isNotNull();
+      assertThat(e.method).isNotNull();
+
+      assertThat(e.configInterface.getName()).isEqualTo(ForTooManyDefaultAnnotations.class.getName());
+      assertThat(e.method.getName()).isEqualTo("fieldA367283");
+    }
   }
 }
