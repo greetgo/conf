@@ -303,7 +303,7 @@ public class DefinitionCreatorTest {
 
     assertThat(definition.elementList().get(0).newDefaultValue()).isInstanceOf(ElemClass.class);
 
-    assertThat(definition.elementList().get(0).defaultValue).isInstanceOf(TypeManager.class);
+    assertThat(definition.elementList().get(0).defaultValue).isNull();
 
     ElemClass defaultValue = (ElemClass) definition.elementList().get(0).newDefaultValue();
 
