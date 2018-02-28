@@ -1,6 +1,7 @@
 package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.type_manager.TypeManager;
+import kz.greetgo.conf.type_manager.TypeManagerCache;
 
 /**
  * Definition of config element
@@ -12,31 +13,34 @@ public class ElementDefinition {
   public final String name;
 
   /**
-   * Config element type
+   * Type manager for operation with type
    */
-  public final Class<?> type;
+  public final TypeManager typeManager;
 
   /**
    * Config element default value
    */
   final Object defaultValue;
 
+
   /**
    * Description of config element
    */
   public final String description;
 
-  public ElementDefinition(String name, Class<?> type, Object defaultValue, String description) {
+  public ElementDefinition(String name, TypeManager typeManager, Object defaultValue, String description) {
+    if (defaultValue instanceof TypeManager) throw new IllegalArgumentException("defaultValue cannot be TypeManager");
     this.name = name;
-    this.type = type;
+    this.typeManager = typeManager;
     this.defaultValue = defaultValue;
     this.description = description;
   }
 
+  public ElementDefinition(String name, Class<?> type, Object defaultValue, String description) {
+    this(name, TypeManagerCache.getOrCreate(type), defaultValue, description);
+  }
+
   public Object newDefaultValue() {
-    if (defaultValue instanceof TypeManager) {
-      return ((TypeManager) defaultValue).newDefaultValue();
-    }
-    return defaultValue;
+    return typeManager.newDefaultValue(defaultValue);
   }
 }

@@ -1,7 +1,5 @@
 package kz.greetgo.conf.hot;
 
-import kz.greetgo.conf.type_manager.TypeManager;
-import kz.greetgo.conf.type_manager.TypeManagerCache;
 import org.fest.assertions.data.MapEntry;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -135,7 +133,7 @@ public class ConfigDataLoaderTest {
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", "some", Collections.singletonList(
-      new ElementDefinition("hello", FieldClass.class, TypeManagerCache.getOrCreate(FieldClass.class), "")
+      new ElementDefinition("hello", FieldClass.class, null, "")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
@@ -431,13 +429,11 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_readAnyType() throws Exception {
     Map<String, Object> target = new HashMap<>();
 
-    TypeManager<FieldClass> typeManager = TypeManagerCache.getOrCreate(FieldClass.class);
-
     String location = "hello/wow.txt";
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       location, "title", Collections.singletonList(
-      new ElementDefinition("element", FieldClass.class, typeManager, "some info")
+      new ElementDefinition("element", FieldClass.class, null, "some info")
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();

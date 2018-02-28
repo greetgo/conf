@@ -1,5 +1,8 @@
 package kz.greetgo.conf.type_manager;
 
+import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.CannotWorkWithType;
+
 import java.lang.reflect.Modifier;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -7,16 +10,24 @@ public class TypeManagerCache {
 
   private static final ConcurrentHashMap<Class<?>, TypeManager> cachedValues = new ConcurrentHashMap<>();
 
-  public static <T> TypeManager<T> getOrCreate(Class<T> type) {
-    if (type.isInterface()
+  public static TypeManager getOrCreate(Class<?> type) {
+    if (TypeManagerPrimitive.forMe(type)) {
+      return cachedValues.computeIfAbsent(type, TypeManagerPrimitive::new);
+    }
+
+    if (false
+
+      || type.isInterface()
       || Modifier.isAbstract(type.getModifiers())
       || type.isAnnotation()
       || type.isArray()
       || type.isEnum()
-      || type.isPrimitive()) return null;
 
-    //noinspection unchecked
-    return cachedValues.computeIfAbsent(type, TypeManagerImpl::new);
+      ) throw new CannotWorkWithType(type);
+
+
+    {
+      return cachedValues.computeIfAbsent(type, TypeManagerClass::new);
+    }
   }
-
 }

@@ -2,6 +2,7 @@ package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.type_manager.TypeManager;
+import org.fest.assertions.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -236,13 +237,25 @@ public class DefinitionCreatorTest {
     LeftType asd();
   }
 
-  @Test(expectedExceptions = CannotGenerateDefaultValue.class)
+  @SuppressWarnings("ConstantConditions")
+  @Test
   public void createDefinition_ForLeftType() throws Exception {
-    //
-    //
-    createDefinition("", ForLeftType.class, Function.identity());
-    //
-    //
+    try {
+      //
+      //
+      createDefinition("", ForLeftType.class, Function.identity());
+      //
+      //
+      Assertions.fail("Must be error");
+    } catch (CannotWorkWithType e) {
+
+      assertThat(e.workingType).isNotNull();
+      assertThat(e.workingType.getName()).isEqualTo(LeftType.class.getName());
+      assertThat(e.method).isNotNull();
+      assertThat(e.method.getName()).isEqualTo("asd");
+      assertThat(e.configInterface).isNotNull();
+      assertThat(e.configInterface.getName()).isEqualTo(ForLeftType.class.getName());
+    }
   }
 
   interface ForLocation {

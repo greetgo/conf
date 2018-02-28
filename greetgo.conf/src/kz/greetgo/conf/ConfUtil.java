@@ -1,5 +1,13 @@
 package kz.greetgo.conf;
 
+import kz.greetgo.conf.hot.CannotConvertToType;
+import kz.greetgo.conf.hot.CannotDetectDateFormat;
+import kz.greetgo.conf.hot.DefaultBoolValue;
+import kz.greetgo.conf.hot.DefaultIntValue;
+import kz.greetgo.conf.hot.DefaultLongValue;
+import kz.greetgo.conf.hot.DefaultStrValue;
+import kz.greetgo.conf.hot.TooManyDefaultAnnotations;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,19 +16,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ConfUtil {
   public static void readFromFile(Object readTo, File file) throws Exception {
@@ -113,6 +128,40 @@ public class ConfUtil {
     return new String(ret);
   }
 
+  public static String extractStrDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer) {
+    String value = null;
+    List<String> aa = new ArrayList<>();
+    for (Annotation a : annotations) {
+      if (a instanceof DefaultStrValue) {
+        DefaultStrValue b = (DefaultStrValue) a;
+        value = parameterReplacer.apply(b.value());
+        aa.add("DefaultStrValue(" + value + ")");
+        continue;
+      }
+      if (a instanceof DefaultIntValue) {
+        DefaultIntValue b = (DefaultIntValue) a;
+        value = "" + b.value();
+        aa.add("DefaultIntValue(" + value + ")");
+        continue;
+      }
+      if (a instanceof DefaultLongValue) {
+        DefaultLongValue b = (DefaultLongValue) a;
+        value = "" + b.value();
+        aa.add("DefaultLongValue(" + b.value() + ")");
+        continue;
+      }
+      if (a instanceof DefaultBoolValue) {
+        DefaultBoolValue b = (DefaultBoolValue) a;
+        value = "" + b.value();
+        aa.add("DefaultBoolValue(" + b.value() + ")");
+        continue;
+      }
+    }
+
+    if (aa.size() > 1) throw new TooManyDefaultAnnotations(aa);
+    return value;
+  }
+
   private static final class PatternFormat {
     final Pattern pattern;
     final SimpleDateFormat format;
@@ -160,20 +209,37 @@ public class ConfUtil {
     if (type.isAssignableFrom(String.class)) {
       return str;
     }
-    if (type == Boolean.TYPE || type.isAssignableFrom(Boolean.class)) {
+    if (type == boolean.class || type == Boolean.class) {
+      if (str == null) return type == Boolean.class ? null : false;
       return strToBool(str);
     }
-    if (type == Integer.TYPE || type.isAssignableFrom(Integer.class)) {
-      if (str == null) return 0;
-      return Integer.parseInt(str);
+    if (type == int.class || type == Integer.class) {
+      if (str == null) return type == Integer.class ? null : 0;
+      if ("true".equals(str)) return 1;
+      if ("false".equals(str)) return 0;
+      try {
+        return Integer.parseInt(str);
+      } catch (NumberFormatException e) {
+        throw new CannotConvertToType(str, type, e);
+      }
     }
-    if (type == Long.TYPE || type.isAssignableFrom(Long.class)) {
-      if (str == null) return 0L;
-      return Long.parseLong(str);
+    if (type == long.class || type == Long.class) {
+      if (str == null) return type == Long.class ? null : 0L;
+      if ("true".equals(str)) return 1L;
+      if ("false".equals(str)) return 0L;
+      try {
+        return Long.parseLong(str);
+      } catch (NumberFormatException e) {
+        throw new CannotConvertToType(str, type, e);
+      }
     }
     if (type == Double.TYPE || type.isAssignableFrom(Double.class)) {
       if (str == null) return 0d;
-      return Double.parseDouble(str);
+      try {
+        return Double.parseDouble(str);
+      } catch (NumberFormatException e) {
+        throw new CannotConvertToType(str, type, e);
+      }
     }
     if (type == Float.TYPE || type.isAssignableFrom(Float.class)) {
       if (str == null) return 0f;
@@ -181,7 +247,11 @@ public class ConfUtil {
     }
     if (type.isAssignableFrom(BigDecimal.class)) {
       if (str == null) return BigDecimal.ZERO;
-      return new BigDecimal(str);
+      try {
+        return new BigDecimal(str);
+      } catch (NumberFormatException e) {
+        throw new CannotConvertToType(str, type, e);
+      }
     }
     if (type.isAssignableFrom(Date.class)) {
       if (str == null) return null;
@@ -191,13 +261,17 @@ public class ConfUtil {
           try {
             return pf.format.parse(m.group(1));
           } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new CannotConvertToType(str, type, e);
           }
         }
       }
-      throw new IllegalArgumentException("Cannot detect date format for value " + str);
+      throw new CannotDetectDateFormat(str,
+        PATTERN_FORMAT_LIST.stream()
+          .map(p -> p.format.toPattern())
+          .collect(Collectors.toList())
+      );
     }
-    throw new IllegalArgumentException("Cannot convert to type " + type + " str value = " + str);
+    throw new CannotConvertToType(str, type);
   }
 
   public static boolean strToBool(String str) {
@@ -218,5 +292,15 @@ public class ConfUtil {
     if ("是的".equals(str)) return true;
 
     return false;
+  }
+
+  public static final Set<Class<?>> WRAPPER_TYPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+    Boolean.class, Character.class, Byte.class,
+    Short.class, Integer.class, Long.class,
+    Float.class, Double.class, Void.class
+  )));
+
+  public static boolean isWrapper(Class<?> aClass) {
+    return WRAPPER_TYPES.contains(aClass);
   }
 }

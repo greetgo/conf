@@ -109,7 +109,7 @@ public class ConfigDataLoader {
       if (commented) {
         target.put(key, hed.newDefaultValue());
       } else {
-        target.put(key, parseStrValue(strValue, hed.type, hed.newDefaultValue()));
+        target.put(key, parseStrValue(strValue, hed.typeManager.type(), hed.newDefaultValue()));
       }
 
     }
