@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static kz.greetgo.conf.ConfUtil.strToBool;
+import static kz.greetgo.conf.hot.LoadingLines.killedLastEmptyLines;
 
 public class ConfigDataLoader {
 
@@ -37,7 +38,7 @@ public class ConfigDataLoader {
     this.configDefinition = configDefinition;
     this.configStorage = configStorage;
     this.now = now;
-    loadingLines = new LoadingLines(now);
+    loadingLines = new LoadingLines(now, configDefinition.description());
   }
 
 
@@ -48,26 +49,16 @@ public class ConfigDataLoader {
     }
 
     boolean contentExists = configStorage.isConfigContentExists(configDefinition.location());
+    loadingLines.setContentExists(contentExists);
     if (contentExists) {
-      boolean hasComment = false;
       for (String line : configStorage.loadConfigContent(configDefinition.location()).split("\n")) {
-
-        int index = line.indexOf('=');
-
-        if (index < 0) {
-          hasComment = hasComment || line.trim().startsWith("#");
-        } else {
-          String key = line.substring(0, index).trim();
-          String value = line.substring(index + 1).trim();
-          loadingLines.readLine(key, value, hasComment);
-          hasComment = false;
-        }
+        loadingLines.readStorageLine(line);
       }
     }
 
-    loadingLines.putData(target);
+    loadingLines.saveTo(target);
 
-    if (loadingLines.didContentChange()) {
+    if (loadingLines.needToSave()) {
       configStorage.saveConfigContent(configDefinition.location(), loadingLines.content());
     }
   }
@@ -150,14 +141,6 @@ public class ConfigDataLoader {
     }
 
     configStorage.saveConfigContent(configDefinition.location(), sb.toString());
-  }
-
-  private static void killedLastEmptyLines(List<String> lines) {
-    while (lines.size() > 0) {
-      String lastLine = lines.get(lines.size() - 1);
-      if (lastLine.trim().length() > 0) return;
-      lines.remove(lines.size() - 1);
-    }
   }
 
   private static Object parseStrValue(String strValue, Class<?> type, Object defaultValue) {

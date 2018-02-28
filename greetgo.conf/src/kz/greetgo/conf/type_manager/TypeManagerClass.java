@@ -1,6 +1,9 @@
 package kz.greetgo.conf.type_manager;
 
+import kz.greetgo.conf.hot.LineHibernate;
+
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.function.Function;
 
 public class TypeManagerClass implements TypeManager {
@@ -28,5 +31,10 @@ public class TypeManagerClass implements TypeManager {
   public Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer) {
     //simple return null, because default value would be get by method #newDefaultValue(Object)
     return null;
+  }
+
+  @Override
+  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue) {
+    throw new RuntimeException("Just not working");
   }
 }

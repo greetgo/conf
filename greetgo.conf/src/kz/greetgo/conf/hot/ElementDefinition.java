@@ -3,6 +3,8 @@ package kz.greetgo.conf.hot;
 import kz.greetgo.conf.type_manager.TypeManager;
 import kz.greetgo.conf.type_manager.TypeManagerCache;
 
+import java.util.List;
+
 /**
  * Definition of config element
  */
@@ -21,7 +23,6 @@ public class ElementDefinition {
    * Config element default value
    */
   final Object defaultValue;
-
 
   /**
    * Description of config element
@@ -42,5 +43,9 @@ public class ElementDefinition {
 
   public Object newDefaultValue() {
     return typeManager.newDefaultValue(defaultValue);
+  }
+
+  public List<LineHibernate> createLineHibernateList() {
+    return typeManager.createLineHibernateList(name, defaultValue);
   }
 }
