@@ -144,9 +144,7 @@ class DefinitionCreator<T> {
 
     {
       TypeManager typeManager = TypeManagerCache.getOrCreate(type);
-      if (typeManager != null) {
-        return typeManager.newDefaultValue();
-      }
+      if (typeManager != null) return typeManager;
     }
 
     throw new CannotGenerateDefaultValue(type, configInterface, method);

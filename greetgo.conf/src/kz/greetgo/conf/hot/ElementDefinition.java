@@ -1,5 +1,7 @@
 package kz.greetgo.conf.hot;
 
+import kz.greetgo.conf.type_manager.TypeManager;
+
 /**
  * Definition of config element
  */
@@ -17,7 +19,7 @@ public class ElementDefinition {
   /**
    * Config element default value
    */
-  public final Object defaultValue;
+  final Object defaultValue;
 
   /**
    * Description of config element
@@ -29,5 +31,12 @@ public class ElementDefinition {
     this.type = type;
     this.defaultValue = defaultValue;
     this.description = description;
+  }
+
+  public Object newDefaultValue() {
+    if (defaultValue instanceof TypeManager) {
+      return ((TypeManager) defaultValue).newDefaultValue();
+    }
+    return defaultValue;
   }
 }

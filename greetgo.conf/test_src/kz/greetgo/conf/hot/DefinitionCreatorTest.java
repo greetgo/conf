@@ -1,6 +1,7 @@
 package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.type_manager.TypeManager;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -180,7 +181,7 @@ public class DefinitionCreatorTest {
     elementDefinitions.sort(Comparator.comparing(a -> a.name));
 
     ElementDefinition elem = elementDefinitions.get(index);
-    assertThat(elem.defaultValue)
+    assertThat(elem.newDefaultValue())
       .describedAs("index = " + index + ", method name = " + elem.name)
       .isEqualTo(defaultValue);
   }
@@ -201,7 +202,7 @@ public class DefinitionCreatorTest {
     //
     //
 
-    assertThat(definition.elementList().get(0).defaultValue).isEqualTo("Default value SIN");
+    assertThat(definition.elementList().get(0).newDefaultValue()).isEqualTo("Default value SIN");
   }
 
   private static final String ForDescription_1 = "ForDescription 1";
@@ -265,19 +266,10 @@ public class DefinitionCreatorTest {
 
   @SuppressWarnings("unused")
   public static class ElemClass {
-
-    @DefaultLongValue(2344324L)
-    long longField;
-
-    @DefaultIntValue(234)
-    int intField;
-
-    @DefaultStrValue("HI dsa2343ddf4")
-    String strField;
-
-    @DefaultBoolValue(true)
-    boolean boolField;
-
+    public long longField = 2344324;
+    public int intField = 234;
+    public String strField = "HI dsa2343ddf4";
+    public boolean boolField = true;
   }
 
   interface ElemClassConfig {
@@ -296,9 +288,11 @@ public class DefinitionCreatorTest {
     //
     //
 
-    assertThat(definition.elementList().get(0).defaultValue).isInstanceOf(ElemClass.class);
+    assertThat(definition.elementList().get(0).newDefaultValue()).isInstanceOf(ElemClass.class);
 
-    ElemClass defaultValue = (ElemClass) definition.elementList().get(0).defaultValue;
+    assertThat(definition.elementList().get(0).defaultValue).isInstanceOf(TypeManager.class);
+
+    ElemClass defaultValue = (ElemClass) definition.elementList().get(0).newDefaultValue();
 
     assertThat(defaultValue.longField).isEqualTo(2344324L);
     assertThat(defaultValue.intField).isEqualTo(234);

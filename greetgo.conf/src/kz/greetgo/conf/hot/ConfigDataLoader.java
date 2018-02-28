@@ -11,12 +11,13 @@ import java.util.Map;
 import static kz.greetgo.conf.ConfUtil.strToBool;
 
 public class ConfigDataLoader {
+
   static void loadConfigDataTo(Map<String, Object> target,
                                HotConfigDefinition configDefinition,
                                ConfigStorage configStorage, Date now) {
 
     try {
-      loadConfigDataToEx(target, configDefinition, configStorage, now);
+      new ConfigDataLoader(target, configDefinition, configStorage, now).load();
     } catch (Exception e) {
       if (e instanceof RuntimeException) throw (RuntimeException) e;
       throw new RuntimeException(e);
@@ -24,9 +25,54 @@ public class ConfigDataLoader {
 
   }
 
-  private static void loadConfigDataToEx(Map<String, Object> target,
-                                         HotConfigDefinition configDefinition,
-                                         ConfigStorage configStorage, Date now) throws Exception {
+  private final Map<String, Object> target;
+  private final HotConfigDefinition configDefinition;
+  private final ConfigStorage configStorage;
+  private final LoadingLines loadingLines;
+  private final Date now;
+
+  private ConfigDataLoader(Map<String, Object> target, HotConfigDefinition configDefinition,
+                           ConfigStorage configStorage, Date now) {
+    this.target = target;
+    this.configDefinition = configDefinition;
+    this.configStorage = configStorage;
+    this.now = now;
+    loadingLines = new LoadingLines(now);
+  }
+
+
+  private void loadNew() throws Exception {
+
+    for (ElementDefinition ed : configDefinition.elementList()) {
+      loadingLines.putDefinition(ed);
+    }
+
+    boolean contentExists = configStorage.isConfigContentExists(configDefinition.location());
+    if (contentExists) {
+      boolean hasComment = false;
+      for (String line : configStorage.loadConfigContent(configDefinition.location()).split("\n")) {
+
+        int index = line.indexOf('=');
+
+        if (index < 0) {
+          hasComment = hasComment || line.trim().startsWith("#");
+        } else {
+          String key = line.substring(0, index).trim();
+          String value = line.substring(index + 1).trim();
+          loadingLines.readLine(key, value, hasComment);
+          hasComment = false;
+        }
+      }
+    }
+
+    loadingLines.putData(target);
+
+    if (loadingLines.didContentChange()) {
+      configStorage.saveConfigContent(configDefinition.location(), loadingLines.content());
+    }
+  }
+
+  private void load() throws Exception {
 
     final List<String> lines = new ArrayList<>();
     boolean isNew = true;
@@ -37,8 +83,8 @@ public class ConfigDataLoader {
 
     Map<String, ElementDefinition> defValues = new LinkedHashMap<>();
 
-    for (ElementDefinition hed : configDefinition.elementList()) {
-      defValues.put(hed.name, hed);
+    for (ElementDefinition ed : configDefinition.elementList()) {
+      defValues.put(ed.name, ed);
     }
 
     for (String line : lines) {
@@ -61,9 +107,9 @@ public class ConfigDataLoader {
       if (hed == null) continue;
 
       if (commented) {
-        target.put(key, hed.defaultValue);
+        target.put(key, hed.newDefaultValue());
       } else {
-        target.put(key, parseStrValue(strValue, hed.type, hed.defaultValue));
+        target.put(key, parseStrValue(strValue, hed.type, hed.newDefaultValue()));
       }
 
     }
@@ -94,8 +140,8 @@ public class ConfigDataLoader {
           lines.add("# " + s.trim());
         }
       }
-      lines.add(e.getKey() + "=" + e.getValue().defaultValue);
-      target.put(e.getKey(), e.getValue().defaultValue);
+      lines.add(e.getKey() + "=" + e.getValue().newDefaultValue());
+      target.put(e.getKey(), e.getValue().newDefaultValue());
     }
 
     StringBuilder sb = new StringBuilder();
@@ -108,8 +154,8 @@ public class ConfigDataLoader {
 
   private static void killedLastEmptyLines(List<String> lines) {
     while (lines.size() > 0) {
-      String lastLine = lines.get(lines.size() - 1).trim();
-      if (lastLine.length() > 0) return;
+      String lastLine = lines.get(lines.size() - 1);
+      if (lastLine.trim().length() > 0) return;
       lines.remove(lines.size() - 1);
     }
   }
@@ -118,6 +164,14 @@ public class ConfigDataLoader {
     if (type == int.class || type == Integer.class) {
       try {
         return Integer.valueOf(strValue);
+      } catch (NumberFormatException e) {
+        return defaultValue;
+      }
+    }
+
+    if (type == long.class || type == Long.class) {
+      try {
+        return Long.valueOf(strValue);
       } catch (NumberFormatException e) {
         return defaultValue;
       }
