@@ -162,6 +162,12 @@ public class ConfUtil {
     return value;
   }
 
+  public static String convertToStr(Object value) {
+    if (value == null) return null;
+    if (value instanceof String) return (String) value;
+    return "" + value;
+  }
+
   private static final class PatternFormat {
     final Pattern pattern;
     final SimpleDateFormat format;

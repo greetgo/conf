@@ -1,6 +1,7 @@
 package kz.greetgo.conf.type_manager;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.ConvertingError;
 import kz.greetgo.conf.hot.LineHibernate;
 
 import java.lang.annotation.Annotation;
@@ -50,7 +51,9 @@ public class TypeManagerPrimitive implements TypeManager {
       @Override
       public void setStoredValue(String strValue, boolean commented) {
         hasStoredValue = true;
-        if (!commented) value = ConfUtil.convertToType(strValue, type);
+        if (!commented) try {
+          value = ConfUtil.convertToType(strValue, type);
+        } catch (ConvertingError ignore) {}
       }
 
       @Override

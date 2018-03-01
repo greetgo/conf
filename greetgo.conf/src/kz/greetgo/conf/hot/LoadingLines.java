@@ -96,7 +96,7 @@ class LoadingLines {
 
     if (needExpand()) expand(lines);
 
-    return lines.stream().collect(Collectors.joining("\n"));
+    return lines.stream().collect(Collectors.joining("\n", "", "\n"));
 
   }
 

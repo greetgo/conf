@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CannotDetectDateFormat extends HasConfigInterfaceAndMethod {
+public class CannotDetectDateFormat extends ConvertingError {
 
   public final String paringStr;
   public final List<String> patternFormatList;

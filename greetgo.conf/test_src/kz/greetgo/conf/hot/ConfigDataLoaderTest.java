@@ -137,8 +137,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "hello.field1=7654");
-    if (!useDefault) configContent.contentMap.put("some", "hello.field2=Good string");
+    if (!useDefault) configContent.contentMap.put("some", "hello.field1=7654\nhello.field2=Good string");
 
     //
     //
@@ -151,7 +150,7 @@ public class ConfigDataLoaderTest {
     assertThat(target.get("hello")).isInstanceOf(FieldClass.class);
     FieldClass hello = (FieldClass) target.get("hello");
 
-    assertThat(hello.field1).isEqualTo(useDefault ? def.field1 : 7645);
+    assertThat(hello.field1).isEqualTo(useDefault ? def.field1 : 7654);
     assertThat(hello.field2).isEqualTo(useDefault ? def.field2 : "Good string");
   }
 
@@ -464,9 +463,6 @@ public class ConfigDataLoaderTest {
       "\n" +
       "# some info\n" +
       "element.field1=123\n" +
-      "element.field2=Hello\n" +
-      "");
-
-
+      "element.field2=Hello\n");
   }
 }
