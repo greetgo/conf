@@ -34,7 +34,7 @@ public class TypeManagerClass implements TypeManager {
   }
 
   @Override
-  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue) {
+  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue, String description) {
     throw new RuntimeException("Just not working");
   }
 }

@@ -37,7 +37,7 @@ public class TypeManagerPrimitive implements TypeManager {
   }
 
   @Override
-  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue) {
+  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue, String description) {
     return Collections.singletonList(new LineHibernate() {
       @Override
       public String fullName() {
@@ -80,7 +80,7 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public String description() {
-        throw new RuntimeException("Пока нет description");
+        return description;
       }
 
       @Override

@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 
 class LoadingLines {
   private final Date now;
-  private final String description;
+  private final String fileDescription;
   private boolean contentExists;
 
-  LoadingLines(Date now, String description) {
+  LoadingLines(Date now, String fileDescription) {
     this.now = now;
-    this.description = description;
+    this.fileDescription = fileDescription;
   }
 
   private final LinkedHashMap<String, LineHibernate> lineList = new LinkedHashMap<>();
@@ -110,8 +110,8 @@ class LoadingLines {
     lines.add("# " + (contentExists ? "Added" : "Created") + " at " + sdf.format(now));
     lines.add("#");
 
-    if (!contentExists && description != null) {
-      for (String s : description.split("\n")) {
+    if (!contentExists && fileDescription != null) {
+      for (String s : fileDescription.split("\n")) {
         lines.add("# " + s.trim());
       }
       lines.add("#");

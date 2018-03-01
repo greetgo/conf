@@ -13,5 +13,5 @@ public interface TypeManager {
 
   Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer);
 
-  List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue);
+  List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue, String description);
 }

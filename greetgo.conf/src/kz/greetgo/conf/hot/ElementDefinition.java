@@ -46,6 +46,6 @@ public class ElementDefinition {
   }
 
   public List<LineHibernate> createLineHibernateList() {
-    return typeManager.createLineHibernateList(name, defaultValue);
+    return typeManager.createLineHibernateList(name, defaultValue, description);
   }
 }
