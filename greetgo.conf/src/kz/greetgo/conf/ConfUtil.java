@@ -220,7 +220,7 @@ public class ConfUtil {
       return strToBool(str);
     }
     if (type == int.class || type == Integer.class) {
-      if (str == null) return type == Integer.class ? null : 0;
+      if (str == null || str.trim().length() == 0) return type == Integer.class ? null : 0;
       if ("true".equals(str)) return 1;
       if ("false".equals(str)) return 0;
       try {
@@ -230,7 +230,7 @@ public class ConfUtil {
       }
     }
     if (type == long.class || type == Long.class) {
-      if (str == null) return type == Long.class ? null : 0L;
+      if (str == null || str.trim().length() == 0) return type == Long.class ? null : 0L;
       if ("true".equals(str)) return 1L;
       if ("false".equals(str)) return 0L;
       try {

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FieldAcceptorCreator {
   private Class<?> type;
@@ -17,6 +19,13 @@ public class FieldAcceptorCreator {
 
   public static List<FieldAcceptor> createList(Class<?> type) {
     return new FieldAcceptorCreator(type).create();
+  }
+
+  public static Map<String, FieldAcceptor> createMap(Class<?> type) {
+    return FieldAcceptorCreator
+      .createList(type)
+      .stream()
+      .collect(Collectors.toMap(FieldAcceptor::name, Function.identity()));
   }
 
   interface Getter {
