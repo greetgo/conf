@@ -1,6 +1,6 @@
 package kz.greetgo.conf.type_manager;
 
-import kz.greetgo.conf.hot.LineHibernate;
+import kz.greetgo.conf.hot.LineStructure;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -13,5 +13,5 @@ public interface TypeManager {
 
   Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer);
 
-  List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue, String description);
+  LineStructure createLineStructure(String topFieldName, Object defaultValue, String description);
 }

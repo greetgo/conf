@@ -18,14 +18,20 @@ class LoadingLines {
     this.fileDescription = fileDescription;
   }
 
-  final LinkedHashMap<String, LineHibernate> lineList = new LinkedHashMap<>();
+  final LinkedHashMap<String, ConfigLine> configLineMap = new LinkedHashMap<>();
+  final List<ReadElement> readElementList = new ArrayList<>();
 
   private final List<String> realLines = new ArrayList<>();
 
   public void putDefinition(ElementDefinition ed) {
-    for (LineHibernate lineHibernate : ed.createLineHibernateList()) {
-      lineList.put(lineHibernate.fullName(), lineHibernate);
+
+    LineStructure lineStructure = ed.createLineStructure();
+
+    for (ConfigLine configLine : lineStructure.configLineList) {
+      configLineMap.put(configLine.fullName(), configLine);
     }
+
+    readElementList.addAll(lineStructure.readElementList);
   }
 
   public void readStorageLine(String line) {
@@ -44,26 +50,24 @@ class LoadingLines {
   }
 
   private void readStorageLine(String key, String value, boolean commented) {
-    LineHibernate line = lineList.get(key);
+    ConfigLine line = configLineMap.get(key);
     if (line == null) return;
 
     line.setStoredValue(value, commented);
   }
 
   public void saveTo(Map<String, Object> target) {
-    for (LineHibernate line : lineList.values()) {
-      if (line.isValueSource()) {
-        target.put(line.fieldName(), line.fieldValue());
-      }
+    for (ReadElement element : readElementList) {
+      target.put(element.fieldName(), element.fieldValue());
     }
   }
 
   public boolean needToSave() {
-    if (!contentExists) return lineList.size() > 0;
-    if (lineList.size() == 0) return false;
+    if (!contentExists) return configLineMap.size() > 0;
+    if (configLineMap.size() == 0) return false;
 
-    for (LineHibernate line : lineList.values()) {
-      if (!line.hasStoredValue()) return true;
+    for (ConfigLine line : configLineMap.values()) {
+      if (!line.isStored()) return true;
     }
 
     return false;
@@ -82,10 +86,8 @@ class LoadingLines {
   }
 
   private boolean needExpand() {
-    for (LineHibernate line : lineList.values()) {
-      if (line.hasContent() && !line.hasStoredValue()) {
-        return true;
-      }
+    for (ConfigLine line : configLineMap.values()) {
+      if (!line.isStored()) return true;
     }
     return false;
   }
@@ -117,9 +119,9 @@ class LoadingLines {
       lines.add("#");
     }
 
-    for (LineHibernate line : lineList.values()) {
+    for (ConfigLine line : configLineMap.values()) {
 
-      if (line.hasContent() && !line.hasStoredValue()) {
+      if (!line.isStored()) {
         lines.add("");
         String description = line.description();
         if (description != null) for (String s : description.split("\n")) {

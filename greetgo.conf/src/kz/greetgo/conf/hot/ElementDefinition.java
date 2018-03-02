@@ -53,7 +53,7 @@ public class ElementDefinition {
     return typeManager.newDefaultValue(defaultValue);
   }
 
-  public List<LineHibernate> createLineHibernateList() {
-    return typeManager.createLineHibernateList(name, defaultValue, description);
+  public LineStructure createLineStructure() {
+    return typeManager.createLineStructure(name, defaultValue, description);
   }
 }

@@ -1,6 +1,8 @@
 package kz.greetgo.conf.type_manager;
 
-import kz.greetgo.conf.hot.LineHibernate;
+import kz.greetgo.conf.hot.ConfigLine;
+import kz.greetgo.conf.hot.LineStructure;
+import kz.greetgo.conf.hot.ReadElement;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -38,51 +40,44 @@ public class TypeManagerClass implements TypeManager {
   }
 
   @Override
-  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue, String description) {
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description) {
+    List<ReadElement> readElementList = new ArrayList<>();
 
-    List<LineHibernate> ret = new ArrayList<>();
+    final Object object[] = new Object[]{newDefaultValue(defaultValue)};
+    final Object defObject = newDefaultValue(defaultValue);
 
-    Object object = newDefaultValue(defaultValue);
-    Object defObject = newDefaultValue(defaultValue);
+    readElementList.add(new ReadElement() {
+      @Override
+      public String fieldName() {
+        return topFieldName;
+      }
+
+      @Override
+      public Object fieldValue() {
+        return object[0];
+      }
+    });
+
+    List<ConfigLine> configLineList = new ArrayList<>();
 
     for (FieldAcceptor fieldAcceptor : FieldAcceptorCreator.createList(type)) {
-      ret.add(new LineHibernate() {
+      configLineList.add(new ConfigLine() {
+        boolean isStored = false;
+
         @Override
         public String fullName() {
           return topFieldName + "." + fieldAcceptor.name();
         }
 
-        boolean hasStored = false;
-
         @Override
         public void setStoredValue(String strValue, boolean commented) {
-          hasStored = true;
-          if (!commented) fieldAcceptor.setStrValue(object, strValue);
+          isStored = true;
+          if (!commented) fieldAcceptor.setStrValue(object[0], strValue);
         }
 
         @Override
-        public boolean isValueSource() {
-          return false;
-        }
-
-        @Override
-        public String fieldName() {
-          throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Object fieldValue() {
-          throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean hasStoredValue() {
-          return hasStored;
-        }
-
-        @Override
-        public boolean hasContent() {
-          return true;
+        public boolean isStored() {
+          return isStored;
         }
 
         @Override
@@ -97,53 +92,6 @@ public class TypeManagerClass implements TypeManager {
       });
     }
 
-    ret.add(new LineHibernate() {
-      @Override
-      public String fullName() {
-        return "[" + topFieldName + "]";
-      }
-
-      @Override
-      public void setStoredValue(String strValue, boolean commented) {
-        throw new RuntimeException("Сюда ничего нельзя присваивать");
-      }
-
-      @Override
-      public boolean isValueSource() {
-        return true;
-      }
-
-      @Override
-      public String fieldName() {
-        return topFieldName;
-      }
-
-      @Override
-      public Object fieldValue() {
-        return object;
-      }
-
-      @Override
-      public boolean hasStoredValue() {
-        return false;
-      }
-
-      @Override
-      public boolean hasContent() {
-        return false;
-      }
-
-      @Override
-      public String description() {
-        throw new RuntimeException("Это вызывать нельзя");
-      }
-
-      @Override
-      public String getNotNullDefaultStringValue() {
-        throw new RuntimeException("Это вызывать нельзя");
-      }
-    });
-
-    return ret;
+    return new LineStructure(readElementList, configLineList);
   }
 }

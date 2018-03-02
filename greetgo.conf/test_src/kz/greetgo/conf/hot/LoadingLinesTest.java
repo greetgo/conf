@@ -279,7 +279,7 @@ public class LoadingLinesTest {
     ll.putDefinition(ElementDefinition.aNew("topField1", ClassWithDescriptions.class, 10, "Описание топ-поля 1\nещё одна строка описания"));
     ll.putDefinition(ElementDefinition.aNew("topField2", ClassWithDescriptions.class, 10, "Описание топ-поля 2\nещё одна строка описания"));
 
-    assertThat(ll.lineList.get("topField1.field1").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField1.field1").description()).isEqualTo(
       "Описание топ-поля 1\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -288,7 +288,7 @@ public class LoadingLinesTest {
       "about field1 more 1"
     );
 
-    assertThat(ll.lineList.get("topField1.field2").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField1.field2").description()).isEqualTo(
       "Описание топ-поля 1\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -297,7 +297,7 @@ public class LoadingLinesTest {
       "about field2 more 2"
     );
 
-    assertThat(ll.lineList.get("topField1.field3").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField1.field3").description()).isEqualTo(
       "Описание топ-поля 1\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -306,7 +306,7 @@ public class LoadingLinesTest {
       "about field3 more 4"
     );
 
-    assertThat(ll.lineList.get("topField1.field4").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField1.field4").description()).isEqualTo(
       "Описание топ-поля 1\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -315,7 +315,7 @@ public class LoadingLinesTest {
       "about field4 more 5"
     );
 
-    assertThat(ll.lineList.get("topField2.field1").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField2.field1").description()).isEqualTo(
       "Описание топ-поля 2\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -324,7 +324,7 @@ public class LoadingLinesTest {
       "about field1 more 1"
     );
 
-    assertThat(ll.lineList.get("topField2.field2").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField2.field2").description()).isEqualTo(
       "Описание топ-поля 2\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -333,7 +333,7 @@ public class LoadingLinesTest {
       "about field2 more 2"
     );
 
-    assertThat(ll.lineList.get("topField2.field3").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField2.field3").description()).isEqualTo(
       "Описание топ-поля 2\n" +
       "ещё одна строка описания\n" +
       "class about\n" +
@@ -342,7 +342,7 @@ public class LoadingLinesTest {
       "about field3 more 4"
     );
 
-    assertThat(ll.lineList.get("topField2.field4").description()).isEqualTo(
+    assertThat(ll.configLineMap.get("topField2.field4").description()).isEqualTo(
       "Описание топ-поля 2\n" +
       "ещё одна строка описания\n" +
       "class about\n" +

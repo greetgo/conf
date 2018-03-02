@@ -1,10 +1,13 @@
 package kz.greetgo.conf.type_manager;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.ConfigLine;
 import kz.greetgo.conf.hot.ConvertingError;
-import kz.greetgo.conf.hot.LineHibernate;
+import kz.greetgo.conf.hot.LineStructure;
+import kz.greetgo.conf.hot.ReadElement;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -38,29 +41,13 @@ public class TypeManagerPrimitive implements TypeManager {
   }
 
   @Override
-  public List<LineHibernate> createLineHibernateList(String topFieldName, Object defaultValue, String description) {
-    return Collections.singletonList(new LineHibernate() {
-      @Override
-      public String fullName() {
-        return topFieldName;
-      }
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description) {
+    List<ReadElement> readElementList = new ArrayList<>();
+    List<ConfigLine> configLineList = new ArrayList<>();
 
-      Object value = defaultValue;
-      boolean hasStoredValue = false;
+    final Object[] value = new Object[]{defaultValue};
 
-      @Override
-      public void setStoredValue(String strValue, boolean commented) {
-        hasStoredValue = true;
-        if (!commented) try {
-          value = ConfUtil.convertToType(strValue, type);
-        } catch (ConvertingError ignore) {}
-      }
-
-      @Override
-      public boolean isValueSource() {
-        return true;
-      }
-
+    readElementList.add(new ReadElement() {
       @Override
       public String fieldName() {
         return topFieldName;
@@ -68,17 +55,29 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public Object fieldValue() {
-        return value;
+        return value[0];
+      }
+    });
+
+    configLineList.add(new ConfigLine() {
+      boolean isStored = false;
+
+      @Override
+      public String fullName() {
+        return topFieldName;
       }
 
       @Override
-      public boolean hasStoredValue() {
-        return hasStoredValue;
+      public void setStoredValue(String strValue, boolean commented) {
+        isStored = true;
+        if (!commented) try {
+          value[0] = ConfUtil.convertToType(strValue, type);
+        } catch (ConvertingError ignore) {}
       }
 
       @Override
-      public boolean hasContent() {
-        return true;
+      public boolean isStored() {
+        return isStored;
       }
 
       @Override
@@ -91,5 +90,7 @@ public class TypeManagerPrimitive implements TypeManager {
         return defaultValue == null ? "" : "" + defaultValue;
       }
     });
+
+    return new LineStructure(readElementList, configLineList);
   }
 }
