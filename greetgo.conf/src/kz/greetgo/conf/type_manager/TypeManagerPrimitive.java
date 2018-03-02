@@ -87,8 +87,8 @@ public class TypeManagerPrimitive implements TypeManager {
       }
 
       @Override
-      public String getStringDefaultValue() {
-        return defaultValue == null ? null : "" + defaultValue;
+      public String getNotNullDefaultStringValue() {
+        return defaultValue == null ? "" : "" + defaultValue;
       }
     });
   }

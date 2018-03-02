@@ -70,5 +70,5 @@ public interface LineHibernate {
    * Предоставляет значение по-умолчанию в строковом представлении
    * @return значение по-умолчанию в строковом представлении
    */
-  String getStringDefaultValue();
+  String getNotNullDefaultStringValue();
 }

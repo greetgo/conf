@@ -18,7 +18,7 @@ class LoadingLines {
     this.fileDescription = fileDescription;
   }
 
-  private final LinkedHashMap<String, LineHibernate> lineList = new LinkedHashMap<>();
+  final LinkedHashMap<String, LineHibernate> lineList = new LinkedHashMap<>();
 
   private final List<String> realLines = new ArrayList<>();
 
@@ -125,7 +125,7 @@ class LoadingLines {
         if (description != null) for (String s : description.split("\n")) {
           lines.add("# " + s.trim());
         }
-        lines.add(line.fullName() + "=" + line.getStringDefaultValue());
+        lines.add(line.fullName() + "=" + line.getNotNullDefaultStringValue());
       }
 
     }

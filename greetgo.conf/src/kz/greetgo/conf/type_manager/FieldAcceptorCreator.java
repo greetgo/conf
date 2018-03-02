@@ -1,6 +1,7 @@
 package kz.greetgo.conf.type_manager;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.Description;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static kz.greetgo.conf.ConfUtil.concatNewLine;
 
 public class FieldAcceptorCreator {
   private Class<?> type;
@@ -39,6 +42,7 @@ public class FieldAcceptorCreator {
   private Map<String, Getter> getterMap = new LinkedHashMap<>();
   private Map<String, Setter> setterMap = new LinkedHashMap<>();
   private Map<String, Class<?>> typeMap = new LinkedHashMap<>();
+  private Map<String, String> descriptionMap = new LinkedHashMap<>();
 
   private List<FieldAcceptor> create() {
 
@@ -47,6 +51,9 @@ public class FieldAcceptorCreator {
 
     fillGetterMapFromGetMethods();
     fillSetterMapFromSetMethods();
+
+    Description d = type.getAnnotation(Description.class);
+    final String typeDescription = d == null ? null : d.value();
 
     List<FieldAcceptor> ret = new ArrayList<>();
 
@@ -60,10 +67,16 @@ public class FieldAcceptorCreator {
         final Getter getter = getterMap.get(name);
         final Setter setter = setterMap.get(name);
         final Class<?> type = typeMap.get(name);
+        final String description = concatNewLine(typeDescription, descriptionMap.get(name));
 
         @Override
         public String getStrValue(Object object) {
           return ConfUtil.convertToStr(getter.get(object));
+        }
+
+        @Override
+        public String description() {
+          return description;
         }
 
         @Override
@@ -72,7 +85,6 @@ public class FieldAcceptorCreator {
         }
       });
     }
-
 
     return ret;
   }
@@ -94,6 +106,12 @@ public class FieldAcceptorCreator {
           throw new RuntimeException(e);
         }
       });
+      {
+        Description d = field.getAnnotation(Description.class);
+        if (d != null) {
+          descriptionMap.put(field.getName(), d.value());
+        }
+      }
     }
   }
 
@@ -140,13 +158,23 @@ public class FieldAcceptorCreator {
         }
       }
 
-      if (name != null) getterMap.put(name, object -> {
-        try {
-          return method.invoke(object);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-          throw new RuntimeException(e);
+      if (name != null) {
+        getterMap.put(name, object -> {
+          try {
+            return method.invoke(object);
+          } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+          }
+        });
+
+        {
+          Description d = method.getAnnotation(Description.class);
+          if (d != null) {
+            descriptionMap.put(name, d.value());
+          }
         }
-      });
+
+      }
     }
   }
 
@@ -173,6 +201,13 @@ public class FieldAcceptorCreator {
             throw new RuntimeException(e);
           }
         });
+
+        if (!descriptionMap.containsKey(name)) {
+          Description d = method.getAnnotation(Description.class);
+          if (d != null) {
+            descriptionMap.put(name, d.value());
+          }
+        }
 
       }
 

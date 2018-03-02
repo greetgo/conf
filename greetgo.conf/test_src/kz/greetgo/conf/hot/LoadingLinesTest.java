@@ -183,4 +183,212 @@ public class LoadingLinesTest {
       "# Описание топ-поля\n" +
       "topField1.subField2=Привет Харальд\n");
   }
+
+  @Test
+  public void testNullStringField() throws Exception {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, null);
+    ll.setContentExists(false);
+
+    ll.putDefinition(new ElementDefinition("field", String.class, null, null));
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target).contains(MapEntry.entry("field", null));
+
+    assertThat(ll.content()).isEqualTo("\n" +
+      "#\n" +
+      "# Created at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "\n" +
+      "field=\n");
+  }
+
+  @Test
+  public void testNullIntBoxedField() throws Exception {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, null);
+    ll.setContentExists(false);
+
+    ll.putDefinition(new ElementDefinition("field", Integer.class, null, null));
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target).contains(MapEntry.entry("field", null));
+
+    assertThat(ll.content()).isEqualTo("\n" +
+      "#\n" +
+      "# Created at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "\n" +
+      "field=\n");
+  }
+
+  @Description("class about\nmore class about")
+  public static class ClassWithDescriptions {
+    @SuppressWarnings("unused")
+    @Description("about field1\nabout field1 more 1")
+    public String field1;
+
+    private String field2;
+
+    @SuppressWarnings("unused")
+    @Description("about field2 from getter\nabout field2 more 2")
+    public String getField2() {
+      return field2;
+    }
+
+    @SuppressWarnings("unused")
+    @Description("about field2 from setter\nabout field2 more 3")
+    public void setField2(String field2) {
+      this.field2 = field2;
+    }
+
+    public String field3;
+
+    @SuppressWarnings("unused")
+    @Description("about field3 from setter\nabout field3 more 4")
+    public void setField3(String field3) {
+      this.field3 = field3;
+    }
+
+    @Description("about field4 from field\nabout field4 more 5")
+    public String field4;
+
+    @SuppressWarnings("unused")
+    @Description("about field4 from setter\nabout field4 more 6")
+    public void setField4(String field4) {
+      this.field4 = field4;
+    }
+  }
+
+  @Test
+  public void testClassFieldDescription() throws Exception {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Это заголовок\nвсего файла");
+    ll.setContentExists(false);
+
+    ll.putDefinition(new ElementDefinition("topField1", ClassWithDescriptions.class, 10, "Описание топ-поля 1\nещё одна строка описания"));
+    ll.putDefinition(new ElementDefinition("topField2", ClassWithDescriptions.class, 10, "Описание топ-поля 2\nещё одна строка описания"));
+
+    assertThat(ll.lineList.get("topField1.field1").description()).isEqualTo(
+      "Описание топ-поля 1\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field1\n" +
+      "about field1 more 1"
+    );
+
+    assertThat(ll.lineList.get("topField1.field2").description()).isEqualTo(
+      "Описание топ-поля 1\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field2 from getter\n" +
+      "about field2 more 2"
+    );
+
+    assertThat(ll.lineList.get("topField1.field3").description()).isEqualTo(
+      "Описание топ-поля 1\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field3 from setter\n" +
+      "about field3 more 4"
+    );
+
+    assertThat(ll.lineList.get("topField1.field4").description()).isEqualTo(
+      "Описание топ-поля 1\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field4 from field\n" +
+      "about field4 more 5"
+    );
+
+    assertThat(ll.lineList.get("topField2.field1").description()).isEqualTo(
+      "Описание топ-поля 2\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field1\n" +
+      "about field1 more 1"
+    );
+
+    assertThat(ll.lineList.get("topField2.field2").description()).isEqualTo(
+      "Описание топ-поля 2\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field2 from getter\n" +
+      "about field2 more 2"
+    );
+
+    assertThat(ll.lineList.get("topField2.field3").description()).isEqualTo(
+      "Описание топ-поля 2\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field3 from setter\n" +
+      "about field3 more 4"
+    );
+
+    assertThat(ll.lineList.get("topField2.field4").description()).isEqualTo(
+      "Описание топ-поля 2\n" +
+      "ещё одна строка описания\n" +
+      "class about\n" +
+      "more class about\n" +
+      "about field4 from field\n" +
+      "about field4 more 5"
+    );
+
+  }
+
+  @Test
+  public void testCutEmptyLinesAtEndOfFile() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, null);
+    ll.setContentExists(true);
+
+    ll.putDefinition(new ElementDefinition("field1", int.class, 10, null));
+    ll.putDefinition(new ElementDefinition("field2", int.class, 20, null));
+    ll.putDefinition(new ElementDefinition("field3", int.class, 30, null));
+
+    ll.readStorageLine("field1 = 100");
+    ll.readStorageLine("    ");
+    ll.readStorageLine(" field2 = 200");
+    ll.readStorageLine("   ");
+    ll.readStorageLine("    ");
+    ll.readStorageLine("     ");
+    ll.readStorageLine("      ");
+    ll.readStorageLine("       ");
+    ll.readStorageLine("        ");
+    ll.readStorageLine("         ");
+    ll.readStorageLine("          ");
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(ll.content()).isEqualTo("field1 = 100\n" +
+      "    \n" +
+      " field2 = 200\n" +
+      "\n" +
+      "#\n" +
+      "# Added at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "\n" +
+      "field3=30\n");
+  }
 }

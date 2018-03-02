@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import static kz.greetgo.conf.ConfUtil.concatNewLine;
+import static kz.greetgo.conf.ConfUtil.nullToEmpty;
+
 public class TypeManagerClass implements TypeManager {
   public final Class<?> type;
 
@@ -84,12 +87,12 @@ public class TypeManagerClass implements TypeManager {
 
         @Override
         public String description() {
-          return description;
+          return concatNewLine(description, fieldAcceptor.description());
         }
 
         @Override
-        public String getStringDefaultValue() {
-          return fieldAcceptor.getStrValue(defObject);
+        public String getNotNullDefaultStringValue() {
+          return nullToEmpty(fieldAcceptor.getStrValue(defObject));
         }
       });
     }
@@ -136,7 +139,7 @@ public class TypeManagerClass implements TypeManager {
       }
 
       @Override
-      public String getStringDefaultValue() {
+      public String getNotNullDefaultStringValue() {
         throw new RuntimeException("Это вызывать нельзя");
       }
     });

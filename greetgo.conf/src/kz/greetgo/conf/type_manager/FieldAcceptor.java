@@ -6,4 +6,6 @@ public interface FieldAcceptor {
   void setStrValue(Object object, String strValue);
 
   String getStrValue(Object object);
+
+  String description();
 }

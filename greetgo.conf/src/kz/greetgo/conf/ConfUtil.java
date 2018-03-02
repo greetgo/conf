@@ -168,6 +168,16 @@ public class ConfUtil {
     return "" + value;
   }
 
+  public static String nullToEmpty(String str) {
+    return str == null ? "" : str;
+  }
+
+  public static String concatNewLine(String s1, String s2) {
+    if (s1 == null) return s2;
+    if (s2 == null) return s1;
+    return s1 + "\n" + s2;
+  }
+
   private static final class PatternFormat {
     final Pattern pattern;
     final SimpleDateFormat format;
