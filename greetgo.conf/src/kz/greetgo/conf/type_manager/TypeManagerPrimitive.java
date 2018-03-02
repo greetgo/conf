@@ -25,11 +25,6 @@ public class TypeManagerPrimitive implements TypeManager {
     return defaultValue;
   }
 
-  @Override
-  public Class<?> type() {
-    return type;
-  }
-
   public static boolean forMe(Class<?> type) {
     return type.isPrimitive() || ConfUtil.isWrapper(type) || type == String.class;
   }

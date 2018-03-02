@@ -1,6 +1,5 @@
 package kz.greetgo.conf.type_manager;
 
-import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.hot.CannotWorkWithType;
 
 import java.lang.reflect.Modifier;

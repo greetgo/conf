@@ -3,8 +3,6 @@ package kz.greetgo.conf.hot;
 import kz.greetgo.conf.type_manager.TypeManager;
 import kz.greetgo.conf.type_manager.TypeManagerCache;
 
-import java.util.List;
-
 /**
  * Definition of config element
  */

@@ -29,11 +29,6 @@ public class TypeManagerClass implements TypeManager {
   }
 
   @Override
-  public Class<?> type() {
-    return type;
-  }
-
-  @Override
   public Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer) {
     //simple return null, because default value would be get by method #newDefaultValue(Object)
     return null;
