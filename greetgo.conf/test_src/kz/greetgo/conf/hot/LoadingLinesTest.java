@@ -20,7 +20,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(new ElementDefinition("field1", int.class, 10, "первая строка"));
+    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 10, "первая строка"));
 
     ll.readStorageLine("    field1 = 799");
 
@@ -41,7 +41,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(new ElementDefinition("field1", int.class, 10, "первая строка"));
+    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 10, "первая строка"));
 
     ll.readStorageLine("  #  field1 = 799");
 
@@ -62,7 +62,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(false);
 
-    ll.putDefinition(new ElementDefinition("field1", int.class, 37, "первая строка"));
+    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 37, "первая строка"));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -95,7 +95,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(new ElementDefinition("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
+    ll.putDefinition(ElementDefinition.aNew("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
 
     ll.readStorageLine("    topField1.subField1 = 2008");
     ll.readStorageLine("    topField1.subField2 = Понедельник начинается в  субботу   ");
@@ -124,7 +124,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(new ElementDefinition("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
+    ll.putDefinition(ElementDefinition.aNew("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
 
     ll.readStorageLine("    topField1.subField1 = 2008");
 
@@ -157,7 +157,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Это заголовок\nвсего файла");
     ll.setContentExists(false);
 
-    ll.putDefinition(new ElementDefinition("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
+    ll.putDefinition(ElementDefinition.aNew("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -192,7 +192,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, null);
     ll.setContentExists(false);
 
-    ll.putDefinition(new ElementDefinition("field", String.class, null, null));
+    ll.putDefinition(ElementDefinition.aNew("field", String.class, null, null));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -215,7 +215,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, null);
     ll.setContentExists(false);
 
-    ll.putDefinition(new ElementDefinition("field", Integer.class, null, null));
+    ll.putDefinition(ElementDefinition.aNew("field", Integer.class, null, null));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -276,8 +276,8 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Это заголовок\nвсего файла");
     ll.setContentExists(false);
 
-    ll.putDefinition(new ElementDefinition("topField1", ClassWithDescriptions.class, 10, "Описание топ-поля 1\nещё одна строка описания"));
-    ll.putDefinition(new ElementDefinition("topField2", ClassWithDescriptions.class, 10, "Описание топ-поля 2\nещё одна строка описания"));
+    ll.putDefinition(ElementDefinition.aNew("topField1", ClassWithDescriptions.class, 10, "Описание топ-поля 1\nещё одна строка описания"));
+    ll.putDefinition(ElementDefinition.aNew("topField2", ClassWithDescriptions.class, 10, "Описание топ-поля 2\nещё одна строка описания"));
 
     assertThat(ll.lineList.get("topField1.field1").description()).isEqualTo(
       "Описание топ-поля 1\n" +
@@ -362,9 +362,9 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, null);
     ll.setContentExists(true);
 
-    ll.putDefinition(new ElementDefinition("field1", int.class, 10, null));
-    ll.putDefinition(new ElementDefinition("field2", int.class, 20, null));
-    ll.putDefinition(new ElementDefinition("field3", int.class, 30, null));
+    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 10, null));
+    ll.putDefinition(ElementDefinition.aNew("field2", int.class, 20, null));
+    ll.putDefinition(ElementDefinition.aNew("field3", int.class, 30, null));
 
     ll.readStorageLine("field1 = 100");
     ll.readStorageLine("    ");

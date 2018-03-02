@@ -29,7 +29,11 @@ public class ElementDefinition {
    */
   public final String description;
 
-  public ElementDefinition(String name, TypeManager typeManager, Object defaultValue, String description) {
+  public static ElementDefinition aNew(String name, TypeManager typeManager, Object defaultValue, String description) {
+    return new ElementDefinition(name, typeManager, defaultValue, description);
+  }
+
+  private ElementDefinition(String name, TypeManager typeManager, Object defaultValue, String description) {
     if (defaultValue instanceof TypeManager) throw new IllegalArgumentException("defaultValue cannot be TypeManager");
     this.name = name;
     this.typeManager = typeManager;
@@ -37,7 +41,11 @@ public class ElementDefinition {
     this.description = description;
   }
 
-  public ElementDefinition(String name, Class<?> type, Object defaultValue, String description) {
+  public static ElementDefinition aNew(String name, Class<?> type, Object defaultValue, String description) {
+    return new ElementDefinition(name, type, defaultValue, description);
+  }
+
+  private ElementDefinition(String name, Class<?> type, Object defaultValue, String description) {
     this(name, TypeManagerCache.getOrCreate(type), defaultValue, description);
   }
 
