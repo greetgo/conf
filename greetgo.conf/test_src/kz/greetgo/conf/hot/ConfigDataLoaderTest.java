@@ -454,7 +454,7 @@ public class ConfigDataLoaderTest {
     assertThat(element.field1).isEqualTo(123);
     assertThat(element.field2).isEqualTo("Hello");
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.contentMap.get(location);
     assertThat(content).isEqualTo("#left content\n" +
       "\n" +
       "#\n" +
@@ -463,6 +463,8 @@ public class ConfigDataLoaderTest {
       "\n" +
       "# some info\n" +
       "element.field1=123\n" +
+      "\n" +
+      "# some info\n" +
       "element.field2=Hello\n");
   }
 }

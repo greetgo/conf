@@ -27,9 +27,9 @@ public class LoadingLinesTest {
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
 
-    assertThat(ll.content()).isEqualTo("    field1 = 799");
-
     assertThat(target).contains(MapEntry.entry("field1", 799));
+
+    assertThat(ll.content()).isEqualTo("    field1 = 799\n");
   }
 
   @Test
@@ -48,7 +48,7 @@ public class LoadingLinesTest {
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
 
-    assertThat(ll.content()).isEqualTo("  #  field1 = 799");
+    assertThat(ll.content()).isEqualTo("  #  field1 = 799\n");
 
     assertThat(target).contains(MapEntry.entry("field1", 10));
   }
@@ -76,7 +76,7 @@ public class LoadingLinesTest {
       "#\n" +
       "\n" +
       "# первая строка\n" +
-      "field1=37");
+      "field1=37\n");
 
     assertThat(target).contains(MapEntry.entry("field1", 37));
   }
@@ -112,7 +112,7 @@ public class LoadingLinesTest {
     assertThat(element.subField2).isEqualTo("Понедельник начинается в  субботу");
 
     assertThat(ll.content()).isEqualTo("    topField1.subField1 = 2008\n" +
-      "    topField1.subField2 = Понедельник начинается в  субботу   ");
+      "    topField1.subField2 = Понедельник начинается в  субботу   \n");
   }
 
   @Test
@@ -145,7 +145,7 @@ public class LoadingLinesTest {
       "#\n" +
       "\n" +
       "# Описание топ-поля\n" +
-      "topField1.subField2=Привет Харальд");
+      "topField1.subField2=Привет Харальд\n");
   }
 
   @Test
@@ -181,6 +181,6 @@ public class LoadingLinesTest {
       "topField1.subField1=796\n" +
       "\n" +
       "# Описание топ-поля\n" +
-      "topField1.subField2=Привет Харальд");
+      "topField1.subField2=Привет Харальд\n");
   }
 }
