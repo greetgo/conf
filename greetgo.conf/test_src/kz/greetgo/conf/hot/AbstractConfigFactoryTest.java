@@ -65,10 +65,6 @@ public class AbstractConfigFactoryTest {
       t.join();
     }
 
-//    System.out.println("callCountOfLoadConfigContent = " + testing.cs.callCountOfLoadConfigContent);
-//    System.out.println("callCountOfIsConfigContentExists = " + testing.cs.callCountOfIsConfigContentExists);
-//    System.out.println("callCountOfSaveConfigContent = " + testing.cs.callCountOfSaveConfigContent);
-
     assertThat(testing.cs.callCountOfLoadConfigContent.get()).isEqualTo(20);
     assertThat(testing.cs.callCountOfIsConfigContentExists.get()).isEqualTo(22);
     assertThat(testing.cs.callCountOfSaveConfigContent.get()).isEqualTo(2);

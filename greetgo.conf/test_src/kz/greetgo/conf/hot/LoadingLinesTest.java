@@ -373,7 +373,7 @@ public class LoadingLinesTest {
     ll.readStorageLine("    ");
     ll.readStorageLine("     ");
     ll.readStorageLine("      ");
-    ll.readStorageLine("       ");
+    ll.readStorageLine("   \t  ");
     ll.readStorageLine("        ");
     ll.readStorageLine("         ");
     ll.readStorageLine("          ");
