@@ -58,7 +58,7 @@ class DefinitionCreator {
     TypeManager typeManager = TypeManagerCache.getOrCreate(type);
     Object defaultValue = typeManager.extractDefaultValue(method.getAnnotations(), parameterReplacer);
     String description = extractDescription(method);
-    return ElementDefinition.aNew(name, typeManager, defaultValue, description);
+    return ElementDefinition.newOne(name, typeManager, defaultValue, description);
   }
 
   private static String extractDescription(Method method) {

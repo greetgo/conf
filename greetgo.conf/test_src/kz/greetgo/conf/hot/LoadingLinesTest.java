@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -20,7 +21,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 10, "первая строка"));
+    ll.putDefinition(ElementDefinition.newOne("field1", int.class, 10, "первая строка"));
 
     ll.readStorageLine("    field1 = 799");
 
@@ -41,7 +42,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 10, "первая строка"));
+    ll.putDefinition(ElementDefinition.newOne("field1", int.class, 10, "первая строка"));
 
     ll.readStorageLine("  #  field1 = 799");
 
@@ -62,7 +63,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 37, "первая строка"));
+    ll.putDefinition(ElementDefinition.newOne("field1", int.class, 37, "первая строка"));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -95,7 +96,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.aNew("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
+    ll.putDefinition(ElementDefinition.newOne("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
 
     ll.readStorageLine("    topField1.subField1 = 2008");
     ll.readStorageLine("    topField1.subField2 = Понедельник начинается в  субботу   ");
@@ -124,7 +125,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Hello world\nand more");
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.aNew("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
+    ll.putDefinition(ElementDefinition.newOne("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
 
     ll.readStorageLine("    topField1.subField1 = 2008");
 
@@ -157,7 +158,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Это заголовок\nвсего файла");
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.aNew("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
+    ll.putDefinition(ElementDefinition.newOne("topField1", ConfigElementClass.class, 10, "Описание топ-поля"));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -192,7 +193,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, null);
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.aNew("field", String.class, null, null));
+    ll.putDefinition(ElementDefinition.newOne("field", String.class, null, null));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -215,7 +216,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, null);
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.aNew("field", Integer.class, null, null));
+    ll.putDefinition(ElementDefinition.newOne("field", Integer.class, null, null));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
@@ -276,79 +277,79 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Это заголовок\nвсего файла");
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.aNew("topField1", ClassWithDescriptions.class, 10, "Описание топ-поля 1\nещё одна строка описания"));
-    ll.putDefinition(ElementDefinition.aNew("topField2", ClassWithDescriptions.class, 10, "Описание топ-поля 2\nещё одна строка описания"));
+    ll.putDefinition(ElementDefinition.newOne("topField1", ClassWithDescriptions.class, 10, "Описание топ-поля 1\nещё одна строка описания"));
+    ll.putDefinition(ElementDefinition.newOne("topField2", ClassWithDescriptions.class, 10, "Описание топ-поля 2\nещё одна строка описания"));
 
     assertThat(ll.configLineMap.get("topField1.field1").description()).isEqualTo(
       "Описание топ-поля 1\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field1\n" +
-      "about field1 more 1"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field1\n" +
+        "about field1 more 1"
     );
 
     assertThat(ll.configLineMap.get("topField1.field2").description()).isEqualTo(
       "Описание топ-поля 1\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field2 from getter\n" +
-      "about field2 more 2"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field2 from getter\n" +
+        "about field2 more 2"
     );
 
     assertThat(ll.configLineMap.get("topField1.field3").description()).isEqualTo(
       "Описание топ-поля 1\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field3 from setter\n" +
-      "about field3 more 4"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field3 from setter\n" +
+        "about field3 more 4"
     );
 
     assertThat(ll.configLineMap.get("topField1.field4").description()).isEqualTo(
       "Описание топ-поля 1\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field4 from field\n" +
-      "about field4 more 5"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field4 from field\n" +
+        "about field4 more 5"
     );
 
     assertThat(ll.configLineMap.get("topField2.field1").description()).isEqualTo(
       "Описание топ-поля 2\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field1\n" +
-      "about field1 more 1"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field1\n" +
+        "about field1 more 1"
     );
 
     assertThat(ll.configLineMap.get("topField2.field2").description()).isEqualTo(
       "Описание топ-поля 2\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field2 from getter\n" +
-      "about field2 more 2"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field2 from getter\n" +
+        "about field2 more 2"
     );
 
     assertThat(ll.configLineMap.get("topField2.field3").description()).isEqualTo(
       "Описание топ-поля 2\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field3 from setter\n" +
-      "about field3 more 4"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field3 from setter\n" +
+        "about field3 more 4"
     );
 
     assertThat(ll.configLineMap.get("topField2.field4").description()).isEqualTo(
       "Описание топ-поля 2\n" +
-      "ещё одна строка описания\n" +
-      "class about\n" +
-      "more class about\n" +
-      "about field4 from field\n" +
-      "about field4 more 5"
+        "ещё одна строка описания\n" +
+        "class about\n" +
+        "more class about\n" +
+        "about field4 from field\n" +
+        "about field4 more 5"
     );
 
   }
@@ -362,9 +363,9 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, null);
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.aNew("field1", int.class, 10, null));
-    ll.putDefinition(ElementDefinition.aNew("field2", int.class, 20, null));
-    ll.putDefinition(ElementDefinition.aNew("field3", int.class, 30, null));
+    ll.putDefinition(ElementDefinition.newOne("field1", int.class, 10, null));
+    ll.putDefinition(ElementDefinition.newOne("field2", int.class, 20, null));
+    ll.putDefinition(ElementDefinition.newOne("field3", int.class, 30, null));
 
     ll.readStorageLine("field1 = 100");
     ll.readStorageLine("    ");
@@ -390,5 +391,93 @@ public class LoadingLinesTest {
       "#\n" +
       "\n" +
       "field3=30\n");
+  }
+
+  public static class ForList {
+    public int field1 = 333;
+    public int field2 = 444;
+  }
+
+  @Test
+  public void testList_halfExists() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Описание поля");
+    ll.setContentExists(true);
+
+    ll.putDefinition(ElementDefinition.newList("topFieldA", ForList.class, null, "описание списка A"));
+    ll.putDefinition(ElementDefinition.newList("topFieldB", ForList.class, null, "описание списка B"));
+
+    ll.readStorageLine("topFieldA.count = 3");
+    ll.readStorageLine("topFieldA.0.field1 = 100");
+    ll.readStorageLine("topFieldA.0.field2 = 200");
+    ll.readStorageLine("topFieldA.1.field1 = 1000");
+    ll.readStorageLine("topFieldA.1.field2 = 2000");
+
+    ll.readStorageLine("topFieldB.count = 2");
+    ll.readStorageLine("topFieldB.0.field1 = 1700");
+    ll.readStorageLine("topFieldB.0.field2 = 2700");
+    ll.readStorageLine("topFieldB.1.field1 = 17000");
+    ll.readStorageLine("topFieldB.1.field2 = 27000");
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target.get("topFieldA")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topFieldA"))).hasSize(3);
+    assertThat(((List) target.get("topFieldA")).get(0)).isInstanceOf(ForList.class);
+    assertThat(((List) target.get("topFieldA")).get(1)).isInstanceOf(ForList.class);
+    assertThat(((List) target.get("topFieldA")).get(2)).isInstanceOf(ForList.class);
+    //noinspection unchecked
+    List<ForList> topFieldA = (List<ForList>) target.get("topFieldA");
+    assertThat(topFieldA.get(0).field1).isEqualTo(100);
+    assertThat(topFieldA.get(0).field2).isEqualTo(200);
+    assertThat(topFieldA.get(1).field1).isEqualTo(1000);
+    assertThat(topFieldA.get(1).field2).isEqualTo(2000);
+    assertThat(topFieldA.get(2).field1).isEqualTo(333);
+    assertThat(topFieldA.get(2).field2).isEqualTo(444);
+
+    assertThat(target.get("topFieldB")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topFieldB"))).hasSize(2);
+    assertThat(((List) target.get("topFieldB")).get(0)).isInstanceOf(ForList.class);
+    assertThat(((List) target.get("topFieldB")).get(1)).isInstanceOf(ForList.class);
+    assertThat(((List) target.get("topFieldB")).get(2)).isInstanceOf(ForList.class);
+    //noinspection unchecked
+    List<ForList> topFieldB = (List<ForList>) target.get("topFieldB");
+    assertThat(topFieldB.get(0).field1).isEqualTo(1700);
+    assertThat(topFieldB.get(0).field2).isEqualTo(2700);
+    assertThat(topFieldB.get(1).field1).isEqualTo(17000);
+    assertThat(topFieldB.get(1).field2).isEqualTo(27000);
+
+    assertThat(ll.configLineMap.get("topFieldA.0.field1").description()).isEqualTo("a");
+
+    assertThat(ll.configLineMap.get("topFieldB.1.field2").description()).isEqualTo("a");
+  }
+
+  @Test
+  public void testList_new() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Описание поля");
+    ll.setContentExists(false);
+
+    ll.putDefinition(ElementDefinition.newList("topField", ForList.class, null, "описание списка"));
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target.get("topField")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topField"))).hasSize(1);
+    assertThat(((List) target.get("topField")).get(0)).isInstanceOf(ForList.class);
+    //noinspection unchecked
+    List<ForList> topField = (List<ForList>) target.get("topField");
+    assertThat(topField.get(0).field1).isEqualTo(333);
   }
 }
