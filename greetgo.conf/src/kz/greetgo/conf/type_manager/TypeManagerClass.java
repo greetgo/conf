@@ -1,13 +1,19 @@
 package kz.greetgo.conf.type_manager;
 
+import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.hot.ConfigLine;
+import kz.greetgo.conf.hot.HotConfigConstants;
 import kz.greetgo.conf.hot.LineStructure;
 import kz.greetgo.conf.hot.ReadElement;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static kz.greetgo.conf.ConfUtil.concatNewLine;
 import static kz.greetgo.conf.ConfUtil.nullToEmpty;
@@ -35,13 +41,40 @@ public class TypeManagerClass implements TypeManager {
   }
 
   @Override
-  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description) {
-    List<ReadElement> readElementList = new ArrayList<>();
-
-    final Object object[] = new Object[]{newDefaultValue(defaultValue)};
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, boolean isList) {
     final Object defObject = newDefaultValue(defaultValue);
 
-    readElementList.add(new ReadElement() {
+    class Data {
+      final List<Object> list = new ArrayList<>();
+
+      Object getOrCreate(int index) {
+        while (index >= list.size()) {
+          list.add(newDefaultValue(defaultValue));
+        }
+        return list.get(index);
+      }
+
+      List<Object> listValue() {
+        return new ArrayList<>(list);
+      }
+
+      final Set<String> storeIsTrue = new HashSet<>();
+
+      void markStored(String fullName) {
+        storeIsTrue.add(fullName);
+      }
+
+      boolean isStored(String fullName) {
+        return storeIsTrue.contains(fullName);
+      }
+
+    }
+
+    final Data d = new Data();
+
+    d.getOrCreate(0);
+
+    final ReadElement readElement = new ReadElement() {
       @Override
       public String fieldName() {
         return topFieldName;
@@ -49,44 +82,90 @@ public class TypeManagerClass implements TypeManager {
 
       @Override
       public Object fieldValue() {
-        return object[0];
+        return isList ? d.listValue() : d.getOrCreate(0);
       }
-    });
+
+      @Override
+      public List<ConfigLine> createListConfigLines(int index) {
+        d.getOrCreate(index);
+        return FieldAcceptorCreator.createList(type).stream().map(fieldAcceptor -> new ConfigLine() {
+
+          @Override
+          public String fullName() {
+            return isList
+              ? topFieldName + "." + index + "." + fieldAcceptor.name()
+              : topFieldName + "." + fieldAcceptor.name();
+          }
+
+          @Override
+          public List<ConfigLine> setStoredValue(String strValue, boolean commented) {
+            d.markStored(fullName());
+            if (!commented) fieldAcceptor.setStrValue(d.getOrCreate(isList ? index : 0), strValue);
+            return Collections.emptyList();
+          }
+
+          @Override
+          public boolean isStored() {
+            return d.isStored(fullName());
+          }
+
+          @Override
+          public String description() {
+            return concatNewLine(description, fieldAcceptor.description());
+          }
+
+          @Override
+          public String getNotNullDefaultStringValue() {
+            return nullToEmpty(fieldAcceptor.getStrValue(defObject));
+          }
+        }).collect(Collectors.toList());
+      }
+    };
 
     List<ConfigLine> configLineList = new ArrayList<>();
 
-    for (FieldAcceptor fieldAcceptor : FieldAcceptorCreator.createList(type)) {
-      configLineList.add(new ConfigLine() {
-        boolean isStored = false;
+    if (isList) configLineList.add(new ConfigLine() {
+      @Override
+      public String fullName() {
+        return topFieldName + "." + HotConfigConstants.COUNT_SUFFIX;
+      }
 
-        @Override
-        public String fullName() {
-          return topFieldName + "." + fieldAcceptor.name();
+      @Override
+      public List<ConfigLine> setStoredValue(String value, boolean commented) {
+        if (commented) return null;
+        int count = (int) ConfUtil.convertToType(value, int.class);
+        d.markStored(fullName());
+
+        List<ConfigLine> ret = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+          ret.addAll(readElement.createListConfigLines(i));
         }
 
-        @Override
-        public void setStoredValue(String strValue, boolean commented) {
-          isStored = true;
-          if (!commented) fieldAcceptor.setStrValue(object[0], strValue);
-        }
+        return ret;
+      }
 
-        @Override
-        public boolean isStored() {
-          return isStored;
-        }
+      @Override
+      public boolean isStored() {
+        return d.isStored(fullName());
+      }
 
-        @Override
-        public String description() {
-          return concatNewLine(description, fieldAcceptor.description());
-        }
+      @Override
+      public String description() {
+        return "Количество элементов в " + topFieldName;
+      }
 
-        @Override
-        public String getNotNullDefaultStringValue() {
-          return nullToEmpty(fieldAcceptor.getStrValue(defObject));
-        }
-      });
-    }
+      @Override
+      public String getNotNullDefaultStringValue() {
+        return "1";
+      }
+    });
 
-    return new LineStructure(readElementList, configLineList);
+    configLineList.addAll(readElement.createListConfigLines(0));
+
+    return new LineStructure(
+      Collections.singletonList(readElement),
+      configLineList
+    );
   }
 }

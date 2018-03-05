@@ -36,38 +36,60 @@ public class TypeManagerPrimitive implements TypeManager {
   }
 
   @Override
-  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description) {
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, boolean isList) {
     List<ReadElement> readElementList = new ArrayList<>();
     List<ConfigLine> configLineList = new ArrayList<>();
 
-    final Object[] value = new Object[]{defaultValue};
+    class Data {
+      List<Object> list = new ArrayList<>();
 
-    readElementList.add(new ReadElement() {
-      @Override
-      public String fieldName() {
-        return topFieldName;
+      void setValue(int index, Object value) {
+        assertExists(index);
+        list.set(index, value);
       }
 
-      @Override
-      public Object fieldValue() {
-        return value[0];
+      private void assertExists(int index) {
+        while (list.size() <= index) {
+          list.add(defaultValue);
+        }
       }
-    });
 
-    configLineList.add(new ConfigLine() {
+      List list() {
+        return new ArrayList<>(list);
+      }
+
+      Object firstValue() {
+        if (list.size() == 0) return defaultValue;
+        return list.get(0);
+      }
+    }
+
+    final Data d = new Data();
+
+    class LocalConfigLine implements ConfigLine {
       boolean isStored = false;
+      private int listIndex;
+
+      public LocalConfigLine(int listIndex) {
+        this.listIndex = listIndex;
+      }
+
+      private int index() {
+        return isList ? listIndex : 0;
+      }
 
       @Override
       public String fullName() {
-        return topFieldName;
+        return topFieldName + (isList ? "." + listIndex : "");
       }
 
       @Override
-      public void setStoredValue(String strValue, boolean commented) {
+      public List<ConfigLine> setStoredValue(String strValue, boolean commented) {
         isStored = true;
         if (!commented) try {
-          value[0] = ConfUtil.convertToType(strValue, type);
+          d.setValue(index(), ConfUtil.convertToType(strValue, type));
         } catch (ConvertingError ignore) {}
+        return Collections.emptyList();
       }
 
       @Override
@@ -84,7 +106,26 @@ public class TypeManagerPrimitive implements TypeManager {
       public String getNotNullDefaultStringValue() {
         return defaultValue == null ? "" : "" + defaultValue;
       }
+    }
+
+    readElementList.add(new ReadElement() {
+      @Override
+      public String fieldName() {
+        return topFieldName;
+      }
+
+      @Override
+      public Object fieldValue() {
+        return isList ? d.list() : d.firstValue();
+      }
+
+      @Override
+      public List<ConfigLine> createListConfigLines(int index) {
+        return Collections.singletonList(new LocalConfigLine(index));
+      }
     });
+
+    if (!isList) configLineList.add(new LocalConfigLine(0));
 
     return new LineStructure(readElementList, configLineList);
   }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static kz.greetgo.conf.hot.HotConfigConstants.COUNT_SUFFIX;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class LoadingLinesTest {
@@ -396,6 +397,14 @@ public class LoadingLinesTest {
   public static class ForList {
     public int field1 = 333;
     public int field2 = 444;
+
+    @Override
+    public String toString() {
+      return "ForList{" +
+        "field1=" + field1 +
+        ", field2=" + field2 +
+        '}';
+    }
   }
 
   @Test
@@ -410,13 +419,13 @@ public class LoadingLinesTest {
     ll.putDefinition(ElementDefinition.newList("topFieldA", ForList.class, null, "описание списка A"));
     ll.putDefinition(ElementDefinition.newList("topFieldB", ForList.class, null, "описание списка B"));
 
-    ll.readStorageLine("topFieldA.count = 3");
+    ll.readStorageLine("topFieldA." + COUNT_SUFFIX + " = 3");
     ll.readStorageLine("topFieldA.0.field1 = 100");
     ll.readStorageLine("topFieldA.0.field2 = 200");
     ll.readStorageLine("topFieldA.1.field1 = 1000");
     ll.readStorageLine("topFieldA.1.field2 = 2000");
 
-    ll.readStorageLine("topFieldB.count = 2");
+    ll.readStorageLine("topFieldB." + COUNT_SUFFIX + " = 2");
     ll.readStorageLine("topFieldB.0.field1 = 1700");
     ll.readStorageLine("topFieldB.0.field2 = 2700");
     ll.readStorageLine("topFieldB.1.field1 = 17000");
@@ -445,7 +454,6 @@ public class LoadingLinesTest {
     assertThat(((List) target.get("topFieldB"))).hasSize(2);
     assertThat(((List) target.get("topFieldB")).get(0)).isInstanceOf(ForList.class);
     assertThat(((List) target.get("topFieldB")).get(1)).isInstanceOf(ForList.class);
-    assertThat(((List) target.get("topFieldB")).get(2)).isInstanceOf(ForList.class);
     //noinspection unchecked
     List<ForList> topFieldB = (List<ForList>) target.get("topFieldB");
     assertThat(topFieldB.get(0).field1).isEqualTo(1700);
@@ -453,9 +461,30 @@ public class LoadingLinesTest {
     assertThat(topFieldB.get(1).field1).isEqualTo(17000);
     assertThat(topFieldB.get(1).field2).isEqualTo(27000);
 
-    assertThat(ll.configLineMap.get("topFieldA.0.field1").description()).isEqualTo("a");
+    assertThat(ll.configLineMap.get("topFieldA.0.field1").description()).isEqualTo("описание списка A");
 
-    assertThat(ll.configLineMap.get("topFieldB.1.field2").description()).isEqualTo("a");
+    assertThat(ll.configLineMap.get("topFieldB.1.field2").description()).isEqualTo("описание списка B");
+
+    assertThat(ll.content()).isEqualTo("topFieldA.listElementsCount = 3\n" +
+      "topFieldA.0.field1 = 100\n" +
+      "topFieldA.0.field2 = 200\n" +
+      "topFieldA.1.field1 = 1000\n" +
+      "topFieldA.1.field2 = 2000\n" +
+      "topFieldB.listElementsCount = 2\n" +
+      "topFieldB.0.field1 = 1700\n" +
+      "topFieldB.0.field2 = 2700\n" +
+      "topFieldB.1.field1 = 17000\n" +
+      "topFieldB.1.field2 = 27000\n" +
+      "\n" +
+      "#\n" +
+      "# Added at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "\n" +
+      "# описание списка A\n" +
+      "topFieldA.2.field1=333\n" +
+      "\n" +
+      "# описание списка A\n" +
+      "topFieldA.2.field2=444\n");
   }
 
   @Test
@@ -479,5 +508,26 @@ public class LoadingLinesTest {
     //noinspection unchecked
     List<ForList> topField = (List<ForList>) target.get("topField");
     assertThat(topField.get(0).field1).isEqualTo(333);
+    assertThat(topField.get(0).field2).isEqualTo(444);
+
+    assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
+
+    assertThat(ll.content()).isEqualTo("\n" +
+      "#\n" +
+      "# Created at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "# Описание поля\n" +
+      "#\n" +
+      "\n" +
+      "# Количество элементов в topField\n" +
+      "topField.listElementsCount=1\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.0.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.0.field2=444\n");
   }
+
+  //TODO протестировать defaultStrValue replacer в различных ситуациях
 }

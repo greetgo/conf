@@ -54,7 +54,7 @@ public class ElementDefinition {
   }
 
   public LineStructure createLineStructure() {
-    return typeManager.createLineStructure(name, defaultValue, description);
+    return typeManager.createLineStructure(name, defaultValue, description, isList);
   }
 
   public static ElementDefinition newList(String name, Class<?> type, Object defaultValue, String description) {

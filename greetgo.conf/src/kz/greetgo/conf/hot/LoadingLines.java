@@ -1,5 +1,7 @@
 package kz.greetgo.conf.hot;
 
+import kz.greetgo.conf.ConfUtil;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +21,7 @@ class LoadingLines {
   }
 
   final LinkedHashMap<String, ConfigLine> configLineMap = new LinkedHashMap<>();
-  final List<ReadElement> readElementList = new ArrayList<>();
+  final LinkedHashMap<String, ReadElement> readElementMap = new LinkedHashMap<>();
 
   private final List<String> realLines = new ArrayList<>();
 
@@ -31,7 +33,9 @@ class LoadingLines {
       configLineMap.put(configLine.fullName(), configLine);
     }
 
-    readElementList.addAll(lineStructure.readElementList);
+    for (ReadElement re : lineStructure.readElementList) {
+      readElementMap.put(re.fieldName(), re);
+    }
   }
 
   public void readStorageLine(String line) {
@@ -50,14 +54,43 @@ class LoadingLines {
   }
 
   private void readStorageLine(String key, String value, boolean commented) {
+//    if (key.endsWith("." + HotConfigConstants.COUNT_SUFFIX)) {
+//      if (commented) return;
+//
+//      String realKey = key.substring(0, key.length() - HotConfigConstants.COUNT_SUFFIX.length() - 1);
+//
+//      ReadElement readElement = readElementMap.get(realKey);
+//
+//      if (readElement == null) return;
+//
+//      int count = (int) ConfUtil.convertToType(value, int.class);
+//
+//      System.out.println("h5gv43h5gv43: key = " + key + ", realKey = " + realKey + ", count = " + count);
+//
+//      for (int i = 0; i < count; i++) {
+//        for (ConfigLine x : readElement.createListConfigLines(i)) {
+//          if (!configLineMap.containsKey(x.fullName())) {
+//            configLineMap.put(x.fullName(), x);
+//          }
+//        }
+//      }
+//
+//      return;
+//    }
+
+
     ConfigLine line = configLineMap.get(key);
     if (line == null) return;
 
-    line.setStoredValue(value, commented);
+    for (ConfigLine x : line.setStoredValue(value, commented)) {
+      if (!configLineMap.containsKey(x.fullName())) {
+        configLineMap.put(x.fullName(), x);
+      }
+    }
   }
 
   public void saveTo(Map<String, Object> target) {
-    for (ReadElement element : readElementList) {
+    for (ReadElement element : readElementMap.values()) {
       target.put(element.fieldName(), element.fieldValue());
     }
   }
