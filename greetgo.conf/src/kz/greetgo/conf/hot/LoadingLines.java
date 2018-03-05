@@ -54,30 +54,6 @@ class LoadingLines {
   }
 
   private void readStorageLine(String key, String value, boolean commented) {
-//    if (key.endsWith("." + HotConfigConstants.COUNT_SUFFIX)) {
-//      if (commented) return;
-//
-//      String realKey = key.substring(0, key.length() - HotConfigConstants.COUNT_SUFFIX.length() - 1);
-//
-//      ReadElement readElement = readElementMap.get(realKey);
-//
-//      if (readElement == null) return;
-//
-//      int count = (int) ConfUtil.convertToType(value, int.class);
-//
-//      System.out.println("h5gv43h5gv43: key = " + key + ", realKey = " + realKey + ", count = " + count);
-//
-//      for (int i = 0; i < count; i++) {
-//        for (ConfigLine x : readElement.createListConfigLines(i)) {
-//          if (!configLineMap.containsKey(x.fullName())) {
-//            configLineMap.put(x.fullName(), x);
-//          }
-//        }
-//      }
-//
-//      return;
-//    }
-
 
     ConfigLine line = configLineMap.get(key);
     if (line == null) return;
@@ -87,6 +63,7 @@ class LoadingLines {
         configLineMap.put(x.fullName(), x);
       }
     }
+
   }
 
   public void saveTo(Map<String, Object> target) {

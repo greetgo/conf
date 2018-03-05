@@ -3,13 +3,16 @@ package kz.greetgo.conf.type_manager;
 import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.hot.ConfigLine;
 import kz.greetgo.conf.hot.ConvertingError;
+import kz.greetgo.conf.hot.HotConfigConstants;
 import kz.greetgo.conf.hot.LineStructure;
 import kz.greetgo.conf.hot.ReadElement;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 public class TypeManagerPrimitive implements TypeManager {
@@ -37,8 +40,6 @@ public class TypeManagerPrimitive implements TypeManager {
 
   @Override
   public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, boolean isList) {
-    List<ReadElement> readElementList = new ArrayList<>();
-    List<ConfigLine> configLineList = new ArrayList<>();
 
     class Data {
       List<Object> list = new ArrayList<>();
@@ -48,7 +49,7 @@ public class TypeManagerPrimitive implements TypeManager {
         list.set(index, value);
       }
 
-      private void assertExists(int index) {
+      void assertExists(int index) {
         while (list.size() <= index) {
           list.add(defaultValue);
         }
@@ -59,15 +60,24 @@ public class TypeManagerPrimitive implements TypeManager {
       }
 
       Object firstValue() {
-        if (list.size() == 0) return defaultValue;
         return list.get(0);
+      }
+
+      final Set<String> storedSet = new HashSet<>();
+
+      void markStored(String fullName) {
+        storedSet.add(fullName);
+      }
+
+      boolean isStored(String fullName) {
+        return storedSet.contains(fullName);
       }
     }
 
     final Data d = new Data();
+    d.assertExists(0);
 
     class LocalConfigLine implements ConfigLine {
-      boolean isStored = false;
       private int listIndex;
 
       public LocalConfigLine(int listIndex) {
@@ -85,7 +95,7 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public List<ConfigLine> setStoredValue(String strValue, boolean commented) {
-        isStored = true;
+        d.markStored(fullName());
         if (!commented) try {
           d.setValue(index(), ConfUtil.convertToType(strValue, type));
         } catch (ConvertingError ignore) {}
@@ -94,7 +104,7 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public boolean isStored() {
-        return isStored;
+        return d.isStored(fullName());
       }
 
       @Override
@@ -108,7 +118,7 @@ public class TypeManagerPrimitive implements TypeManager {
       }
     }
 
-    readElementList.add(new ReadElement() {
+    ReadElement readElement = new ReadElement() {
       @Override
       public String fieldName() {
         return topFieldName;
@@ -121,12 +131,54 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public List<ConfigLine> createListConfigLines(int index) {
+        d.assertExists(index);
         return Collections.singletonList(new LocalConfigLine(index));
+      }
+    };
+
+    List<ConfigLine> configLineList = new ArrayList<>();
+
+    if (isList) configLineList.add(new ConfigLine() {
+      @Override
+      public String fullName() {
+        return topFieldName + "." + HotConfigConstants.COUNT_SUFFIX;
+      }
+
+      @Override
+      public List<ConfigLine> setStoredValue(String value, boolean commented) {
+        if (commented) return Collections.emptyList();
+
+        int count = (int) ConfUtil.convertToType(value, int.class);
+
+        d.markStored(fullName());
+
+        List<ConfigLine> ret = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+          ret.addAll(readElement.createListConfigLines(i));
+        }
+
+        return ret;
+      }
+
+      @Override
+      public boolean isStored() {
+        return d.isStored(fullName());
+      }
+
+      @Override
+      public String description() {
+        return "Количество элементов в массиве " + topFieldName;
+      }
+
+      @Override
+      public String getNotNullDefaultStringValue() {
+        return "1";
       }
     });
 
-    if (!isList) configLineList.add(new LocalConfigLine(0));
+    configLineList.add(new LocalConfigLine(0));
 
-    return new LineStructure(readElementList, configLineList);
+    return new LineStructure(Collections.singletonList(readElement), configLineList);
   }
 }
