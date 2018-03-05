@@ -5,6 +5,7 @@ import org.fest.assertions.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -182,6 +183,9 @@ public class DefinitionCreatorTest {
     elementDefinitions.sort(Comparator.comparing(a -> a.name));
 
     ElementDefinition elem = elementDefinitions.get(index);
+
+    assertThat(elem.isList).isFalse();
+
     assertThat(elem.newDefaultValue())
       .describedAs("index = " + index + ", method name = " + elem.name)
       .isEqualTo(defaultValue);
@@ -315,6 +319,7 @@ public class DefinitionCreatorTest {
 
   interface ForTooManyDefaultAnnotations {
 
+    @SuppressWarnings("unused")
     @DefaultStrValue("csa23")
     @DefaultIntValue(123)
     @DefaultLongValue(234L)
@@ -343,5 +348,91 @@ public class DefinitionCreatorTest {
       assertThat(e.configInterface.getName()).isEqualTo(ForTooManyDefaultAnnotations.class.getName());
       assertThat(e.method.getName()).isEqualTo("fieldA367283");
     }
+  }
+
+  public static class ListElementType {}
+
+  interface ListElemClassConfig {
+
+    @SuppressWarnings("unused")
+    @Description("description 4325434324h3546")
+    List<ListElementType> fieldList();
+
+  }
+
+  @Test
+  public void createDefinition_ElemClass_list() throws Exception {
+
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", ListElemClassConfig.class, Function.identity());
+    //
+    //
+
+    assertThat(definition).isNotNull();
+    assertThat(definition.elementList()).hasSize(1);
+
+    ElementDefinition def = definition.elementList().get(0);
+
+    assertThat(def.isList).isTrue();
+    assertThat(def.newDefaultValue()).isInstanceOf(ListElementType.class);
+    assertThat(def.name).isEqualTo("fieldList");
+    assertThat(def.description).isEqualTo("description 4325434324h3546");
+  }
+
+  interface ListElemPrimitiveConfig {
+
+    @SuppressWarnings("unused")
+    @Description("description 43hb5435hb25")
+    List<Integer> fieldList();
+
+  }
+
+  @Test
+  public void createDefinition_int_list() throws Exception {
+
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", ListElemPrimitiveConfig.class, Function.identity());
+    //
+    //
+
+    assertThat(definition).isNotNull();
+    assertThat(definition.elementList()).hasSize(1);
+
+    ElementDefinition def = definition.elementList().get(0);
+
+    assertThat(def.isList).isTrue();
+    assertThat(def.newDefaultValue()).isNull();
+    assertThat(def.name).isEqualTo("fieldList");
+    assertThat(def.description).isEqualTo("description 43hb5435hb25");
+  }
+
+  public static class SomeClass {}
+
+  interface ForExtractClass {
+    List<SomeClass> someList();
+
+    SomeClass someField();
+  }
+
+  @Test
+  public void extractClass_fromList() throws Exception {
+
+    Type genericReturnType = ForExtractClass.class.getMethod("someList").getGenericReturnType();
+
+    Class<?> aClass = DefinitionCreator.extractClass(genericReturnType);
+
+    assertThat(aClass.getName()).isEqualTo(SomeClass.class.getName());
+  }
+
+  @Test
+  public void extractClass_direct() throws Exception {
+
+    Type genericReturnType = ForExtractClass.class.getMethod("someField").getGenericReturnType();
+
+    Class<?> aClass = DefinitionCreator.extractClass(genericReturnType);
+
+    assertThat(aClass.getName()).isEqualTo(SomeClass.class.getName());
   }
 }

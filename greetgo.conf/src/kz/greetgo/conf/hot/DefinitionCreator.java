@@ -4,6 +4,8 @@ import kz.greetgo.conf.type_manager.TypeManager;
 import kz.greetgo.conf.type_manager.TypeManagerCache;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -54,11 +56,30 @@ class DefinitionCreator {
 
   private static ElementDefinition createElementDefinition(Method method, Function<String, String> parameterReplacer) {
     String name = method.getName();
-    Class<?> type = method.getReturnType();
-    TypeManager typeManager = TypeManagerCache.getOrCreate(type);
+
+    TypeManager typeManager = TypeManagerCache.getOrCreate(extractClass(method.getGenericReturnType()));
     Object defaultValue = typeManager.extractDefaultValue(method.getAnnotations(), parameterReplacer);
     String description = extractDescription(method);
-    return ElementDefinition.newOne(name, typeManager, defaultValue, description);
+
+    boolean isList = method.getReturnType() == List.class;
+
+    return isList
+      ? ElementDefinition.newList(name, typeManager, defaultValue, description)
+      : ElementDefinition.newOne(name, typeManager, defaultValue, description)
+      ;
+
+  }
+
+  static Class<?> extractClass(Type type) {
+    if (type instanceof Class) return (Class<?>) type;
+    if (type instanceof ParameterizedType) {
+      ParameterizedType pType = (ParameterizedType) type;
+      if (pType.getRawType() == List.class) {
+        return (Class<?>) pType.getActualTypeArguments()[0];
+      }
+      throw new RuntimeException("Cannot extract type from " + type);
+    }
+    throw new RuntimeException("Cannot extract type from " + type);
   }
 
   private static String extractDescription(Method method) {

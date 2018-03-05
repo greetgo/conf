@@ -633,7 +633,4 @@ public class LoadingLinesTest {
       "# описание списка\n" +
       "topField.0=777\n");
   }
-
-
-  //TODO протестировать defaultStrValue replacer в различных ситуациях
 }

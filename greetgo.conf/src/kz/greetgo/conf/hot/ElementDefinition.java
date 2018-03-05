@@ -60,4 +60,8 @@ public class ElementDefinition {
   public static ElementDefinition newList(String name, Class<?> type, Object defaultValue, String description) {
     return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, true);
   }
+
+  public static ElementDefinition newList(String name, TypeManager typeManager, Object defaultValue, String description) {
+    return new ElementDefinition(name, typeManager, defaultValue, description, true);
+  }
 }

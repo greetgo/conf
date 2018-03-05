@@ -2,7 +2,9 @@ package kz.greetgo.conf.hot;
 
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -69,5 +71,77 @@ public class AbstractConfigFactoryTest {
     assertThat(testing.cs.callCountOfIsConfigContentExists.get()).isEqualTo(22);
     assertThat(testing.cs.callCountOfSaveConfigContent.get()).isEqualTo(2);
 
+  }
+
+  @Test
+  public void checkArrays_new() throws Exception {
+    final Testing testing = new Testing();
+
+    HostConfigWithLists config = testing.createConfig(HostConfigWithLists.class);
+
+    assertThat(config.elementA().intField).isEqualTo(20019);
+    assertThat(config.elementA().strField).isEqualTo("By one");
+
+    String content = testing.cs.contentMap.get("HostConfigWithLists.txt");
+    content = Arrays.stream(content.split("\n"))
+      .filter(s -> s.trim().length() > 0)
+      .filter(s -> !s.trim().startsWith("#"))
+      .sorted()
+      .collect(Collectors.joining("\n"));
+
+    assertThat(content).isEqualTo("" +
+      "elementA.intField=20019\n" +
+      "elementA.strField=By one\n" +
+      "elementB.0.intField=20019\n" +
+      "elementB.0.strField=By one\n" +
+      "elementB.listElementsCount=1\n" +
+      "status=0");
+  }
+
+  @Test
+  public void checkArrays_hasContent() throws Exception {
+    final Testing testing = new Testing();
+
+    testing.cs.contentMap.put("HostConfigWithLists.txt", "" +
+      "elementB.listElementsCount=3\n" +
+      "elementB.0.intField = 45000\n" +
+      "elementB.0.strField = The new begins\n" +
+      "elementB.1.intField = 456\n" +
+      "elementB.1.strField = hello world\n" +
+      "\n" +
+      "elementA.intField = 709\n" +
+      ""
+    );
+
+    HostConfigWithLists config = testing.createConfig(HostConfigWithLists.class);
+
+    assertThat(config.elementA().intField).isEqualTo(709);
+    assertThat(config.elementA().strField).isEqualTo("By one");
+
+    assertThat(config.elementB().get(0).intField).isEqualTo(45_000);
+    assertThat(config.elementB().get(0).strField).isEqualTo("The new begins");
+    assertThat(config.elementB().get(1).intField).isEqualTo(456);
+    assertThat(config.elementB().get(1).strField).isEqualTo("hello world");
+    assertThat(config.elementB().get(2).intField).isEqualTo(20019);
+    assertThat(config.elementB().get(2).strField).isEqualTo("By one");
+
+    String content = testing.cs.contentMap.get("HostConfigWithLists.txt");
+    content = Arrays.stream(content.split("\n"))
+      .filter(s -> s.trim().length() > 0)
+      .filter(s -> !s.trim().startsWith("#"))
+      .sorted()
+      .collect(Collectors.joining("\n"));
+
+    assertThat(content).isEqualTo("" +
+      "elementA.intField = 709\n" +
+      "elementA.strField=By one\n" +
+      "elementB.0.intField = 45000\n" +
+      "elementB.0.strField = The new begins\n" +
+      "elementB.1.intField = 456\n" +
+      "elementB.1.strField = hello world\n" +
+      "elementB.2.intField=20019\n" +
+      "elementB.2.strField=By one\n" +
+      "elementB.listElementsCount=3\n" +
+      "status=0");
   }
 }
