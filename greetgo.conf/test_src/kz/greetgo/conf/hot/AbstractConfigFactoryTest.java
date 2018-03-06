@@ -22,6 +22,11 @@ public class AbstractConfigFactoryTest {
     protected <T> String configLocationFor(Class<T> configInterface) {
       return configInterface.getSimpleName() + ".txt";
     }
+
+    @Override
+    protected String replaceParametersInDefaultStrValue(String value) {
+      return value.replaceAll("T1001", "Жыдкий терминатор");
+    }
   }
 
   @Test
@@ -143,5 +148,13 @@ public class AbstractConfigFactoryTest {
       "elementB.2.strField=By one\n" +
       "elementB.listElementsCount=3\n" +
       "status=0");
+  }
+
+  @Test
+  public void replaceParametersInDefaultStrValue() throws Exception {
+    final Testing testing = new Testing();
+    HotConfig1 config1 = testing.createConfig(HotConfig1.class);
+
+    assertThat(config1.name()).isEqualTo("Привет Жыдкий терминатор");
   }
 }
