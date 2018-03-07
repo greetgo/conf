@@ -10,5 +10,5 @@ public interface TypeManager {
 
   Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer);
 
-  LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, boolean isList);
+  LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, Integer defaultListSize);
 }

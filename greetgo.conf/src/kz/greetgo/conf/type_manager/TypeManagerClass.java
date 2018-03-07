@@ -41,7 +41,9 @@ public class TypeManagerClass implements TypeManager {
   }
 
   @Override
-  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, boolean isList) {
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, Integer defaultListSize) {
+    boolean isList = defaultListSize != null;
+
     final Object defObject = newDefaultValue(defaultValue);
 
     class Data {

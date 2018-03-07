@@ -616,7 +616,6 @@ public class LoadingLinesTest {
     //noinspection unchecked
     List<Integer> topField = (List<Integer>) target.get("topField");
     assertThat(topField.get(0)).isEqualTo(777);
-    assertThat(topField.get(0)).isEqualTo(777);
 
     assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
 
@@ -632,5 +631,141 @@ public class LoadingLinesTest {
       "\n" +
       "# описание списка\n" +
       "topField.0=777\n");
+  }
+
+  @Test
+  public void testPrimitiveList_newFile_DefaultListSize() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Описание поля");
+    ll.setContentExists(false);
+
+    ll.putDefinition(ElementDefinition.create("topField", int.class, 777, "описание списка", 7));
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target.get("topField")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topField"))).hasSize(7);
+    assertThat(((List) target.get("topField")).get(0)).isInstanceOf(Integer.class);
+    //noinspection unchecked
+    List<Integer> topField = (List<Integer>) target.get("topField");
+    assertThat(topField.get(0)).isEqualTo(777);
+    assertThat(topField.get(1)).isEqualTo(777);
+    assertThat(topField.get(2)).isEqualTo(777);
+    assertThat(topField.get(3)).isEqualTo(777);
+    assertThat(topField.get(4)).isEqualTo(777);
+    assertThat(topField.get(5)).isEqualTo(777);
+    assertThat(topField.get(6)).isEqualTo(777);
+
+    assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
+
+    assertThat(ll.content()).isEqualTo("aaa");
+  }
+
+  @Test
+  public void testPrimitiveList_exists_DefaultListSize() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Описание поля");
+    ll.setContentExists(true);
+
+    ll.putDefinition(ElementDefinition.create("topField", int.class, 777, "описание списка", 7));
+
+    //ll.readStorageLine("topField." + COUNT_SUFFIX + " = 3");
+    ll.readStorageLine("topField.0 = 100");
+    ll.readStorageLine("topField.3 = 900");
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target.get("topField")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topField"))).hasSize(7);
+    assertThat(((List) target.get("topField")).get(0)).isInstanceOf(Integer.class);
+    //noinspection unchecked
+    List<Integer> topField = (List<Integer>) target.get("topField");
+    assertThat(topField.get(0)).isEqualTo(100);
+    assertThat(topField.get(1)).isEqualTo(777);
+    assertThat(topField.get(2)).isEqualTo(777);
+    assertThat(topField.get(3)).isEqualTo(900);
+    assertThat(topField.get(4)).isEqualTo(777);
+    assertThat(topField.get(5)).isEqualTo(777);
+    assertThat(topField.get(6)).isEqualTo(777);
+
+    assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
+
+    assertThat(ll.content()).isEqualTo("aaa");
+  }
+
+  @Test
+  public void testClassList_newFile_DefaultListSize() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Описание поля");
+    ll.setContentExists(false);
+
+    ll.putDefinition(ElementDefinition.create("topField", ForList.class, null, "описание списка", 5));
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target.get("topField")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topField"))).hasSize(5);
+    assertThat(((List) target.get("topField")).get(0)).isInstanceOf(ForList.class);
+    //noinspection unchecked
+    List<ForList> topField = (List<ForList>) target.get("topField");
+    assertThat(topField.get(0).field1).isEqualTo(333);
+    assertThat(topField.get(1).field1).isEqualTo(333);
+    assertThat(topField.get(2).field1).isEqualTo(333);
+    assertThat(topField.get(3).field1).isEqualTo(333);
+    assertThat(topField.get(4).field1).isEqualTo(333);
+
+    assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
+
+    assertThat(ll.content()).isEqualTo("aaa");
+  }
+
+  @Test
+  public void testClassList_exists_DefaultListSize() throws Exception {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    Date now = sdf.parse("2011-07-16 11:12:53.233");
+
+    LoadingLines ll = new LoadingLines(now, "Описание поля");
+    ll.setContentExists(true);
+
+    ll.putDefinition(ElementDefinition.create("topField", ForList.class, null, "описание списка", 5));
+
+    //ll.readStorageLine("topField." + COUNT_SUFFIX + " = 3");
+    ll.readStorageLine("topField.0.field1 = 100");
+    ll.readStorageLine("topField.3.field1 = 900");
+
+    Map<String, Object> target = new HashMap<>();
+    ll.saveTo(target);
+
+    assertThat(target.get("topField")).isInstanceOf(List.class);
+    //noinspection unchecked
+    assertThat(((List) target.get("topField"))).hasSize(5);
+    assertThat(((List) target.get("topField")).get(0)).isInstanceOf(ForList.class);
+    //noinspection unchecked
+    List<ForList> topField = (List<ForList>) target.get("topField");
+    assertThat(topField.get(0).field1).isEqualTo(100);
+    assertThat(topField.get(1).field1).isEqualTo(333);
+    assertThat(topField.get(2).field1).isEqualTo(333);
+    assertThat(topField.get(3).field1).isEqualTo(900);
+    assertThat(topField.get(4).field1).isEqualTo(333);
+
+    assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
+
+    assertThat(ll.content()).isEqualTo("aaa");
   }
 }

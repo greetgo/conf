@@ -50,7 +50,7 @@ public class ElementDefinition {
   }
 
   public LineStructure createLineStructure() {
-    return typeManager.createLineStructure(name, defaultValue, description, defaultListSize != null);
+    return typeManager.createLineStructure(name, defaultValue, description, defaultListSize);
   }
 
   public static ElementDefinition newList(String name, Class<?> type, Object defaultValue, String description) {
@@ -64,6 +64,16 @@ public class ElementDefinition {
                                          Integer defaultListSize) {
 
     return new ElementDefinition(name, typeManager, defaultValue, description, defaultListSize);
+
+  }
+
+  public static ElementDefinition create(String name,
+                                         Class<?> type,
+                                         Object defaultValue,
+                                         String description,
+                                         Integer defaultListSize) {
+
+    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, defaultListSize);
 
   }
 }
