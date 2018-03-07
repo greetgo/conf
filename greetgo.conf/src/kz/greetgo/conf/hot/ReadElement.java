@@ -6,6 +6,4 @@ public interface ReadElement {
   String fieldName();
 
   Object fieldValue();
-
-  List<ConfigLine> createListConfigLines(int index);
 }

@@ -39,7 +39,9 @@ public class TypeManagerPrimitive implements TypeManager {
   }
 
   @Override
-  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, Integer defaultListSize) {
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue,
+                                           String description, Integer defaultListSize) {
+
     boolean isList = defaultListSize != null;
 
     class Data {
@@ -56,7 +58,7 @@ public class TypeManagerPrimitive implements TypeManager {
         }
       }
 
-      List list() {
+      List listValue() {
         return new ArrayList<>(list);
       }
 
@@ -127,13 +129,7 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public Object fieldValue() {
-        return isList ? d.list() : d.firstValue();
-      }
-
-      @Override
-      public List<ConfigLine> createListConfigLines(int index) {
-        d.assertExists(index);
-        return Collections.singletonList(new LocalConfigLine(index));
+        return isList ? d.listValue() : d.firstValue();
       }
     };
 
@@ -156,7 +152,8 @@ public class TypeManagerPrimitive implements TypeManager {
         List<ConfigLine> ret = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-          ret.addAll(readElement.createListConfigLines(i));
+          d.assertExists(i);
+          ret.add(new LocalConfigLine(i));
         }
 
         return ret;
@@ -174,11 +171,17 @@ public class TypeManagerPrimitive implements TypeManager {
 
       @Override
       public String getNotNullDefaultStringValue() {
-        return "1";
+        return "" + defaultListSize;
       }
     });
 
-    configLineList.add(new LocalConfigLine(0));
+    {
+      int count = defaultListSize == null ? 1 : defaultListSize;
+      for (int i = 0; i < count; i++) {
+        d.assertExists(i);
+        configLineList.add(new LocalConfigLine(i));
+      }
+    }
 
     return new LineStructure(Collections.singletonList(readElement), configLineList);
   }

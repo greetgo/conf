@@ -663,7 +663,36 @@ public class LoadingLinesTest {
 
     assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
 
-    assertThat(ll.content()).isEqualTo("aaa");
+    assertThat(ll.content()).isEqualTo("\n" +
+      "#\n" +
+      "# Created at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "# Описание поля\n" +
+      "#\n" +
+      "\n" +
+      "# Количество элементов в массиве topField\n" +
+      "topField.listElementsCount=7\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.0=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.1=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.2=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.3=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.4=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.5=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.6=777\n");
   }
 
   @Test
@@ -700,7 +729,30 @@ public class LoadingLinesTest {
 
     assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
 
-    assertThat(ll.content()).isEqualTo("aaa");
+    assertThat(ll.content()).isEqualTo("topField.0 = 100\n" +
+      "topField.3 = 900\n" +
+      "\n" +
+      "#\n" +
+      "# Added at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "\n" +
+      "# Количество элементов в массиве topField\n" +
+      "topField.listElementsCount=7\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.1=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.2=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.4=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.5=777\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.6=777\n");
   }
 
   @Test
@@ -731,7 +783,45 @@ public class LoadingLinesTest {
 
     assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
 
-    assertThat(ll.content()).isEqualTo("aaa");
+    assertThat(ll.content()).isEqualTo("\n" +
+      "#\n" +
+      "# Created at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "# Описание поля\n" +
+      "#\n" +
+      "\n" +
+      "# Количество элементов в topField\n" +
+      "topField.listElementsCount=5\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.0.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.0.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.1.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.1.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.2.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.2.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.3.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.3.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.4.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.4.field2=444\n");
   }
 
   @Test
@@ -766,6 +856,38 @@ public class LoadingLinesTest {
 
     assertThat(ll.configLineMap).containsKey("topField." + COUNT_SUFFIX);
 
-    assertThat(ll.content()).isEqualTo("aaa");
+    assertThat(ll.content()).isEqualTo("topField.0.field1 = 100\n" +
+      "topField.3.field1 = 900\n" +
+      "\n" +
+      "#\n" +
+      "# Added at 2011-07-16 11:12:53.233\n" +
+      "#\n" +
+      "\n" +
+      "# Количество элементов в topField\n" +
+      "topField.listElementsCount=5\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.0.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.1.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.1.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.2.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.2.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.3.field2=444\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.4.field1=333\n" +
+      "\n" +
+      "# описание списка\n" +
+      "topField.4.field2=444\n");
   }
 }

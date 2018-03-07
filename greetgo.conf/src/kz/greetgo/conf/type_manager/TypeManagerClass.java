@@ -66,8 +66,43 @@ public class TypeManagerClass implements TypeManager {
         storeIsTrue.add(fullName);
       }
 
-      boolean isStored(String fullName) {
+      boolean checkStored(String fullName) {
         return storeIsTrue.contains(fullName);
+      }
+
+      public List<ConfigLine> createListConfigLines(int index) {
+        getOrCreate(index);
+        return FieldAcceptorCreator.createList(type).stream().map(fieldAcceptor -> new ConfigLine() {
+
+          @Override
+          public String fullName() {
+            return isList
+              ? topFieldName + "." + index + "." + fieldAcceptor.name()
+              : topFieldName + "." + fieldAcceptor.name();
+          }
+
+          @Override
+          public List<ConfigLine> setStoredValue(String strValue, boolean commented) {
+            markStored(fullName());
+            if (!commented) fieldAcceptor.setStrValue(getOrCreate(isList ? index : 0), strValue);
+            return Collections.emptyList();
+          }
+
+          @Override
+          public boolean isStored() {
+            return checkStored(fullName());
+          }
+
+          @Override
+          public String description() {
+            return concatNewLine(description, fieldAcceptor.description());
+          }
+
+          @Override
+          public String getNotNullDefaultStringValue() {
+            return nullToEmpty(fieldAcceptor.getStrValue(defObject));
+          }
+        }).collect(Collectors.toList());
       }
 
     }
@@ -85,42 +120,6 @@ public class TypeManagerClass implements TypeManager {
       @Override
       public Object fieldValue() {
         return isList ? d.listValue() : d.getOrCreate(0);
-      }
-
-      @Override
-      public List<ConfigLine> createListConfigLines(int index) {
-        d.getOrCreate(index);
-        return FieldAcceptorCreator.createList(type).stream().map(fieldAcceptor -> new ConfigLine() {
-
-          @Override
-          public String fullName() {
-            return isList
-              ? topFieldName + "." + index + "." + fieldAcceptor.name()
-              : topFieldName + "." + fieldAcceptor.name();
-          }
-
-          @Override
-          public List<ConfigLine> setStoredValue(String strValue, boolean commented) {
-            d.markStored(fullName());
-            if (!commented) fieldAcceptor.setStrValue(d.getOrCreate(isList ? index : 0), strValue);
-            return Collections.emptyList();
-          }
-
-          @Override
-          public boolean isStored() {
-            return d.isStored(fullName());
-          }
-
-          @Override
-          public String description() {
-            return concatNewLine(description, fieldAcceptor.description());
-          }
-
-          @Override
-          public String getNotNullDefaultStringValue() {
-            return nullToEmpty(fieldAcceptor.getStrValue(defObject));
-          }
-        }).collect(Collectors.toList());
       }
     };
 
@@ -141,7 +140,7 @@ public class TypeManagerClass implements TypeManager {
         List<ConfigLine> ret = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-          ret.addAll(readElement.createListConfigLines(i));
+          ret.addAll(d.createListConfigLines(i));
         }
 
         return ret;
@@ -149,7 +148,7 @@ public class TypeManagerClass implements TypeManager {
 
       @Override
       public boolean isStored() {
-        return d.isStored(fullName());
+        return d.checkStored(fullName());
       }
 
       @Override
@@ -159,11 +158,16 @@ public class TypeManagerClass implements TypeManager {
 
       @Override
       public String getNotNullDefaultStringValue() {
-        return "1";
+        return "" + defaultListSize;
       }
     });
 
-    configLineList.addAll(readElement.createListConfigLines(0));
+    {
+      int count = defaultListSize == null ? 1 : defaultListSize;
+      for (int i = 0; i < count; i++) {
+        configLineList.addAll(d.createListConfigLines(i));
+      }
+    }
 
     return new LineStructure(
       Collections.singletonList(readElement),

@@ -157,4 +157,89 @@ public class AbstractConfigFactoryTest {
 
     assertThat(config1.name()).isEqualTo("Привет Жыдкий терминатор");
   }
+
+  @Test
+  public void defaultListSize_new_reset_exists() throws Exception {
+    final Testing testing = new Testing();
+
+    HotConfigWithDefaultListSize config = testing.createConfig(HotConfigWithDefaultListSize.class);
+
+    assertThat(config.longList()).hasSize(9);
+    assertThat(config.classList()).hasSize(7);
+
+    String location = testing.configLocationFor(HotConfigWithDefaultListSize.class);
+
+    String content = Arrays.stream(testing.cs.contentMap.get(location).split("\n"))
+      .filter(s -> s.trim().length() > 0)
+      .filter(s -> !s.trim().startsWith("#"))
+      .sorted()
+      .collect(Collectors.joining("\n"));
+
+    assertThat(content).isEqualTo("classList.0.intField=20019\n" +
+      "classList.0.strField=By one\n" +
+      "classList.1.intField=20019\n" +
+      "classList.1.strField=By one\n" +
+      "classList.2.intField=20019\n" +
+      "classList.2.strField=By one\n" +
+      "classList.3.intField=20019\n" +
+      "classList.3.strField=By one\n" +
+      "classList.4.intField=20019\n" +
+      "classList.4.strField=By one\n" +
+      "classList.5.intField=20019\n" +
+      "classList.5.strField=By one\n" +
+      "classList.6.intField=20019\n" +
+      "classList.6.strField=By one\n" +
+      "classList.listElementsCount=7\n" +
+      "longList.0=70078\n" +
+      "longList.1=70078\n" +
+      "longList.2=70078\n" +
+      "longList.3=70078\n" +
+      "longList.4=70078\n" +
+      "longList.5=70078\n" +
+      "longList.6=70078\n" +
+      "longList.7=70078\n" +
+      "longList.8=70078\n" +
+      "longList.listElementsCount=9");
+
+    testing.cs.contentMap.put(location, "classList.2.strField=Boom loon hi\n" +
+      "classList.5.intField=119988\n" +
+      "longList.4=4511\n");
+
+    testing.reset();
+
+    assertThat(config.longList()).hasSize(9);
+    assertThat(config.classList()).hasSize(7);
+
+    String content2 = Arrays.stream(testing.cs.contentMap.get(location).split("\n"))
+      .filter(s -> s.trim().length() > 0)
+      .filter(s -> !s.trim().startsWith("#"))
+      .sorted()
+      .collect(Collectors.joining("\n"));
+
+    assertThat(content2).isEqualTo("classList.0.intField=20019\n" +
+      "classList.0.strField=By one\n" +
+      "classList.1.intField=20019\n" +
+      "classList.1.strField=By one\n" +
+      "classList.2.intField=20019\n" +
+      "classList.2.strField=Boom loon hi\n" +
+      "classList.3.intField=20019\n" +
+      "classList.3.strField=By one\n" +
+      "classList.4.intField=20019\n" +
+      "classList.4.strField=By one\n" +
+      "classList.5.intField=119988\n" +
+      "classList.5.strField=By one\n" +
+      "classList.6.intField=20019\n" +
+      "classList.6.strField=By one\n" +
+      "classList.listElementsCount=7\n" +
+      "longList.0=70078\n" +
+      "longList.1=70078\n" +
+      "longList.2=70078\n" +
+      "longList.3=70078\n" +
+      "longList.4=4511\n" +
+      "longList.5=70078\n" +
+      "longList.6=70078\n" +
+      "longList.7=70078\n" +
+      "longList.8=70078\n" +
+      "longList.listElementsCount=9");
+  }
 }
