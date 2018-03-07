@@ -61,13 +61,15 @@ class DefinitionCreator {
     Object defaultValue = typeManager.extractDefaultValue(method.getAnnotations(), parameterReplacer);
     String description = extractDescription(method);
 
-    boolean isList = method.getReturnType() == List.class;
+    Integer defaultListSize = null;
 
-    return isList
-      ? ElementDefinition.newList(name, typeManager, defaultValue, description)
-      : ElementDefinition.newOne(name, typeManager, defaultValue, description)
-      ;
+    if (method.getReturnType() == List.class) {
+      defaultListSize = 1;
+      DefaultListSize a = method.getAnnotation(DefaultListSize.class);
+      if (a != null) defaultListSize = a.value();
+    }
 
+    return ElementDefinition.create(name, typeManager, defaultValue, description, defaultListSize);
   }
 
   static Class<?> extractClass(Type type) {

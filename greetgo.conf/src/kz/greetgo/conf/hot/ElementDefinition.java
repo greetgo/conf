@@ -28,25 +28,21 @@ public class ElementDefinition {
   public final String description;
 
   /**
-   * Mark that element is list
+   * Define default list size. If null then is not list
    */
-  public final boolean isList;
+  public final Integer defaultListSize;
 
-  private ElementDefinition(String name, TypeManager typeManager, Object defaultValue, String description, boolean isList) {
+  private ElementDefinition(String name, TypeManager typeManager, Object defaultValue, String description, Integer defaultListSize) {
     if (defaultValue instanceof TypeManager) throw new IllegalArgumentException("defaultValue cannot be TypeManager");
     this.name = name;
     this.typeManager = typeManager;
     this.defaultValue = defaultValue;
     this.description = description;
-    this.isList = isList;
-  }
-
-  public static ElementDefinition newOne(String name, TypeManager typeManager, Object defaultValue, String description) {
-    return new ElementDefinition(name, typeManager, defaultValue, description, false);
+    this.defaultListSize = defaultListSize;
   }
 
   public static ElementDefinition newOne(String name, Class<?> type, Object defaultValue, String description) {
-    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, false);
+    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, null);
   }
 
   public Object newDefaultValue() {
@@ -54,14 +50,20 @@ public class ElementDefinition {
   }
 
   public LineStructure createLineStructure() {
-    return typeManager.createLineStructure(name, defaultValue, description, isList);
+    return typeManager.createLineStructure(name, defaultValue, description, defaultListSize != null);
   }
 
   public static ElementDefinition newList(String name, Class<?> type, Object defaultValue, String description) {
-    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, true);
+    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, 1);
   }
 
-  public static ElementDefinition newList(String name, TypeManager typeManager, Object defaultValue, String description) {
-    return new ElementDefinition(name, typeManager, defaultValue, description, true);
+  public static ElementDefinition create(String name,
+                                         TypeManager typeManager,
+                                         Object defaultValue,
+                                         String description,
+                                         Integer defaultListSize) {
+
+    return new ElementDefinition(name, typeManager, defaultValue, description, defaultListSize);
+
   }
 }

@@ -184,7 +184,7 @@ public class DefinitionCreatorTest {
 
     ElementDefinition elem = elementDefinitions.get(index);
 
-    assertThat(elem.isList).isFalse();
+    assertThat(elem.defaultListSize).isNull();
 
     assertThat(elem.newDefaultValue())
       .describedAs("index = " + index + ", method name = " + elem.name)
@@ -374,7 +374,7 @@ public class DefinitionCreatorTest {
 
     ElementDefinition def = definition.elementList().get(0);
 
-    assertThat(def.isList).isTrue();
+    assertThat(def.defaultListSize).isEqualTo(1);
     assertThat(def.newDefaultValue()).isInstanceOf(ListElementType.class);
     assertThat(def.name).isEqualTo("fieldList");
     assertThat(def.description).isEqualTo("description 4325434324h3546");
@@ -402,7 +402,7 @@ public class DefinitionCreatorTest {
 
     ElementDefinition def = definition.elementList().get(0);
 
-    assertThat(def.isList).isTrue();
+    assertThat(def.defaultListSize).isEqualTo(1);
     assertThat(def.newDefaultValue()).isNull();
     assertThat(def.name).isEqualTo("fieldList");
     assertThat(def.description).isEqualTo("description 43hb5435hb25");
@@ -434,5 +434,45 @@ public class DefinitionCreatorTest {
     Class<?> aClass = DefinitionCreator.extractClass(genericReturnType);
 
     assertThat(aClass.getName()).isEqualTo(SomeClass.class.getName());
+  }
+
+  interface HasDefListSize {
+
+    @DefaultListSize(10)
+    @SuppressWarnings("unused")
+    List<String> strField();
+
+  }
+
+  @Test
+  public void extractClass_DefaultListSize() throws Exception {
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", HasDefListSize.class, Function.identity());
+    //
+    //
+
+    ElementDefinition elementDefinition = definition.elementList().get(0);
+    assertThat(elementDefinition.defaultListSize).isEqualTo(10);
+  }
+
+  interface HasDefListSizeForSomeClass {
+
+    @DefaultListSize(13)
+    @SuppressWarnings("unused")
+    List<SomeClass> someList();
+
+  }
+
+  @Test
+  public void extractClass_DefaultListSize_for_SomeClass() throws Exception {
+    //
+    //
+    HotConfigDefinition definition = createDefinition("", HasDefListSizeForSomeClass.class, Function.identity());
+    //
+    //
+
+    ElementDefinition elementDefinition = definition.elementList().get(0);
+    assertThat(elementDefinition.defaultListSize).isEqualTo(13);
   }
 }
