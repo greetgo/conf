@@ -1,4 +1,4 @@
-package kz.greetgo.conf;
+package kz.greetgo.conf.sys_params;
 
 /**
  * The adapter of system parameters. Reading is made from environment variables

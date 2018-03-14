@@ -1,3 +1,4 @@
 rootProject.name = 'greetgo.conf.root'
 
 include "greetgo.conf"
+include "greetgo.sys_params"
