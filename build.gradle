@@ -1,3 +1,10 @@
+import kz.greetgo.gradle.plugins.ShortJavaPathPlugin
+
+buildscript {
+  dependencies {
+    classpath "kz.greetgo.plugins:greetgo.gradle.plugins:0.0.2"
+  }
+}
 plugins {
   id 'org.ajoberstar.grgit' version '2.1.0'
 }
@@ -28,6 +35,8 @@ allprojects {
 }
 
 subprojects {
+  apply plugin: ShortJavaPathPlugin
+
   dependencies {
     ext.servletApiVersion = '3.1.0';
 
@@ -47,14 +56,6 @@ subprojects {
       )
     }
   }
-
-  compileJava.options.encoding = 'UTF-8'
-  compileTestJava.options.encoding = 'UTF-8'
-
-  sourceSets.main.java.srcDirs = ["src"]
-  sourceSets.main.resources.srcDirs = ["src", "src_resources"]
-  sourceSets.test.java.srcDirs = ["test_src"]
-  sourceSets.test.resources.srcDirs = ["test_src", "test_resources"]
 
   //noinspection GroovyMissingReturnStatement
   test { useTestNG() }

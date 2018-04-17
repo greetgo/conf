@@ -1,4 +1,6 @@
-apply plugin: 'signing'
+import kz.greetgo.gradle.plugins.MavenUploadPlugin
+
+apply plugin: MavenUploadPlugin
 
 configurations { repoUpload }
 
@@ -9,116 +11,13 @@ dependencies {
 
 test { useTestNG() }
 
-task sourcesJar(type: Jar) {
-  from sourceSets.main.allSource
-  classifier = 'sources'
-}
-
-tasks.withType(Javadoc) {
-  options.addStringOption('Xdoclint:none', '-quiet')
-  options.addStringOption('encoding', 'UTF-8')
-  options.addStringOption('charSet', 'UTF-8')
-}
-
-task javadocJar(type: Jar) {
-  classifier = 'javadoc'
-  from javadoc
-}
-
-artifacts {
-  archives javadocJar, sourcesJar
-}
-
-uploadArchives {
-  repositories.mavenDeployer {
-    configuration = configurations.archives
-    repository(
-      url: System.getenv('GG_REPO')
-    )
-
-    pom.project {
-      name project.name
-      packaging 'jar'
-    }
-  }
-}
-
-if (System.getenv('LIB_SIGN_GPG_KEY_ID') != null && System.getenv('LIB_SIGN_GPG_KEY_ID').length() > 0) {
-
-  gradle.taskGraph.whenReady { taskGraph ->
-    if (taskGraph.allTasks.any { it instanceof Sign }) {
-      allprojects { ext."signing.keyId" = System.getenv('LIB_SIGN_GPG_KEY_ID') }
-      allprojects { ext."signing.secretKeyRingFile" = System.getenv('LIB_SIGN_GPG_KEY_LOCATION') }
-      allprojects { ext."signing.password" = System.getenv('LIB_SIGN_GPG_KEY_PASSWORD') }
-    }
-  }
-
-}
-
-signing {
-  sign configurations.archives
-}
-
-project.tasks.create('uploadToMavenCentral', Upload.class) {
-  group = "upload"
-  configuration = configurations.archives
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(
-          userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
-          password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
-        )
-      }
-
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(
-          userName: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_ID'),
-          password: System.getenv('LIB_SONATYPE_ACCOUNT_HASH_PASSWORD')
-        )
-      }
-
-      pom.project {
-        name project.name
-        packaging 'jar'
-
-        description 'Hot configs. To manage apllication configuration'
-        url 'http://tech.greetgo.kz/libs/greetgo/conf.php'
-
-        scm {
-          connection 'scm:git:https://github.com/greetgo/conf'
-          developerConnection 'scm:git:https://github.com/greetgo/conf'
-          url 'https://github.com/greetgo/conf'
-        }
-
-        licenses {
-          license {
-            name 'The Apache License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          }
-        }
-
-        developers {
-          developer {
-            id 'greetgo'
-            name 'Yevgeniy Kolpakov'
-            email 'tech@greet-go.com'
-          }
-          developer {
-            id 'yakzhanov'
-            name 'Yerlan Akzhanov'
-            email 'yakzhanov@greet-go.com'
-          }
-          developer {
-            id 'mkasyanov'
-            name 'Maxim Kasyanov'
-            email 'mkasyanov@greet-go.com'
-          }
-
-        }
-      }
-    }
+uploadToMavenCentral {
+  description = "System parameters from environment using in greetgo!'s projects"
+  url = 'https://github.com/greetgo/greetgo.conf'
+  scm.url = 'https://github.com/greetgo/greetgo.conf.git'
+  developer {
+    id = 'pompei'
+    name = 'Evgeniy Kolpakov'
+    email = 'ekolpakov@greet-go.com'
   }
 }
