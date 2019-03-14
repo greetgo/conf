@@ -45,7 +45,7 @@ class DefinitionCreator {
       }
     }
 
-    result = new HotConfigDefinitionModel(configLocation, extractDescription(configInterface), elementDefinitions);
+    result = new HotConfigDefinitionModel(configLocation, configInterface, extractDescription(configInterface), elementDefinitions);
   }
 
   private static String extractDescription(Class<?> configInterface) {

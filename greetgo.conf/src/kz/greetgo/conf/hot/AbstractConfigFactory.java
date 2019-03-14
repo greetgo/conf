@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
 
@@ -33,9 +34,18 @@ public abstract class AbstractConfigFactory {
   /**
    * Marks all configs to reread from storage
    */
-  public void reset() {
+  public void resetAll() {
+    resetIf(config -> true);
+  }
+
+  /**
+   * Marks specified configs to reread from storage
+   */
+  public void resetIf(Predicate<HotConfig> predicate) {
     for (HotConfigImpl mediator : workingConfigs.values()) {
-      mediator.reset();
+      if (predicate.test(mediator)) {
+        mediator.reset();
+      }
     }
   }
 
@@ -83,6 +93,16 @@ public abstract class AbstractConfigFactory {
     @Override
     public boolean isElementExists(String elementName) {
       return getData().containsKey(elementName);
+    }
+
+    @Override
+    public String location() {
+      return configDefinition.location();
+    }
+
+    @Override
+    public Class<?> configInterface() {
+      return configDefinition.configInterface();
     }
   }
 

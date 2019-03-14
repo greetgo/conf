@@ -7,9 +7,11 @@ public class HotConfigDefinitionModel implements HotConfigDefinition {
 
   private final List<ElementDefinition> elementDefinitions;
   private final String location, description;
+  private final Class<?> configInterface;
 
-  public HotConfigDefinitionModel(String location, String description, List<ElementDefinition> elementDefinitions) {
+  public HotConfigDefinitionModel(String location, Class<?> configInterface, String description, List<ElementDefinition> elementDefinitions) {
     this.location = location;
+    this.configInterface = configInterface;
     this.description = description;
     this.elementDefinitions = Collections.unmodifiableList(elementDefinitions);
   }
@@ -27,5 +29,10 @@ public class HotConfigDefinitionModel implements HotConfigDefinition {
   @Override
   public List<ElementDefinition> elementList() {
     return elementDefinitions;
+  }
+
+  @Override
+  public Class<?> configInterface() {
+    return configInterface;
   }
 }

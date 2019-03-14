@@ -8,9 +8,10 @@ import java.util.Random;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileConfigFactoryTest {
   @Test
-  public void createDefault() throws Exception {
+  public void createDefault() {
     {
       File f = new File("build/asd/HotConfig1.hot");
       if (f.exists()) f.delete();
@@ -72,14 +73,16 @@ public class FileConfigFactoryTest {
   public void reset() throws Exception {
 
     File f = new File("build/asd/HotConfig1.hot");
-    if (f.exists()) f.delete();
+    if (f.exists()) {
+      f.delete();
+    }
 
     {
       PrintStream out = new PrintStream(f, "UTF-8");
       out.println("intExampleValue = 7111");
       out.println("intExampleValue2 = 444");
       out.println("boolExampleValue = 0");
-      out.println("strExampleValue = parabelum");
+      out.println("strExampleValue = status");
       out.close();
     }
 
@@ -89,7 +92,7 @@ public class FileConfigFactoryTest {
     assertThat(conf.intExampleValue()).isEqualTo(7111);
     assertThat(conf.intExampleValue2()).isEqualTo(444);
     assertThat(conf.boolExampleValue()).isEqualTo(false);
-    assertThat(conf.strExampleValue()).isEqualTo("parabelum");
+    assertThat(conf.strExampleValue()).isEqualTo("status");
 
     {
       PrintStream out = new PrintStream(f, "UTF-8");
@@ -100,7 +103,7 @@ public class FileConfigFactoryTest {
       out.close();
     }
 
-    fab.reset();
+    fab.resetAll();
 
     assertThat(conf.intExampleValue()).isEqualTo(999);
     assertThat(conf.intExampleValue2()).isEqualTo(111);
@@ -154,7 +157,7 @@ public class FileConfigFactoryTest {
   }
 
   @Test
-  public void testingMethod_toString_inConfig() throws Exception {
+  public void testingMethod_toString_inConfig() {
     final String baseDir = "build/testingMethod_toString_inConfig/" + rnd.nextInt(10_000_000);
 
     FileConfigFactory fileConfigFactory = new FileConfigFactory() {

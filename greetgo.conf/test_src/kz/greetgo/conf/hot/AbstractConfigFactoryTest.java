@@ -34,7 +34,7 @@ public class AbstractConfigFactoryTest {
 
     final Testing testing = new Testing();
 
-    Thread tt[] = new Thread[10];
+    Thread[] tt = new Thread[10];
 
     final AtomicBoolean reading = new AtomicBoolean(true);
 
@@ -61,7 +61,7 @@ public class AbstractConfigFactoryTest {
 
     for (int i = 0; i < 10; i++) {
       Thread.sleep(70);
-      testing.reset();
+      testing.resetAll();
     }
 
     Thread.sleep(70);
@@ -79,7 +79,7 @@ public class AbstractConfigFactoryTest {
   }
 
   @Test
-  public void checkArrays_new() throws Exception {
+  public void checkArrays_new() {
     final Testing testing = new Testing();
 
     HostConfigWithLists config = testing.createConfig(HostConfigWithLists.class);
@@ -104,7 +104,7 @@ public class AbstractConfigFactoryTest {
   }
 
   @Test
-  public void checkArrays_hasContent() throws Exception {
+  public void checkArrays_hasContent() {
     final Testing testing = new Testing();
 
     testing.cs.contentMap.put("HostConfigWithLists.txt", "" +
@@ -151,7 +151,7 @@ public class AbstractConfigFactoryTest {
   }
 
   @Test
-  public void replaceParametersInDefaultStrValue() throws Exception {
+  public void replaceParametersInDefaultStrValue() {
     final Testing testing = new Testing();
     HotConfig1 config1 = testing.createConfig(HotConfig1.class);
 
@@ -159,7 +159,7 @@ public class AbstractConfigFactoryTest {
   }
 
   @Test
-  public void defaultListSize_new_reset_exists() throws Exception {
+  public void defaultListSize_new_reset_exists() {
     final Testing testing = new Testing();
 
     HotConfigWithDefaultListSize config = testing.createConfig(HotConfigWithDefaultListSize.class);
@@ -205,7 +205,7 @@ public class AbstractConfigFactoryTest {
       "classList.5.intField=119988\n" +
       "longList.4=4511\n");
 
-    testing.reset();
+    testing.resetAll();
 
     assertThat(config.longList()).hasSize(9);
     assertThat(config.classList()).hasSize(7);

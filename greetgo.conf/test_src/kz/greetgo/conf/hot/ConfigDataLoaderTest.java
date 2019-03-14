@@ -23,11 +23,11 @@ public class ConfigDataLoaderTest {
   }
 
   @Test(dataProvider = "useDefaultDataProvider")
-  public void loadConfigDataTo_int(boolean useDefault) throws Exception {
+  public void loadConfigDataTo_int(boolean useDefault) {
     Map<String, Object> target = new HashMap<>();
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "some", "some", Collections.singletonList(
+      "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", int.class, 1300, "")
     ));
 
@@ -44,11 +44,11 @@ public class ConfigDataLoaderTest {
   }
 
   @Test(dataProvider = "useDefaultDataProvider")
-  public void loadConfigDataTo_long(boolean useDefault) throws Exception {
+  public void loadConfigDataTo_long(boolean useDefault) {
     Map<String, Object> target = new HashMap<>();
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "some", "some", Collections.singletonList(
+      "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", long.class, 17_000L, "")
     ));
 
@@ -65,11 +65,11 @@ public class ConfigDataLoaderTest {
   }
 
   @Test(dataProvider = "useDefaultDataProvider")
-  public void loadConfigDataTo_str(boolean useDefault) throws Exception {
+  public void loadConfigDataTo_str(boolean useDefault) {
     Map<String, Object> target = new HashMap<>();
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "some", "some", Collections.singletonList(
+      "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", String.class, "DEF_STR", "")
     ));
 
@@ -86,11 +86,11 @@ public class ConfigDataLoaderTest {
   }
 
   @Test(dataProvider = "useDefaultDataProvider")
-  public void loadConfigDataTo_bool_1(boolean useDefault) throws Exception {
+  public void loadConfigDataTo_bool_1(boolean useDefault) {
     Map<String, Object> target = new HashMap<>();
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "some", "some", Collections.singletonList(
+      "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", boolean.class, true, "")
     ));
 
@@ -107,11 +107,11 @@ public class ConfigDataLoaderTest {
   }
 
   @Test(dataProvider = "useDefaultDataProvider")
-  public void loadConfigDataTo_bool_2(boolean useDefault) throws Exception {
+  public void loadConfigDataTo_bool_2(boolean useDefault) {
     Map<String, Object> target = new HashMap<>();
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "some", "some", Collections.singletonList(
+      "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", boolean.class, false, "")
     ));
 
@@ -128,11 +128,11 @@ public class ConfigDataLoaderTest {
   }
 
   @Test(dataProvider = "useDefaultDataProvider")
-  public void loadConfigDataTo_FieldClass(boolean useDefault) throws Exception {
+  public void loadConfigDataTo_FieldClass(boolean useDefault) {
     Map<String, Object> target = new HashMap<>();
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "some", "some", Collections.singletonList(
+      "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("hello", FieldClass.class, null, "")
     ));
 
@@ -158,7 +158,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_createsNew() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Arrays.asList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement", int.class, 100, "int element description\nin two lines"),
       ElementDefinition.newOne("strElement", String.class, "asd", "str element description\nin two lines"),
       ElementDefinition.newOne("boolElement", boolean.class, true, "bool element description\nin two lines")
@@ -206,7 +206,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_appendMore() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Collections.singletonList(
       ElementDefinition.newOne("intElement", int.class, 123, "int element description\nin two lines")
     ));
 
@@ -244,7 +244,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_appendMore2() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Arrays.asList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement1", int.class, 123, "int element 1 description\nin two lines"),
       ElementDefinition.newOne("intElement2", int.class, 567, "int element 2 description\nin two lines")
     ));
@@ -284,7 +284,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_appendMore3() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Arrays.asList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement1", int.class, 876, "int element 1 description\nin two lines"),
       ElementDefinition.newOne("intElement2", int.class, 543, "int element 2 description\nin two lines")
     ));
@@ -324,7 +324,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_allExists() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Arrays.asList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement1", int.class, 311, "int element 1 description\nin two lines"),
       ElementDefinition.newOne("intElement2", Integer.class, 544, "int element 2 description\nin two lines")
     ));
@@ -356,7 +356,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_commentedIsExists() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Collections.singletonList(
       ElementDefinition.newOne("intElement1", int.class, 311, "int element 1 description\nin two lines")
     ));
 
@@ -386,7 +386,7 @@ public class ConfigDataLoaderTest {
   public void loadConfigDataTo_doubleCommentedIsExists() throws Exception {
     Map<String, Object> target = new HashMap<>();
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      "hello/asd.txt", "hello world\nsingle", Collections.singletonList(
+      "hello/asd.txt", Object.class, "hello world\nsingle", Collections.singletonList(
       ElementDefinition.newOne("intElement1", int.class, 311, "int element 1 description\nin two lines")
     ));
 
@@ -431,7 +431,7 @@ public class ConfigDataLoaderTest {
     String location = "hello/wow.txt";
 
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
-      location, "title", Collections.singletonList(
+      location, Object.class, "title", Collections.singletonList(
       ElementDefinition.newOne("element", FieldClass.class, null, "some info")
     ));
 

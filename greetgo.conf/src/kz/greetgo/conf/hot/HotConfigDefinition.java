@@ -6,6 +6,14 @@ import java.util.List;
  * Defines hot config infrastructure
  */
 public interface HotConfigDefinition {
+
+  /**
+   * Returns config interface class
+   *
+   * @return config interface class
+   */
+  Class<?> configInterface();
+
   /**
    * Hot config location
    *
