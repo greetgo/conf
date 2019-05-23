@@ -11,11 +11,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 public class ConfDataTest {
   @Test
-  public void parseToPair_001() throws Exception {
+  public void parseToPair_001() {
     String[] pair = ConfData.parseToPair("");
     assertThat(pair).isNull();
   }

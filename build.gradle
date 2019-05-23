@@ -39,9 +39,10 @@ subprojects {
 
   dependencies {
     ext.servletApiVersion = '3.1.0';
-
+    ext.assertjVersion = "3.12.2"
+    
     testCompile 'org.testng:testng:6.11'
-    compile 'org.easytesting:fest-assert-core:2.0M10'
+    testCompile "org.assertj:assertj-core:${assertjVersion}"
   }
 
   jar {

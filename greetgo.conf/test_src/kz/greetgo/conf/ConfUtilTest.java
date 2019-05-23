@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 import static kz.greetgo.conf.ConfUtil.convertToType;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfUtilTest {
   @Test

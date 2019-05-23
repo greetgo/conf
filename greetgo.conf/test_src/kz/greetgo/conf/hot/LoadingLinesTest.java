@@ -1,6 +1,7 @@
 package kz.greetgo.conf.hot;
 
-import org.fest.assertions.data.MapEntry;
+
+import org.assertj.core.data.MapEntry;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static kz.greetgo.conf.hot.HotConfigConstants.COUNT_SUFFIX;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoadingLinesTest {
   @Test

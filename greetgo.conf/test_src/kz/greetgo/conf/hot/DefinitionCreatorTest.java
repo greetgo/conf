@@ -1,7 +1,8 @@
 package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.ConfUtil;
-import org.fest.assertions.api.Assertions;
+
+import org.assertj.core.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static kz.greetgo.conf.hot.DefinitionCreator.createDefinition;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefinitionCreatorTest {
 

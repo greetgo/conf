@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.Random;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileConfigFactoryTest {
