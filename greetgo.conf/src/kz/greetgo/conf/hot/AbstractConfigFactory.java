@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
@@ -49,6 +50,16 @@ public abstract class AbstractConfigFactory {
     }
   }
 
+  /**
+   * Defines auto reset timeout. It is a time interval in milliseconds to check last config modification date and time.
+   * And if the date and time was changed, then it calls method `reset` for this config.
+   *
+   * @return auto reset timeout. Zero - auto resetting is off
+   */
+  protected long autoResetTimeout() {
+    return 500;
+  }
+
   private final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
 
   private class HotConfigImpl implements HotConfig {
@@ -63,16 +74,69 @@ public abstract class AbstractConfigFactory {
       data.set(null);
     }
 
+    private final AtomicReference<Date> lastModificationTime = new AtomicReference<>(null);
+    private final AtomicLong lastChecked = new AtomicLong(System.currentTimeMillis());
+
+    private void preReset() {
+      try {
+
+        long autoResetTimeout = autoResetTimeout();
+
+        if (autoResetTimeout == 0) {
+          return;
+        }
+
+        long delay = System.currentTimeMillis() - lastChecked.get();
+
+        if (delay < autoResetTimeout) {
+          return;
+        }
+
+        Date lastModificationTime = this.lastModificationTime.get();
+        if (lastModificationTime == null) {
+          Date lastChangedAt = getConfigStorage().getLastChangedAt(configDefinition.location());
+          this.lastModificationTime.set(lastChangedAt);
+          lastChecked.set(System.currentTimeMillis());
+          return;
+        }
+
+        Date lastChangedAt = getConfigStorage().getLastChangedAt(configDefinition.location());
+        lastChecked.set(System.currentTimeMillis());
+        if (lastChangedAt == null) {
+          return;
+        }
+
+        if (lastChangedAt.equals(lastModificationTime)) {
+          return;
+        }
+
+        this.lastModificationTime.set(lastChangedAt);
+
+        reset();
+
+      } catch (RuntimeException e) {
+        throw e;
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
     Map<String, Object> getData() {
+      preReset();
+
       {
         Map<String, Object> x = data.get();
-        if (x != null) return x;
+        if (x != null) {
+          return x;
+        }
       }
 
       synchronized (workingConfigs) {
         {
           Map<String, Object> x = data.get();
-          if (x != null) return x;
+          if (x != null) {
+            return x;
+          }
         }
         {
           Map<String, Object> newData = new HashMap<>();

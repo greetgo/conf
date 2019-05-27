@@ -9,6 +9,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FieldAcceptorCreatorTest {
+
   public static class SimpleFields {
     public String stringField;
     public int intField;
@@ -20,7 +21,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_stringField() throws Exception {
+  public void classSimpleFields_setter_stringField() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -31,7 +32,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_stringField_null() throws Exception {
+  public void classSimpleFields_setter_stringField_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
     x.stringField = "asd";
@@ -41,7 +42,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_intField() throws Exception {
+  public void classSimpleFields_setter_intField() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -52,7 +53,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_intField_null() throws Exception {
+  public void classSimpleFields_setter_intField_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -61,7 +62,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_intField_empty() throws Exception {
+  public void classSimpleFields_setter_intField_empty() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -70,7 +71,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_intFieldBoxed() throws Exception {
+  public void classSimpleFields_setter_intFieldBoxed() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -81,7 +82,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_intFieldBoxed_null() throws Exception {
+  public void classSimpleFields_setter_intFieldBoxed_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
     x.intFieldBoxed = 234;
@@ -91,7 +92,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_intFieldBoxed_empty() throws Exception {
+  public void classSimpleFields_setter_intFieldBoxed_empty() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
     x.intFieldBoxed = 234;
@@ -102,7 +103,7 @@ public class FieldAcceptorCreatorTest {
 
 
   @Test
-  public void classSimpleFields_setter_longField() throws Exception {
+  public void classSimpleFields_setter_longField() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -113,7 +114,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_longField_null() throws Exception {
+  public void classSimpleFields_setter_longField_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -122,7 +123,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_longField_empty() throws Exception {
+  public void classSimpleFields_setter_longField_empty() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -131,7 +132,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_longFieldBoxed() throws Exception {
+  public void classSimpleFields_setter_longFieldBoxed() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -142,7 +143,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_longFieldBoxed_null() throws Exception {
+  public void classSimpleFields_setter_longFieldBoxed_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
     x.longFieldBoxed = 234L;
@@ -152,7 +153,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_setter_longFieldBoxed_empty() throws Exception {
+  public void classSimpleFields_setter_longFieldBoxed_empty() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
     x.longFieldBoxed = 234L;
@@ -191,7 +192,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test(dataProvider = "classSimpleFields_setter_booleanField_DataProvider")
-  public void classSimpleFields_setter_booleanField(String settingString, Boolean expectedValue) throws Exception {
+  public void classSimpleFields_setter_booleanField(String settingString, Boolean expectedValue) {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -202,7 +203,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test(dataProvider = "classSimpleFields_setter_booleanField_DataProvider")
-  public void classSimpleFields_setter_booleanFieldBoxed(String settingString, Boolean expectedValue) throws Exception {
+  public void classSimpleFields_setter_booleanFieldBoxed(String settingString, Boolean expectedValue) {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -214,7 +215,7 @@ public class FieldAcceptorCreatorTest {
 
 
   @Test
-  public void classSimpleFields_getter_stringField() throws Exception {
+  public void classSimpleFields_getter_stringField() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -225,7 +226,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_stringField_null() throws Exception {
+  public void classSimpleFields_getter_stringField_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -235,7 +236,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_stringField_empty() throws Exception {
+  public void classSimpleFields_getter_stringField_empty() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -245,7 +246,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_intField() throws Exception {
+  public void classSimpleFields_getter_intField() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -255,7 +256,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_intField_zero() throws Exception {
+  public void classSimpleFields_getter_intField_zero() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -265,7 +266,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_intFieldBoxed() throws Exception {
+  public void classSimpleFields_getter_intFieldBoxed() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -275,7 +276,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_intFieldBoxed_null() throws Exception {
+  public void classSimpleFields_getter_intFieldBoxed_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -285,7 +286,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_intFieldBoxed_zero() throws Exception {
+  public void classSimpleFields_getter_intFieldBoxed_zero() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -296,7 +297,7 @@ public class FieldAcceptorCreatorTest {
 
 
   @Test
-  public void classSimpleFields_getter_longField() throws Exception {
+  public void classSimpleFields_getter_longField() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -306,7 +307,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_longField_zero() throws Exception {
+  public void classSimpleFields_getter_longField_zero() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -316,7 +317,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_longFieldBoxed() throws Exception {
+  public void classSimpleFields_getter_longFieldBoxed() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -326,7 +327,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_longFieldBoxed_null() throws Exception {
+  public void classSimpleFields_getter_longFieldBoxed_null() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -336,7 +337,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void classSimpleFields_getter_longFieldBoxed_zero() throws Exception {
+  public void classSimpleFields_getter_longFieldBoxed_zero() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(SimpleFields.class);
     SimpleFields x = new SimpleFields();
 
@@ -347,7 +348,7 @@ public class FieldAcceptorCreatorTest {
 
 
   public static class NoGetterForField {
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
     private int field;
 
     @SuppressWarnings("unused")
@@ -357,7 +358,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void testNoGetterForField() throws Exception {
+  public void testNoGetterForField() {
     assertThat(FieldAcceptorCreator.createList(NoGetterForField.class)).isEmpty();
   }
 
@@ -372,7 +373,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void testNoSetterForField() throws Exception {
+  public void testNoSetterForField() {
     assertThat(FieldAcceptorCreator.createList(NoSetterForField.class)).isEmpty();
   }
 
@@ -386,7 +387,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void testWithGetterForField() throws Exception {
+  public void testWithGetterForField() {
 
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(WithGetterForField.class);
 
@@ -410,7 +411,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void testWithSetterForField() throws Exception {
+  public void testWithSetterForField() {
 
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(WithSetterForField.class);
 
@@ -442,7 +443,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void testAllAcceptors() throws Exception {
+  public void testAllAcceptors() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(AllAcceptors.class);
 
     AllAcceptors x = new AllAcceptors();
@@ -477,7 +478,7 @@ public class FieldAcceptorCreatorTest {
   }
 
   @Test
-  public void testAllAcceptors_boolean() throws Exception {
+  public void testAllAcceptors_boolean() {
     Map<String, FieldAcceptor> map = FieldAcceptorCreator.createMap(AllAcceptorsBoolean.class);
 
     AllAcceptorsBoolean x = new AllAcceptorsBoolean();
@@ -509,4 +510,5 @@ public class FieldAcceptorCreatorTest {
     assertThat(x.field).isFalse();
 
   }
+
 }

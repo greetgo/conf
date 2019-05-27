@@ -22,4 +22,5 @@ public class NoValue extends RuntimeException {
   public synchronized Throwable fillInStackTrace() {
     return this;
   }
+
 }

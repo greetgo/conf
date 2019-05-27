@@ -4,6 +4,7 @@ package kz.greetgo.conf.hot;
  * Hot config defined by {@link HotConfigDefinition}
  */
 public interface HotConfig {
+
   /**
    * Takes value of config element
    *
@@ -33,4 +34,5 @@ public interface HotConfig {
    * @return config interface class
    */
   Class<?> configInterface();
+
 }

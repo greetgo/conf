@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static kz.greetgo.conf.ConfUtil.concatNewLine;
 
 public class FieldAcceptorCreator {
+
   private Class<?> type;
 
   private FieldAcceptorCreator(Class<?> type) {this.type = type;}
@@ -213,4 +214,5 @@ public class FieldAcceptorCreator {
 
     }
   }
+
 }

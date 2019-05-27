@@ -7,6 +7,7 @@ import kz.greetgo.conf.type_manager.TypeManagerCache;
  * Definition of config element
  */
 public class ElementDefinition {
+
   /**
    * Config element name
    */
@@ -76,4 +77,5 @@ public class ElementDefinition {
     return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, defaultListSize);
 
   }
+
 }

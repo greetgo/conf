@@ -6,9 +6,11 @@ import java.lang.annotation.Annotation;
 import java.util.function.Function;
 
 public interface TypeManager {
+
   Object newDefaultValue(Object defaultValue);
 
   Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer);
 
   LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, Integer defaultListSize);
+
 }

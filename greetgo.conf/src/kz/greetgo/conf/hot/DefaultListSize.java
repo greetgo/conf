@@ -16,10 +16,12 @@ import static java.lang.annotation.ElementType.METHOD;
 @Target({METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultListSize {
+
   /**
    * Perform default list size
    *
    * @return default list size
    */
   int value();
+
 }

@@ -20,4 +20,5 @@ public class CannotWorkWithType extends HasConfigInterfaceAndMethod {
   public HasConfigInterfaceAndMethod setSourcePoint(Class<?> configInterface, Method method) {
     return new CannotWorkWithType(workingType, configInterface, method, this);
   }
+
 }

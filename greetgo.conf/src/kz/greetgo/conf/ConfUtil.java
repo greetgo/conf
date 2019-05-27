@@ -46,6 +46,7 @@ public class ConfUtil {
     readFromFile(readTo, new File(fileName));
   }
 
+  @SuppressWarnings({"UnnecessaryLabelOnContinueStatement", "UnnecessaryContinue"})
   public static void readFromStream(Object readTo, InputStream inputStream) throws Exception {
     if (readTo == null) {
       inputStream.close();
@@ -88,7 +89,7 @@ public class ConfUtil {
     try {
       try (FileInputStream in = new FileInputStream(file)) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        byte buf[] = new byte[1024 * 4];
+        byte[] buf = new byte[1024 * 4];
 
         while (true) {
           int count = in.read(buf);
@@ -111,6 +112,7 @@ public class ConfUtil {
 
   public static final String rus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
   public static final String RUS = rus.toUpperCase();
+  @SuppressWarnings("SpellCheckingInspection")
   public static final String eng = "abcdefghijklmnopqrstuvwxyz";
   public static final String ENG = eng.toUpperCase();
   public static final String DEG = "0123456789";
@@ -121,13 +123,14 @@ public class ConfUtil {
 
   @SuppressWarnings("unused")
   public static String rndStr(int len) {
-    char ret[] = new char[len];
+    char[] ret = new char[len];
     for (int i = 0; i < len; i++) {
       ret[i] = ALL_CHARS[rnd.nextInt(ALL_CHARS_LEN)];
     }
     return new String(ret);
   }
 
+  @SuppressWarnings("UnnecessaryContinue")
   public static String extractStrDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer) {
     String value = null;
     List<String> aa = new ArrayList<>();
@@ -158,13 +161,19 @@ public class ConfUtil {
       }
     }
 
-    if (aa.size() > 1) throw new TooManyDefaultAnnotations(aa);
+    if (aa.size() > 1) {
+      throw new TooManyDefaultAnnotations(aa);
+    }
     return value;
   }
 
   public static String convertToStr(Object value) {
-    if (value == null) return null;
-    if (value instanceof String) return (String) value;
+    if (value == null) {
+      return null;
+    }
+    if (value instanceof String) {
+      return (String) value;
+    }
     return "" + value;
   }
 
@@ -173,8 +182,12 @@ public class ConfUtil {
   }
 
   public static String concatNewLine(String s1, String s2) {
-    if (s1 == null) return s2;
-    if (s2 == null) return s1;
+    if (s1 == null) {
+      return s2;
+    }
+    if (s2 == null) {
+      return s1;
+    }
     return s1 + "\n" + s2;
   }
 
@@ -191,8 +204,7 @@ public class ConfUtil {
   private static final List<PatternFormat> PATTERN_FORMAT_LIST = new ArrayList<>();
 
   private static void addPatternFormat(String patternStr, String formatStr) {
-    PATTERN_FORMAT_LIST.add(new PatternFormat(Pattern.compile(patternStr), new SimpleDateFormat(
-      formatStr)));
+    PATTERN_FORMAT_LIST.add(new PatternFormat(Pattern.compile(patternStr), new SimpleDateFormat(formatStr)));
   }
 
   static {
@@ -221,18 +233,18 @@ public class ConfUtil {
   }
 
   public static Object convertToType(String str, Class<?> type) {
-    if (type == null) return null;
+    if (type == null) {return null;}
     if (type.isAssignableFrom(String.class)) {
       return str;
     }
     if (type == boolean.class || type == Boolean.class) {
-      if (str == null) return type == Boolean.class ? null : false;
+      if (str == null) {return type == Boolean.class ? null : false;}
       return strToBool(str);
     }
     if (type == int.class || type == Integer.class) {
-      if (str == null || str.trim().length() == 0) return type == Integer.class ? null : 0;
-      if ("true".equals(str)) return 1;
-      if ("false".equals(str)) return 0;
+      if (str == null || str.trim().length() == 0) {return type == Integer.class ? null : 0;}
+      if ("true".equals(str))  {return 1;}
+      if ("false".equals(str)) {return 0;}
       try {
         return Integer.parseInt(str);
       } catch (NumberFormatException e) {
@@ -240,9 +252,9 @@ public class ConfUtil {
       }
     }
     if (type == long.class || type == Long.class) {
-      if (str == null || str.trim().length() == 0) return type == Long.class ? null : 0L;
-      if ("true".equals(str)) return 1L;
-      if ("false".equals(str)) return 0L;
+      if (str == null || str.trim().length() == 0) {return type == Long.class ? null : 0L;}
+      if ("true".equals(str))  {return 1L;}
+      if ("false".equals(str)) {return 0L;}
       try {
         return Long.parseLong(str);
       } catch (NumberFormatException e) {
@@ -250,7 +262,7 @@ public class ConfUtil {
       }
     }
     if (type == Double.TYPE || type.isAssignableFrom(Double.class)) {
-      if (str == null) return 0d;
+      if (str == null) {return 0d;}
       try {
         return Double.parseDouble(str);
       } catch (NumberFormatException e) {
@@ -258,11 +270,11 @@ public class ConfUtil {
       }
     }
     if (type == Float.TYPE || type.isAssignableFrom(Float.class)) {
-      if (str == null) return 0f;
+      if (str == null) {return 0f;}
       return Float.parseFloat(str);
     }
     if (type.isAssignableFrom(BigDecimal.class)) {
-      if (str == null) return BigDecimal.ZERO;
+      if (str == null) {return BigDecimal.ZERO;}
       try {
         return new BigDecimal(str);
       } catch (NumberFormatException e) {
@@ -270,7 +282,7 @@ public class ConfUtil {
       }
     }
     if (type.isAssignableFrom(Date.class)) {
-      if (str == null) return null;
+      if (str == null) {return null;}
       for (PatternFormat pf : PATTERN_FORMAT_LIST) {
         Matcher m = pf.pattern.matcher(str);
         if (m.matches()) {
@@ -290,6 +302,7 @@ public class ConfUtil {
     throw new CannotConvertToType(str, type);
   }
 
+  @SuppressWarnings("RedundantIfStatement")
   public static boolean strToBool(String str) {
     if (str == null) return false;
 
@@ -319,4 +332,5 @@ public class ConfUtil {
   public static boolean isWrapper(Class<?> aClass) {
     return WRAPPER_TYPES.contains(aClass);
   }
+
 }

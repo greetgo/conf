@@ -175,4 +175,21 @@ public class FileConfigFactoryTest {
     assertThat(config.toString()).contains(ConcreteHotConfig.class.getName());
 
   }
+
+  @Test
+  public void dynamicTest() {
+
+    final String baseDir = "build/dynamicTest";
+    final String ext = ".hot.txt";
+
+    TestHotConfigFab fab = new TestHotConfigFab(baseDir, ext);
+
+    HotConfig1 config1 = fab.createConfig1();
+
+    HotConfig2 config2 = fab.createConfig2();
+
+    System.out.println("config1.strExampleValue() = " + config1.strExampleValue());
+    System.out.println("config2.asd() = " + config2.asd());
+    System.out.println("ok");
+  }
 }

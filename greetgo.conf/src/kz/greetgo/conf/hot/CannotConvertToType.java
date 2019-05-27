@@ -3,6 +3,7 @@ package kz.greetgo.conf.hot;
 import java.lang.reflect.Method;
 
 public class CannotConvertToType extends ConvertingError {
+
   public final String convertingValue;
   public final Class<?> type;
 
@@ -25,10 +26,12 @@ public class CannotConvertToType extends ConvertingError {
   public CannotConvertToType(String convertingValue, Class<?> type,
                              Class<?> configInterface, Method method,
                              CannotConvertToType cause) {
+
     super(message(convertingValue, type) + " ; at " + place(configInterface, method),
       cause, configInterface, method);
     this.convertingValue = convertingValue;
     this.type = type;
+
   }
 
 
@@ -36,4 +39,5 @@ public class CannotConvertToType extends ConvertingError {
   public HasConfigInterfaceAndMethod setSourcePoint(Class<?> configInterface, Method method) {
     return new CannotConvertToType(convertingValue, type, configInterface, method, this);
   }
+
 }

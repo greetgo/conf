@@ -33,10 +33,12 @@ import static java.lang.annotation.ElementType.METHOD;
 @Target({METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultStrValue {
+
   /**
    * Perform default parameter value
    *
    * @return default parameter value
    */
   String value();
+
 }

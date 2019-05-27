@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TooManyDefaultAnnotations extends HasConfigInterfaceAndMethod {
+
   public final List<String> annotations;
 
   private static String message(List<String> annotations) {
@@ -27,4 +28,5 @@ public class TooManyDefaultAnnotations extends HasConfigInterfaceAndMethod {
   public HasConfigInterfaceAndMethod setSourcePoint(Class<?> configInterface, Method method) {
     return new TooManyDefaultAnnotations(this, configInterface, method);
   }
+
 }

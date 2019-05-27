@@ -1,7 +1,6 @@
 package kz.greetgo.conf.hot;
 
 import kz.greetgo.conf.ConfUtil;
-
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -130,7 +129,6 @@ public class DefinitionCreatorTest {
 
   @DataProvider
   public Object[][] checkDefaultValue_DP() {
-    //noinspection ConstantConditions
     return new Object[][]{
 
       {0, DEF0},
@@ -166,7 +164,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test(dataProvider = "checkDefaultValue_DP")
-  public void createDefinition_checkDefaultValue(int index, Object defaultValue) throws Exception {
+  public void createDefinition_checkDefaultValue(int index, Object defaultValue) {
 
     String location = ConfUtil.rndStr(10);
 
@@ -199,7 +197,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void createDefinition_replacer() throws Exception {
+  public void createDefinition_replacer() {
     Function<String, String> replacer = s -> s.replaceAll("WOW", "SIN");
 
     //
@@ -222,7 +220,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void createDefinition_description_name() throws Exception {
+  public void createDefinition_description_name() {
 
     //
     //
@@ -242,9 +240,8 @@ public class DefinitionCreatorTest {
     LeftType asd();
   }
 
-  @SuppressWarnings("ConstantConditions")
   @Test
-  public void createDefinition_ForLeftType() throws Exception {
+  public void createDefinition_ForLeftType() {
     try {
       //
       //
@@ -269,7 +266,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void createDefinition_location() throws Exception {
+  public void createDefinition_location() {
 
     String location = ConfUtil.rndStr(10);
 
@@ -298,7 +295,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void createDefinition_ElemClass_defaultValue() throws Exception {
+  public void createDefinition_ElemClass_defaultValue() {
 
     //
     //
@@ -328,8 +325,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  @SuppressWarnings("ConstantConditions")
-  public void createDefinition_TooManyDefaultAnnotations() throws Exception {
+  public void createDefinition_TooManyDefaultAnnotations() {
 
     try {
       //
@@ -362,7 +358,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void createDefinition_ElemClass_list() throws Exception {
+  public void createDefinition_ElemClass_list() {
 
     //
     //
@@ -390,7 +386,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void createDefinition_int_list() throws Exception {
+  public void createDefinition_int_list() {
 
     //
     //
@@ -418,7 +414,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void extractClass_fromList() throws Exception {
+  public void extractClass_fromList() throws NoSuchMethodException {
 
     Type genericReturnType = ForExtractClass.class.getMethod("someList").getGenericReturnType();
 
@@ -428,7 +424,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void extractClass_direct() throws Exception {
+  public void extractClass_direct() throws NoSuchMethodException {
 
     Type genericReturnType = ForExtractClass.class.getMethod("someField").getGenericReturnType();
 
@@ -446,7 +442,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void extractClass_DefaultListSize() throws Exception {
+  public void extractClass_DefaultListSize() {
     //
     //
     HotConfigDefinition definition = createDefinition("", HasDefListSize.class, Function.identity());
@@ -466,7 +462,7 @@ public class DefinitionCreatorTest {
   }
 
   @Test
-  public void extractClass_DefaultListSize_for_SomeClass() throws Exception {
+  public void extractClass_DefaultListSize_for_SomeClass() {
     //
     //
     HotConfigDefinition definition = createDefinition("", HasDefListSizeForSomeClass.class, Function.identity());

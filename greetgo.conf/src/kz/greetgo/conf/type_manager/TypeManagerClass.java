@@ -19,6 +19,7 @@ import static kz.greetgo.conf.ConfUtil.concatNewLine;
 import static kz.greetgo.conf.ConfUtil.nullToEmpty;
 
 public class TypeManagerClass implements TypeManager {
+
   public final Class<?> type;
 
   public TypeManagerClass(Class<?> type) {
@@ -174,4 +175,5 @@ public class TypeManagerClass implements TypeManager {
       configLineList
     );
   }
+
 }

@@ -14,6 +14,7 @@ public class TypeManagerCache {
       return cachedValues.computeIfAbsent(type, TypeManagerPrimitive::new);
     }
 
+    //noinspection PointlessBooleanExpression
     if (false
 
       || type.isInterface()
@@ -29,4 +30,5 @@ public class TypeManagerCache {
       return cachedValues.computeIfAbsent(type, TypeManagerClass::new);
     }
   }
+
 }

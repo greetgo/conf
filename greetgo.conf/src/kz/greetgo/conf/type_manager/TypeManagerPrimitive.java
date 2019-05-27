@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class TypeManagerPrimitive implements TypeManager {
+
   public final Class<?> type;
 
   public TypeManagerPrimitive(Class<?> type) {
@@ -185,4 +186,5 @@ public class TypeManagerPrimitive implements TypeManager {
 
     return new LineStructure(Collections.singletonList(readElement), configLineList);
   }
+
 }

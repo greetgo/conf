@@ -3,6 +3,7 @@ package kz.greetgo.conf.hot;
 import java.lang.reflect.Method;
 
 public abstract class HasConfigInterfaceAndMethod extends RuntimeException {
+
   public final Class<?> configInterface;
   public final Method method;
 
@@ -30,4 +31,5 @@ public abstract class HasConfigInterfaceAndMethod extends RuntimeException {
   protected static String place(Class<?> configInterface, Method method) {
     return configInterface.getName() + "." + method.getName() + "()";
   }
+
 }

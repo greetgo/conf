@@ -14,4 +14,5 @@ public abstract class ConvertingError extends HasConfigInterfaceAndMethod {
   public ConvertingError(String message, Throwable cause) {
     super(message, cause);
   }
+
 }

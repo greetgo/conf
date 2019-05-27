@@ -17,10 +17,12 @@ import static java.lang.annotation.ElementType.METHOD;
 @Target({METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultIntValue {
+
   /**
    * Perform default parameter value
    *
    * @return default parameter value
    */
   int value();
+
 }

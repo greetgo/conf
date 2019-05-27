@@ -51,4 +51,5 @@ public class ConfigDataLoader {
       configStorage.saveConfigContent(configDefinition.location(), loadingLines.content());
     }
   }
+
 }

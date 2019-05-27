@@ -1,6 +1,12 @@
 package kz.greetgo.conf;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,12 +18,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * This class is storing config data earlier read from file (or some other source)
  *
  * @author pompei
  */
 public class ConfData {
+
   private final Map<String, List<Object>> data = new HashMap<>();
 
   /**
@@ -34,7 +43,7 @@ public class ConfData {
    *
    * @param fileName full name of config file
    */
-  public void readFromFile(String fileName) throws Exception {
+  public void readFromFile(String fileName) {
     readFromFile(new File(fileName));
   }
 
@@ -81,28 +90,35 @@ public class ConfData {
    * @param charSequence reading char sequence
    */
   public void readFromCharSequence(CharSequence charSequence) {
-    try {
-      readFromByteArray(charSequence.toString().getBytes("UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+    readFromByteArray(charSequence.toString().getBytes(UTF_8));
   }
 
+  @SuppressWarnings({"UnnecessaryLabelOnBreakStatement", "UnnecessaryLabelOnContinueStatement"})
   private void readFromStream0(InputStream inputStream) throws IOException {
     final LinkedList<Map<String, List<Object>>> stack = new LinkedList<>();
     stack.add(data);
 
-    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
       WHILE:
       while (true) {
         String line = br.readLine();
-        if (line == null) break WHILE;
+        if (line == null) {
+          break WHILE;
+        }
         line = line.replaceAll("^\\s+", "");
-        if (line.startsWith("#")) continue WHILE;
-        if (line.length() == 0) continue WHILE;
-        String pair[] = parseToPair(line);
-        if (pair == null) continue WHILE;
-        if (pair.length != 2) continue WHILE;
+        if (line.startsWith("#")) {
+          continue WHILE;
+        }
+        if (line.length() == 0) {
+          continue WHILE;
+        }
+        String[] pair = parseToPair(line);
+        if (pair == null) {
+          continue WHILE;
+        }
+        if (pair.length != 2) {
+          continue WHILE;
+        }
 
         if ("{".equals(pair[1])) {
           Map<String, List<Object>> hash = new HashMap<>();
@@ -126,7 +142,9 @@ public class ConfData {
   }
 
   static String[] parseToPair(String line) {
-    if (line == null) return null;
+    if (line == null) {
+      return null;
+    }
     {
       int idx1 = line.indexOf('=');
       int idx2 = line.indexOf(':');
@@ -167,10 +185,14 @@ public class ConfData {
     StringBuilder prevPath = new StringBuilder();
     for (int i = 0, C = split.length - 1; i < C; i++) {
       String step = split[i];
-      if (prevPath.length() > 0) prevPath.append('/');
+      if (prevPath.length() > 0) {
+        prevPath.append('/');
+      }
       prevPath.append(step);
       cur = getMap(cur, new Name(step), prevPath);
-      if (cur == null) throw new NoValue(prevPath);
+      if (cur == null) {
+        throw new NoValue(prevPath);
+      }
     }
     return getStr(cur, new Name(split[split.length - 1]), prevPath);
   }
@@ -213,7 +235,9 @@ public class ConfData {
    */
   public int asInt(String path, int defaultValue) {
     String str = str(path);
-    if (str == null) return defaultValue;
+    if (str == null) {
+      return defaultValue;
+    }
     try {
       return Integer.parseInt(str);
     } catch (NumberFormatException ignore) {
@@ -243,7 +267,9 @@ public class ConfData {
    */
   public long asLong(String path) {
     String str = str(path);
-    if (str == null) return 0;
+    if (str == null) {
+      return 0;
+    }
     return Long.parseLong(str);
   }
 
@@ -258,7 +284,9 @@ public class ConfData {
    */
   public long asLong(String path, long defaultValue) {
     String str = str(path);
-    if (str == null) return defaultValue;
+    if (str == null) {
+      return defaultValue;
+    }
     try {
       return Long.parseLong(str);
     } catch (NumberFormatException ignore) {
@@ -333,6 +361,7 @@ public class ConfData {
    * @throws NoValue if path to parameter is absent
    * @see #bool(String)
    */
+  @SuppressWarnings("RedundantIfStatement")
   public boolean boolEx(String path) {
     String str = strEx(path);
     if (str == null) return false;
@@ -410,19 +439,28 @@ public class ConfData {
    * @throws NoValue if path to parameters is absent
    * @throws NoValue if parameter value cannot be converted to date with specified formats
    */
+  @SuppressWarnings("UnnecessaryContinue")
   public Date dateEx(String path, String... formats) {
 
     String strValue = strEx(path);
-    if (strValue == null) return null;
+    if (strValue == null) {
+      return null;
+    }
     strValue = strValue.trim();
-    if (strValue.startsWith("#")) return null;
+    if (strValue.startsWith("#")) {
+      return null;
+    }
 
     List<SimpleDateFormat> formatList = new LinkedList<>();
     for (String format : formats) {
-      if (format == null) continue;
+      if (format == null) {
+        continue;
+      }
       for (String f : format.split(";")) {
         String trimmedFormat = f.trim();
-        if (trimmedFormat.length() == 0) continue;
+        if (trimmedFormat.length() == 0) {
+          continue;
+        }
         formatList.add(new SimpleDateFormat(trimmedFormat));
       }
     }
@@ -471,6 +509,7 @@ public class ConfData {
    * @param defaultValue returning value when no parameter or parameter value cannot be parsed to date
    * @return date value or <code>defaultValue</code>
    */
+  @SuppressWarnings("RedundantIfStatement")
   public Date date(String path, Date defaultValue) {
     try {
       Date ret = dateEx(path);
@@ -493,7 +532,9 @@ public class ConfData {
   public Date date(String path, Date defaultValue, String... formats) {
     try {
       Date ret = dateEx(path, formats);
-      if (ret == null) return defaultValue;
+      if (ret == null) {
+        return defaultValue;
+      }
       return ret;
     } catch (NoValue ignore) {
       return defaultValue;
@@ -540,7 +581,9 @@ public class ConfData {
     }
 
     public String bigName() {
-      if (index == 0) return name;
+      if (index == 0) {
+        return name;
+      }
       return name + '.' + index;
     }
 
@@ -552,7 +595,9 @@ public class ConfData {
 
   private String getStr(Map<String, List<Object>> map, Name name, StringBuilder prevPath) {
     List<Object> list = map.get(name.name);
-    if (list == null) throw new NoValue(prevPath, name.bigName());
+    if (list == null) {
+      throw new NoValue(prevPath, name.bigName());
+    }
 
     int index = 0;
     for (Object object : list) {
@@ -603,4 +648,5 @@ public class ConfData {
     ret.addAll(cur.keySet());
     return ret;
   }
+
 }

@@ -8,6 +8,7 @@ public interface ConfigLine {
 
   List<ConfigLine> setStoredValue(String value, boolean commented);
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   boolean isStored();
 
   String description();

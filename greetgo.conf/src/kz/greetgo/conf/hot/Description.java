@@ -23,10 +23,12 @@ import static java.lang.annotation.ElementType.TYPE;
 @Target({METHOD, TYPE, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Description {
+
   /**
    * Description contents
    *
    * @return description contents
    */
   String value();
+
 }

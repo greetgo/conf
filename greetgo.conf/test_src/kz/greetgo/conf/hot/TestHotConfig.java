@@ -3,13 +3,13 @@ package kz.greetgo.conf.hot;
 public class TestHotConfig {
   public static void main(String[] args) {
     TestHotConfigFab fab = new TestHotConfigFab("build/hotAsd", ".hotconfig");
-    
+
     HotConfig1 config1 = fab.createConfig1();
     HotConfig2 config2 = fab.createConfig2();
-    
+
     printValues(config1, config2);
   }
-  
+
   private static void printValues(HotConfig1 config1, HotConfig2 config2) {
     System.out.println("----------------------------------------------------");
     System.out.println("config1.strExampleValue = " + config1.strExampleValue());

@@ -34,4 +34,5 @@ public interface HotConfigDefinition {
    * @return config element definition list
    */
   List<ElementDefinition> elementList();
+
 }

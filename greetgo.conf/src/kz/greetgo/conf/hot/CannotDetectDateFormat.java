@@ -2,7 +2,6 @@ package kz.greetgo.conf.hot;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CannotDetectDateFormat extends ConvertingError {
 
@@ -30,12 +29,12 @@ public class CannotDetectDateFormat extends ConvertingError {
   }
 
   private static String message(String paringStr, List<String> patternFormatList) {
-    return "paringStr = " + paringStr + ", must be one from "
-      + patternFormatList.stream().collect(Collectors.joining(", "));
+    return "paringStr = " + paringStr + ", must be one from " + String.join(", ", patternFormatList);
   }
 
   @Override
   public HasConfigInterfaceAndMethod setSourcePoint(Class<?> configInterface, Method method) {
     return new CannotDetectDateFormat(paringStr, patternFormatList, configInterface, method, this);
   }
+
 }

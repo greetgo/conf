@@ -1,7 +1,5 @@
 package kz.greetgo.conf.hot;
 
-import kz.greetgo.conf.ConfUtil;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 class LoadingLines {
+
   private final Date now;
   private final String fileDescription;
   private boolean contentExists;
@@ -142,4 +141,5 @@ class LoadingLines {
 
     }
   }
+
 }

@@ -45,7 +45,8 @@ class DefinitionCreator {
       }
     }
 
-    result = new HotConfigDefinitionModel(configLocation, configInterface, extractDescription(configInterface), elementDefinitions);
+    result = new HotConfigDefinitionModel(configLocation, configInterface,
+      extractDescription(configInterface), elementDefinitions);
   }
 
   private static String extractDescription(Class<?> configInterface) {
@@ -66,14 +67,18 @@ class DefinitionCreator {
     if (method.getReturnType() == List.class) {
       defaultListSize = 1;
       DefaultListSize a = method.getAnnotation(DefaultListSize.class);
-      if (a != null) defaultListSize = a.value();
+      if (a != null) {
+        defaultListSize = a.value();
+      }
     }
 
     return ElementDefinition.create(name, typeManager, defaultValue, description, defaultListSize);
   }
 
   static Class<?> extractClass(Type type) {
-    if (type instanceof Class) return (Class<?>) type;
+    if (type instanceof Class) {
+      return (Class<?>) type;
+    }
     if (type instanceof ParameterizedType) {
       ParameterizedType pType = (ParameterizedType) type;
       if (pType.getRawType() == List.class) {
@@ -89,4 +94,5 @@ class DefinitionCreator {
     if (a == null) return null;
     return a.value();
   }
+
 }
