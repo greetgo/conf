@@ -190,6 +190,7 @@ public class FileConfigFactoryTest {
 
     System.out.println("config1.strExampleValue() = " + config1.strExampleValue());
     System.out.println("config2.asd() = " + config2.asd());
+    System.out.println("config2.userEnv() = " + config2.userEnv());
     System.out.println("ok");
   }
 }

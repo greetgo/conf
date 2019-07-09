@@ -20,7 +20,9 @@ public class TypeManagerPrimitive implements TypeManager {
   public final Class<?> type;
 
   public TypeManagerPrimitive(Class<?> type) {
-    if (!forMe(type)) throw new IllegalArgumentException("Wrong type " + type);
+    if (!forMe(type)) {
+      throw new IllegalArgumentException("Wrong type " + type);
+    }
     this.type = type;
   }
 
@@ -36,6 +38,11 @@ public class TypeManagerPrimitive implements TypeManager {
   @Override
   public Object extractDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer) {
     String strValue = ConfUtil.extractStrDefaultValue(annotations, parameterReplacer);
+    return fromStr(strValue);
+  }
+
+  @Override
+  public Object fromStr(String strValue) {
     return ConfUtil.convertToType(strValue, type);
   }
 
@@ -100,9 +107,13 @@ public class TypeManagerPrimitive implements TypeManager {
       @Override
       public List<ConfigLine> setStoredValue(String strValue, boolean commented) {
         d.markStored(fullName());
-        if (!commented) try {
-          d.setValue(index(), ConfUtil.convertToType(strValue, type));
-        } catch (ConvertingError ignore) {}
+        if (!commented) {
+          try {
+            d.setValue(index(), fromStr(strValue));
+          } catch (ConvertingError ignore) {
+            //nothing to do
+          }
+        }
         return Collections.emptyList();
       }
 
@@ -136,45 +147,49 @@ public class TypeManagerPrimitive implements TypeManager {
 
     List<ConfigLine> configLineList = new ArrayList<>();
 
-    if (isList) configLineList.add(new ConfigLine() {
-      @Override
-      public String fullName() {
-        return topFieldName + "." + HotConfigConstants.COUNT_SUFFIX;
-      }
-
-      @Override
-      public List<ConfigLine> setStoredValue(String value, boolean commented) {
-        if (commented) return Collections.emptyList();
-
-        int count = (int) ConfUtil.convertToType(value, int.class);
-
-        d.markStored(fullName());
-
-        List<ConfigLine> ret = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-          d.assertExists(i);
-          ret.add(new LocalConfigLine(i));
+    if (isList) {
+      configLineList.add(new ConfigLine() {
+        @Override
+        public String fullName() {
+          return topFieldName + "." + HotConfigConstants.COUNT_SUFFIX;
         }
 
-        return ret;
-      }
+        @Override
+        public List<ConfigLine> setStoredValue(String value, boolean commented) {
+          if (commented) {
+            return Collections.emptyList();
+          }
 
-      @Override
-      public boolean isStored() {
-        return d.isStored(fullName());
-      }
+          int count = (int) ConfUtil.convertToType(value, int.class);
 
-      @Override
-      public String description() {
-        return "Количество элементов в массиве " + topFieldName;
-      }
+          d.markStored(fullName());
 
-      @Override
-      public String getNotNullDefaultStringValue() {
-        return "" + defaultListSize;
-      }
-    });
+          List<ConfigLine> ret = new ArrayList<>();
+
+          for (int i = 0; i < count; i++) {
+            d.assertExists(i);
+            ret.add(new LocalConfigLine(i));
+          }
+
+          return ret;
+        }
+
+        @Override
+        public boolean isStored() {
+          return d.isStored(fullName());
+        }
+
+        @Override
+        public String description() {
+          return "Количество элементов в массиве " + topFieldName;
+        }
+
+        @Override
+        public String getNotNullDefaultStringValue() {
+          return "" + defaultListSize;
+        }
+      });
+    }
 
     {
       int count = defaultListSize == null ? 1 : defaultListSize;

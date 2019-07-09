@@ -8,4 +8,7 @@ public interface HotConfig2 {
   @Description("Пример описания\nболее длинного")
   @DefaultIntValue(456)
   int intAsd();
+
+  @FirstReadEnv("USER")
+  String userEnv();
 }

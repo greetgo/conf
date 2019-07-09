@@ -42,7 +42,14 @@ public class TypeManagerClass implements TypeManager {
   }
 
   @Override
-  public LineStructure createLineStructure(String topFieldName, Object defaultValue, String description, Integer defaultListSize) {
+  public Object fromStr(String strValue) {
+    throw new RuntimeException("Cannot convert from string `" + strValue + "` to type " + type);
+  }
+
+  @Override
+  public LineStructure createLineStructure(String topFieldName, Object defaultValue,
+                                           String description, Integer defaultListSize) {
+
     boolean isList = defaultListSize != null;
 
     final Object defObject = newDefaultValue(defaultValue);

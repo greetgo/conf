@@ -72,7 +72,9 @@ class DefinitionCreator {
       }
     }
 
-    return ElementDefinition.create(name, typeManager, defaultValue, description, defaultListSize);
+    FirstReadEnv firstReadEnv = method.getAnnotation(FirstReadEnv.class);
+
+    return ElementDefinition.create(name, typeManager, defaultValue, description, defaultListSize, firstReadEnv);
   }
 
   static Class<?> extractClass(Type type) {

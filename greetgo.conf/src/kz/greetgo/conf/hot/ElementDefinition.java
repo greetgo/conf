@@ -33,17 +33,29 @@ public class ElementDefinition {
    */
   public final Integer defaultListSize;
 
-  private ElementDefinition(String name, TypeManager typeManager, Object defaultValue, String description, Integer defaultListSize) {
-    if (defaultValue instanceof TypeManager) throw new IllegalArgumentException("defaultValue cannot be TypeManager");
+  public final FirstReadEnv firstReadEnv;
+
+  private ElementDefinition(String name,
+                            TypeManager typeManager,
+                            Object defaultValue,
+                            String description,
+                            Integer defaultListSize,
+                            FirstReadEnv firstReadEnv) {
+    this.firstReadEnv = firstReadEnv;
+
+    if (defaultValue instanceof TypeManager) {
+      throw new IllegalArgumentException("defaultValue cannot be TypeManager");
+    }
     this.name = name;
     this.typeManager = typeManager;
     this.defaultValue = defaultValue;
     this.description = description;
     this.defaultListSize = defaultListSize;
+
   }
 
   public static ElementDefinition newOne(String name, Class<?> type, Object defaultValue, String description) {
-    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, null);
+    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, null, null);
   }
 
   public Object newDefaultValue() {
@@ -55,16 +67,17 @@ public class ElementDefinition {
   }
 
   public static ElementDefinition newList(String name, Class<?> type, Object defaultValue, String description) {
-    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, 1);
+    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, 1, null);
   }
 
   public static ElementDefinition create(String name,
                                          TypeManager typeManager,
                                          Object defaultValue,
                                          String description,
-                                         Integer defaultListSize) {
+                                         Integer defaultListSize,
+                                         FirstReadEnv firstReadEnv) {
 
-    return new ElementDefinition(name, typeManager, defaultValue, description, defaultListSize);
+    return new ElementDefinition(name, typeManager, defaultValue, description, defaultListSize, firstReadEnv);
 
   }
 
@@ -72,9 +85,16 @@ public class ElementDefinition {
                                          Class<?> type,
                                          Object defaultValue,
                                          String description,
-                                         Integer defaultListSize) {
+                                         Integer defaultListSize,
+                                         FirstReadEnv firstReadEnv) {
 
-    return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, defaultListSize);
+    return new ElementDefinition(
+      name,
+      TypeManagerCache.getOrCreate(type),
+      defaultValue,
+      description,
+      defaultListSize,
+      firstReadEnv);
 
   }
 

@@ -2,7 +2,6 @@ package kz.greetgo.conf.hot;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
+import static java.util.Collections.unmodifiableMap;
 import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
 
 /**
@@ -49,6 +49,8 @@ public abstract class AbstractConfigFactory {
       }
     }
   }
+
+  private static final Object ABSENT_ENV = new Object();
 
   /**
    * Defines auto reset timeout. It is a time interval in milliseconds to check last config modification date and time.
@@ -141,17 +143,51 @@ public abstract class AbstractConfigFactory {
         {
           Map<String, Object> newData = new HashMap<>();
           loadConfigDataTo(newData, configDefinition, getConfigStorage(), new Date());
-          newData = Collections.unmodifiableMap(newData);
+          newData = unmodifiableMap(newData);
           data.set(newData);
           return newData;
         }
       }
     }
 
+
+    private final ConcurrentHashMap<String, Object> environmentValues = new ConcurrentHashMap<>();
+
     @Override
     @SuppressWarnings("unchecked")
     public Object getElementValue(String elementName) {
-      return getData().get(elementName);
+
+      Object envValue = environmentValues.get(elementName);
+
+      if (envValue == null) {
+        for (ElementDefinition definition : configDefinition.elementList()) {
+          if (definition.name.equals(elementName)) {
+            if (definition.firstReadEnv == null) {
+              envValue = ABSENT_ENV;
+              break;
+            }
+
+            String strEnvValue = System.getenv(definition.firstReadEnv.value());
+            if (strEnvValue != null && strEnvValue.trim().length() > 0) {
+              envValue = definition.typeManager.fromStr(strEnvValue);
+            } else {
+              envValue = ABSENT_ENV;
+            }
+
+            break;
+          }
+        }
+        if (envValue == null) {
+          envValue = ABSENT_ENV;
+        }
+        environmentValues.put(elementName, envValue);
+      }
+
+      if (envValue == ABSENT_ENV) {
+        return getData().get(elementName);
+      }
+
+      return envValue;
     }
 
     @Override
@@ -179,12 +215,16 @@ public abstract class AbstractConfigFactory {
   public HotConfig getOrCreateConfig(HotConfigDefinition configDefinition) {
     {
       HotConfigImpl config = workingConfigs.get(configDefinition.location());
-      if (config != null) return config;
+      if (config != null) {
+        return config;
+      }
     }
     synchronized (this) {
       {
         HotConfigImpl config = workingConfigs.get(configDefinition.location());
-        if (config != null) return config;
+        if (config != null) {
+          return config;
+        }
       }
 
       HotConfigImpl config = new HotConfigImpl(configDefinition);
@@ -244,14 +284,19 @@ public abstract class AbstractConfigFactory {
 
     {
       HotConfig hotConfig = workingConfigs.get(configLocation);
-      if (hotConfig != null) return createInvocationHandlerOnHotConfig(hotConfig, configInterface);
+      if (hotConfig != null) {
+        return createInvocationHandlerOnHotConfig(hotConfig, configInterface);
+      }
     }
 
     return createInvocationHandlerOnHotConfig(
-      getOrCreateConfig(DefinitionCreator.createDefinition(
-        configLocation, configInterface, this::replaceParametersInDefaultStrValue
-      )),
-      configInterface
+      getOrCreateConfig(
+
+        DefinitionCreator.createDefinition(
+          configLocation, configInterface, this::replaceParametersInDefaultStrValue
+        )
+
+      ), configInterface
     );
   }
 

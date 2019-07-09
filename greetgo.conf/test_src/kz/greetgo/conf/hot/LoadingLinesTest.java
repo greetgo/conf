@@ -436,7 +436,6 @@ public class LoadingLinesTest {
     ll.saveTo(target);
 
     assertThat(target.get("topFieldA")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topFieldA"))).hasSize(3);
     assertThat(((List) target.get("topFieldA")).get(0)).isInstanceOf(ForList.class);
     assertThat(((List) target.get("topFieldA")).get(1)).isInstanceOf(ForList.class);
@@ -451,7 +450,6 @@ public class LoadingLinesTest {
     assertThat(topFieldA.get(2).field2).isEqualTo(444);
 
     assertThat(target.get("topFieldB")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topFieldB"))).hasSize(2);
     assertThat(((List) target.get("topFieldB")).get(0)).isInstanceOf(ForList.class);
     assertThat(((List) target.get("topFieldB")).get(1)).isInstanceOf(ForList.class);
@@ -503,7 +501,6 @@ public class LoadingLinesTest {
     ll.saveTo(target);
 
     assertThat(target.get("topField")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topField"))).hasSize(1);
     assertThat(((List) target.get("topField")).get(0)).isInstanceOf(ForList.class);
     //noinspection unchecked
@@ -555,7 +552,6 @@ public class LoadingLinesTest {
     ll.saveTo(target);
 
     assertThat(target.get("topFieldA")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topFieldA"))).hasSize(3);
     assertThat(((List) target.get("topFieldA")).get(0)).isInstanceOf(Integer.class);
     assertThat(((List) target.get("topFieldA")).get(1)).isInstanceOf(Integer.class);
@@ -567,7 +563,6 @@ public class LoadingLinesTest {
     assertThat(topFieldA.get(2)).isEqualTo(333);
 
     assertThat(target.get("topFieldB")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topFieldB"))).hasSize(2);
     assertThat(((List) target.get("topFieldB")).get(0)).isInstanceOf(Integer.class);
     assertThat(((List) target.get("topFieldB")).get(1)).isInstanceOf(Integer.class);
@@ -611,7 +606,6 @@ public class LoadingLinesTest {
     ll.saveTo(target);
 
     assertThat(target.get("topField")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topField"))).hasSize(1);
     assertThat(((List) target.get("topField")).get(0)).isInstanceOf(Integer.class);
     //noinspection unchecked
@@ -643,13 +637,12 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Описание поля");
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.create("topField", int.class, 777, "описание списка", 7));
+    ll.putDefinition(ElementDefinition.create("topField", int.class, 777, "описание списка", 7, null));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
 
     assertThat(target.get("topField")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topField"))).hasSize(7);
     assertThat(((List) target.get("topField")).get(0)).isInstanceOf(Integer.class);
     //noinspection unchecked
@@ -705,7 +698,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Описание поля");
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.create("topField", int.class, 777, "описание списка", 7));
+    ll.putDefinition(ElementDefinition.create("topField", int.class, 777, "описание списка", 7, null));
 
     //ll.readStorageLine("topField." + COUNT_SUFFIX + " = 3");
     ll.readStorageLine("topField.0 = 100");
@@ -715,7 +708,6 @@ public class LoadingLinesTest {
     ll.saveTo(target);
 
     assertThat(target.get("topField")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topField"))).hasSize(7);
     assertThat(((List) target.get("topField")).get(0)).isInstanceOf(Integer.class);
     //noinspection unchecked
@@ -765,13 +757,12 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Описание поля");
     ll.setContentExists(false);
 
-    ll.putDefinition(ElementDefinition.create("topField", ForList.class, null, "описание списка", 5));
+    ll.putDefinition(ElementDefinition.create("topField", ForList.class, null, "описание списка", 5, null));
 
     Map<String, Object> target = new HashMap<>();
     ll.saveTo(target);
 
     assertThat(target.get("topField")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topField"))).hasSize(5);
     assertThat(((List) target.get("topField")).get(0)).isInstanceOf(ForList.class);
     //noinspection unchecked
@@ -834,7 +825,7 @@ public class LoadingLinesTest {
     LoadingLines ll = new LoadingLines(now, "Описание поля");
     ll.setContentExists(true);
 
-    ll.putDefinition(ElementDefinition.create("topField", ForList.class, null, "описание списка", 5));
+    ll.putDefinition(ElementDefinition.create("topField", ForList.class, null, "описание списка", 5, null));
 
     //ll.readStorageLine("topField." + COUNT_SUFFIX + " = 3");
     ll.readStorageLine("topField.0.field1 = 100");
@@ -844,7 +835,6 @@ public class LoadingLinesTest {
     ll.saveTo(target);
 
     assertThat(target.get("topField")).isInstanceOf(List.class);
-    //noinspection unchecked
     assertThat(((List) target.get("topField"))).hasSize(5);
     assertThat(((List) target.get("topField")).get(0)).isInstanceOf(ForList.class);
     //noinspection unchecked
