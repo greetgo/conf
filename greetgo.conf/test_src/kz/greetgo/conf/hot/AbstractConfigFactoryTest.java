@@ -1,8 +1,11 @@
 package kz.greetgo.conf.hot;
 
+import kz.greetgo.conf.RND;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -10,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractConfigFactoryTest {
 
+  @SuppressWarnings("InnerClassMayBeStatic")
   class Testing extends AbstractConfigFactory {
     final ConfigStorageForTests cs = new ConfigStorageForTests();
 
@@ -27,6 +31,40 @@ public class AbstractConfigFactoryTest {
     protected String replaceParametersInDefaultStrValue(String value) {
       return value.replaceAll("T1001", "Жыдкий терминатор");
     }
+  }
+
+  @Test
+  public void useConfigAsKeyOfMap() {
+    final Testing testing = new Testing();
+
+    HotConfig1 config11 = testing.createConfig(HotConfig1.class);
+    HotConfig1 config12 = testing.createConfig(HotConfig1.class);
+
+    HotConfig2 config21 = testing.createConfig(HotConfig2.class);
+    HotConfig2 config22 = testing.createConfig(HotConfig2.class);
+
+    Object value11 = RND.str(10);
+    Object value12 = RND.str(10);
+    Object value21 = RND.str(10);
+    Object value22 = RND.str(10);
+
+    Map<Object, Object> map = new HashMap<>();
+
+    map.put(config11, value11);
+    map.put(config12, value12);
+    map.put(config21, value21);
+    map.put(config22, value22);
+
+    Object actualValue11 = map.get(config11);
+    Object actualValue12 = map.get(config12);
+    Object actualValue21 = map.get(config21);
+    Object actualValue22 = map.get(config22);
+
+    assertThat(actualValue11).isEqualTo(value11);
+    assertThat(actualValue12).isEqualTo(value12);
+    assertThat(actualValue21).isEqualTo(value21);
+    assertThat(actualValue22).isEqualTo(value22);
+
   }
 
   @Test

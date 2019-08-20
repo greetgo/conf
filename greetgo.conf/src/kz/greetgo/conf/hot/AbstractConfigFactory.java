@@ -243,7 +243,7 @@ public abstract class AbstractConfigFactory {
   @SuppressWarnings("unchecked")
   public <T> T createConfig(Class<T> configInterface) {
     return (T) Proxy.newProxyInstance(
-      getClass().getClassLoader(), new Class<?>[]{configInterface}, getInvocationHandler(configInterface)
+      getClass().getClassLoader(), new Class<?>[]{configInterface}, createInvocationHandler(configInterface)
     );
   }
 
@@ -260,26 +260,7 @@ public abstract class AbstractConfigFactory {
     return value;
   }
 
-  private final Map<Class<?>, InvocationHandler> configInterfaceInvocationHandlerMap = new HashMap<>();
-
-  private <T> InvocationHandler getInvocationHandler(Class<T> configInterface) {
-    {
-      InvocationHandler x = configInterfaceInvocationHandlerMap.get(configInterface);
-      if (x != null) return x;
-    }
-    synchronized (this) {
-      {
-        InvocationHandler x = configInterfaceInvocationHandlerMap.get(configInterface);
-        if (x != null) return x;
-      }
-
-      InvocationHandler x = createInvocationHandlerFor(configInterface);
-      configInterfaceInvocationHandlerMap.put(configInterface, x);
-      return x;
-    }
-  }
-
-  private <T> InvocationHandler createInvocationHandlerFor(Class<T> configInterface) {
+  private <T> InvocationHandler createInvocationHandler(Class<T> configInterface) {
     String configLocation = configLocationFor(configInterface);
 
     {
@@ -302,13 +283,23 @@ public abstract class AbstractConfigFactory {
 
   private InvocationHandler createInvocationHandlerOnHotConfig(final HotConfig hotConfig,
                                                                final Class<?> configInterface) {
+    final Object identityObject = new Object();
     return (proxy, method, args) -> {
 
       if (method.getParameterTypes().length > 0) return null;
 
       if ("toString".equals(method.getName())) {
-        return "[Hot config for <" + configInterface.getName() + ">@" + System.identityHashCode(this) + "]";
+        return "[Hot config for <" + configInterface.getName() + ">@" + identityObject.hashCode() + "]";
       }
+
+      if ("hashCode".equals(method.getName()) && method.getParameterCount() == 0) {
+        return identityObject.hashCode();
+      }
+      if ("equals".equals(method.getName()) && method.getParameterCount() == 1) {
+        return identityObject.equals(args[0]);
+      }
+
+      System.out.println("Called method " + method.getName());
 
       return hotConfig.getElementValue(method.getName());
     };
