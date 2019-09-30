@@ -64,6 +64,13 @@ public abstract class AbstractConfigFactory {
 
   private final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
 
+  /**
+   * Creates config storage with default values if it is absent
+   */
+  public void sync() {
+    workingConfigs.values().forEach(HotConfigImpl::getData);
+  }
+
   private class HotConfigImpl implements HotConfig {
     private final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
     private final HotConfigDefinition configDefinition;

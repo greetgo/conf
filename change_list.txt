@@ -4,3 +4,6 @@
 
 1.0.0 -> 1.0.1
   1) Выделен модуль greetgo.sys_params из greetgo.conf
+
+1.1.4 -> 1.1.5
+  1) Added method AbstractConfigFactory.sync()
