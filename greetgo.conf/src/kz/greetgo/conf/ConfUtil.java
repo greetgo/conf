@@ -3,6 +3,7 @@ package kz.greetgo.conf;
 import kz.greetgo.conf.hot.CannotConvertToType;
 import kz.greetgo.conf.hot.CannotDetectDateFormat;
 import kz.greetgo.conf.hot.DefaultBoolValue;
+import kz.greetgo.conf.hot.DefaultDoubleValue;
 import kz.greetgo.conf.hot.DefaultIntValue;
 import kz.greetgo.conf.hot.DefaultLongValue;
 import kz.greetgo.conf.hot.DefaultStrValue;
@@ -157,6 +158,12 @@ public class ConfUtil {
         DefaultBoolValue b = (DefaultBoolValue) a;
         value = "" + b.value();
         aa.add("DefaultBoolValue(" + b.value() + ")");
+        continue;
+      }
+      if (a instanceof DefaultDoubleValue) {
+        DefaultDoubleValue b = (DefaultDoubleValue) a;
+        value = "" + b.value();
+        aa.add("DefaultDoubleValue(" + b.value() + ")");
         continue;
       }
     }

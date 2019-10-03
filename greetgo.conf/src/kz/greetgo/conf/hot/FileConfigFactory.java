@@ -3,13 +3,14 @@ package kz.greetgo.conf.hot;
 import kz.greetgo.conf.ConfUtil;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Date;
 
 /**
  * Creates proxy-instances to access to config data with method {@link #createConfig(Class)}
  * <p/>
  * <p>
- * Config file located in folder returing with method {@link #getBaseDir()}.
+ * Config file located in folder returning with method {@link #getBaseDir()}.
  * </p>
  * <p>
  * Config file name is config interface name
@@ -27,7 +28,7 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
    *
    * @return folder path where config files will be created
    */
-  protected abstract String getBaseDir();
+  protected abstract Path getBaseDir();
 
   @Override
   protected <T> String configLocationFor(Class<T> configInterface) {
@@ -35,7 +36,7 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
   }
 
   private File configStorageFile(String configLocation) {
-    return new File(getBaseDir() + File.separator + configLocation);
+    return getBaseDir().resolve(configLocation).toFile();
   }
 
   public File storageFileFor(Class<?> configInterface) {

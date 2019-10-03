@@ -1,11 +1,13 @@
 package kz.greetgo.conf.hot;
 
+import java.nio.file.Path;
+
 public class TestHotConfigFab extends FileConfigFactory {
 
-  private final String baseDir;
+  private final Path baseDir;
   private final String configFileExt;
 
-  public TestHotConfigFab(String baseDir, String configFileExt) {
+  public TestHotConfigFab(Path baseDir, String configFileExt) {
     this.baseDir = baseDir;
     this.configFileExt = configFileExt;
   }
@@ -16,7 +18,7 @@ public class TestHotConfigFab extends FileConfigFactory {
   }
 
   @Override
-  protected String getBaseDir() {
+  protected Path getBaseDir() {
     return baseDir;
   }
 

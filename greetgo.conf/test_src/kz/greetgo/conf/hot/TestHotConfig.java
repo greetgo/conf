@@ -1,8 +1,10 @@
 package kz.greetgo.conf.hot;
 
+import java.nio.file.Paths;
+
 public class TestHotConfig {
   public static void main(String[] args) {
-    TestHotConfigFab fab = new TestHotConfigFab("build/hotAsd", ".hotconfig");
+    TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("hotAsd"), ".hotconfig");
 
     HotConfig1 config1 = fab.createConfig1();
     HotConfig2 config2 = fab.createConfig2();
