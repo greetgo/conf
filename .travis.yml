@@ -9,3 +9,8 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+addons:
+  artifacts:
+    paths:
+      - "$HOME/build/greetgo/greetgo.conf/greetgo.conf/build/reports"
