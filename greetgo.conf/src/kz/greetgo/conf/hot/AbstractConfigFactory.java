@@ -306,8 +306,6 @@ public abstract class AbstractConfigFactory {
         return identityObject.equals(args[0]);
       }
 
-      System.out.println("Called method " + method.getName());
-
       return hotConfig.getElementValue(method.getName());
     };
   }
