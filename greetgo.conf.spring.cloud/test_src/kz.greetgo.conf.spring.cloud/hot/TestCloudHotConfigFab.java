@@ -1,10 +1,13 @@
-package kz.greetgo.conf.hot;
+package kz.greetgo.conf.spring.cloud.hot;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.ConfigStorage;
+import kz.greetgo.conf.spring.cloud.ConfCloudUtil;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Map;
 
 public class TestCloudHotConfigFab extends CloudFileConfigFactory {
 
@@ -47,15 +50,16 @@ public class TestCloudHotConfigFab extends CloudFileConfigFactory {
   private final ConfigStorage cloudConfigStorage = new ConfigStorage() {
 
     @Override
-    public String loadCloudConfigContent() {
-      return "{\"name\":\"test-config\",\"profiles\":[\"master\"],\"label\":null,\"version\":\"b37442a398d024b10fcccb071aefbb2ef9b5db95\",\"state\":null,\"propertySources\":[{\"name\":\"http://gitlab.greetgo/aix/aix_cloud_config.git/test-config.properties\"," +
+    public Map<String, Object> loadCloudConfigContent() {
+      return ConfCloudUtil.convertContentToMap(
+      "{\"name\":\"test-config\",\"profiles\":[\"master\"],\"label\":null,\"version\":\"b37442a398d024b10fcccb071aefbb2ef9b5db95\",\"state\":null,\"propertySources\":[{\"name\":\"http://gitlab.greetgo/aix/aix_cloud_config.git/test-config.properties\"," +
           "\"source\":{" +
           "\"HotConfig1.strExampleValue\":\"check the value\"," +
           "\"HotConfig1.intExampleValue\": 1," +
           "\"HotConfig1.boolExampleValue\": false," +
           "\"HotConfig2.asd\":\"check asd the value\"," +
           "\"HotConfig2.intAsd\": 457" +
-          "}}]}\n";
+          "}}]}\n");
     }
 
     @Override

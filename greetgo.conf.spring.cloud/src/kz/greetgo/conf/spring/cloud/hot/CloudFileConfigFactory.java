@@ -1,11 +1,15 @@
-package kz.greetgo.conf.hot;
+package kz.greetgo.conf.spring.cloud.hot;
 
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.AbstractConfigFactory;
+import kz.greetgo.conf.hot.ConfigStorage;
+import kz.greetgo.conf.spring.cloud.ConfCloudUtil;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -99,8 +103,8 @@ public abstract class CloudFileConfigFactory extends AbstractConfigFactory {
   private final ConfigStorage cloudConfigStorage = new ConfigStorage() {
 
     @Override
-    public String loadCloudConfigContent() {
-      return ConfUtil.readCloudFileContent(getServerBaseUrl() + "/" + getApplication() + nvl(getProfile()) + nvl(getLabel()) );
+    public Map<String, Object> loadCloudConfigContent() {
+      return ConfCloudUtil.readCloudContent(getServerBaseUrl() + "/" + getApplication() + nvl(getProfile()) + nvl(getLabel()) );
     }
 
     @Override

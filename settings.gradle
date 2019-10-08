@@ -1,4 +1,5 @@
 rootProject.name = 'greetgo.conf.root'
 
+include "greetgo.conf.spring.cloud"
 include "greetgo.conf"
 include "greetgo.sys_params"

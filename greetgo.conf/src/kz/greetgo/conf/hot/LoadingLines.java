@@ -1,9 +1,5 @@
 package kz.greetgo.conf.hot;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kz.greetgo.conf.in_service.model.CloudPropertyModel;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -65,16 +61,9 @@ class LoadingLines {
     }
   }
 
-  public void readCloudContent(String content) {
-    if(Objects.isNull(content)) return;
-    try {
-      CloudPropertyModel model = new ObjectMapper().readValue(content, CloudPropertyModel.class);
-      if(model.propertySources!=null && !model.propertySources.isEmpty()) {
-        Map<String, Object> propertyMap = model.propertySources.get(0).source;
-        propertyMap.forEach((key, value) -> readStorageLine(key, String.valueOf(value), false));
-      }
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
+  public void readCloudContent(Map<String, Object> propertyMap) {
+    if(propertyMap!=null && !propertyMap.isEmpty()) {
+      propertyMap.forEach((key, value) -> readStorageLine(key, String.valueOf(value), false));
     }
   }
 

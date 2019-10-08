@@ -1,4 +1,4 @@
-package kz.greetgo.conf.in_service.model;
+package kz.greetgo.conf.spring.cloud.in_service.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.ToString;

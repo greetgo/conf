@@ -1,4 +1,4 @@
-package kz.greetgo.conf.in_service.util;
+package kz.greetgo.conf.spring.cloud.in_service.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -1,11 +1,19 @@
-package kz.greetgo.conf.hot;
+package kz.greetgo.conf.spring.cloud.hot;
 
 import java.nio.file.Paths;
 
 public class TestHotConfig {
   public static void main(String[] args) {
     {
-      TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("hotAsd"), ".hotconfig");
+      TestCloudHotConfigFab fab = new TestCloudHotConfigFab(Paths.get("build").resolve("hotAsd"), ".hotconfig");
+
+      HotConfig1 config1 = fab.createConfig1();
+      HotConfig2 config2 = fab.createConfig2();
+
+      printValues(config1, config2);
+    }
+    {
+      TestCloudHotConfigFromFile fab = new TestCloudHotConfigFromFile(Paths.get("build").resolve("hotAsd"), ".hotconfig");
 
       HotConfig1 config1 = fab.createConfig1();
       HotConfig2 config2 = fab.createConfig2();

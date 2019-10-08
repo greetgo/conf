@@ -1,10 +1,12 @@
-package kz.greetgo.conf.hot;
+package kz.greetgo.conf.spring.cloud.hot;
 
 import kz.greetgo.conf.ConfUtil;
+import kz.greetgo.conf.hot.ConfigStorage;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Map;
 
 public class TestCloudHotConfigFromFile extends CloudFileConfigFactory {
 
@@ -47,7 +49,7 @@ public class TestCloudHotConfigFromFile extends CloudFileConfigFactory {
   private final ConfigStorage cloudConfigStorage = new ConfigStorage() {
 
     @Override
-    public String loadCloudConfigContent() {
+    public Map loadCloudConfigContent() {
       return null;
     }
 

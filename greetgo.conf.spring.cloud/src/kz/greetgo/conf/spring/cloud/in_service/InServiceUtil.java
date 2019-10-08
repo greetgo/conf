@@ -1,10 +1,9 @@
-package kz.greetgo.conf.in_service;
+package kz.greetgo.conf.spring.cloud.in_service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kz.greetgo.conf.in_service.model.CloudPropertyModel;
-import kz.greetgo.conf.in_service.model.Response;
-import kz.greetgo.conf.in_service.util.ExceptionUtils;
+import kz.greetgo.conf.spring.cloud.in_service.model.CloudPropertyModel;
+import kz.greetgo.conf.spring.cloud.in_service.model.Response;
+import kz.greetgo.conf.spring.cloud.in_service.util.ExceptionUtils;
 import lombok.var;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;

@@ -5,6 +5,7 @@ import kz.greetgo.conf.ConfUtil;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Creates proxy-instances to access to config data with method {@link #createConfig(Class)}
@@ -55,7 +56,7 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
   private final ConfigStorage configStorage = new ConfigStorage() {
 
     @Override
-    public String loadCloudConfigContent() throws Exception {
+    public Map<String, Object> loadCloudConfigContent() throws Exception {
       throw new UnsupportedOperationException("File doesn't have cloud content");
     }
 
