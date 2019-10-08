@@ -15,6 +15,13 @@ public interface HotConfigDefinition {
   Class<?> configInterface();
 
   /**
+   * Is hot config located in cloud
+   *
+   * @return is hot config in cloud
+   */
+  boolean isCloud();
+
+  /**
    * Hot config location
    *
    * @return hot config location

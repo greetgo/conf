@@ -18,6 +18,19 @@ public class ConfigDataLoader {
 
   }
 
+  static void loadConfigDataToCloud(Map<String, Object> target,
+                               HotConfigDefinition configDefinition,
+                               ConfigStorage configStorage, Date now) {
+
+    try {
+      new ConfigDataLoader(target, configDefinition, configStorage, now).loadCloud();
+    } catch (Exception e) {
+      if (e instanceof RuntimeException) throw (RuntimeException) e;
+      throw new RuntimeException(e);
+    }
+
+  }
+
   private final Map<String, Object> target;
   private final HotConfigDefinition configDefinition;
   private final ConfigStorage configStorage;
@@ -50,6 +63,17 @@ public class ConfigDataLoader {
     if (loadingLines.needToSave()) {
       configStorage.saveConfigContent(configDefinition.location(), loadingLines.content());
     }
+  }
+
+  private void loadCloud() throws Exception {
+
+    for (ElementDefinition ed : configDefinition.elementList()) {
+      loadingLines.putCloudDefinition(configDefinition.configInterface(), ed);
+    }
+
+    loadingLines.readCloudContent(configStorage.loadCloudConfigContent());
+
+    loadingLines.saveTo(target);
   }
 
 }

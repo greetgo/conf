@@ -29,6 +29,7 @@ allprojects {
 
   repositories {
     mavenLocal()
+    mavenCentral()
     if (ggRepo?.trim()) maven { url ggRepo.trim() }
     jcenter()
   }

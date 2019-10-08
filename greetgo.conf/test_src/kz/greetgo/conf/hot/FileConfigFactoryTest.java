@@ -38,6 +38,7 @@ public class FileConfigFactoryTest {
     {
       File f = new File("build/asd/HotConfig1.hot");
       if (f.exists()) f.delete();
+      f.getParentFile().mkdirs();
 
       PrintStream out = new PrintStream(f, "UTF-8");
       out.println("intExampleValue = 711");
@@ -58,6 +59,7 @@ public class FileConfigFactoryTest {
     {
       File f = new File("build/asd/HotConfig1.hot");
       if (f.exists()) f.delete();
+      f.getParentFile().mkdirs();
 
       try (PrintStream out = new PrintStream(f, "UTF-8")) {
         out.println("intExampleValue = 7111");
@@ -83,6 +85,7 @@ public class FileConfigFactoryTest {
     if (f.exists()) {
       f.delete();
     }
+    f.getParentFile().mkdirs();
 
     {
       PrintStream out = new PrintStream(f, "UTF-8");

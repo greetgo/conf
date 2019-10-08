@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.unmodifiableMap;
 import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
+import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataToCloud;
 
 /**
  * Factory for hot config implementations
@@ -31,6 +32,13 @@ public abstract class AbstractConfigFactory {
    * @return config location
    */
   protected abstract <T> String configLocationFor(Class<T> configInterface);
+
+  /**
+   * Is config factory is cloud
+   *
+   * @return is config factory is cloud
+   */
+  protected abstract <T> boolean isCloud();
 
   /**
    * Marks all configs to reread from storage
@@ -73,6 +81,7 @@ public abstract class AbstractConfigFactory {
 
   private class HotConfigImpl implements HotConfig {
     private final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
+    private final AtomicReference<Map<String, Object>> cloudData = new AtomicReference<>(null);
     private final HotConfigDefinition configDefinition;
 
     public HotConfigImpl(HotConfigDefinition configDefinition) {
@@ -80,6 +89,7 @@ public abstract class AbstractConfigFactory {
     }
 
     void reset() {
+      cloudData.set(null);
       data.set(null);
     }
 
@@ -130,6 +140,33 @@ public abstract class AbstractConfigFactory {
       }
     }
 
+    Map<String, Object> getCloudData() {
+      preReset();
+
+      {
+        Map<String, Object> x = cloudData.get();
+        if (x != null) {
+          return x;
+        }
+      }
+
+      synchronized (workingConfigs) {
+        {
+          Map<String, Object> x = cloudData.get();
+          if (x != null) {
+            return x;
+          }
+        }
+        {
+          Map<String, Object> newData = new HashMap<>();
+          loadConfigDataToCloud(newData, configDefinition, getConfigStorage(), new Date());
+          newData = unmodifiableMap(newData);
+          cloudData.set(newData);
+          return newData;
+        }
+      }
+    }
+
     Map<String, Object> getData() {
       preReset();
 
@@ -163,8 +200,15 @@ public abstract class AbstractConfigFactory {
     @Override
     @SuppressWarnings("unchecked")
     public Object getElementValue(String elementName) {
+      Object envValue = null;
 
-      Object envValue = environmentValues.get(elementName);
+      if(configDefinition.isCloud()) {
+        envValue = getCloudData().get(configDefinition.configInterface().getSimpleName() + "." + elementName);
+      }
+
+      if(envValue!=null) return envValue;
+
+      envValue = environmentValues.get(elementName);
 
       if (envValue == null) {
         for (ElementDefinition definition : configDefinition.elementList()) {
@@ -278,13 +322,13 @@ public abstract class AbstractConfigFactory {
     }
 
     return createInvocationHandlerOnHotConfig(
-      getOrCreateConfig(
+        getOrCreateConfig(
 
-        DefinitionCreator.createDefinition(
-          configLocation, configInterface, this::replaceParametersInDefaultStrValue
-        )
+            DefinitionCreator.createDefinition(
+                configLocation, configInterface, this::replaceParametersInDefaultStrValue, isCloud()
+            )
 
-      ), configInterface
+        ), configInterface
     );
   }
 
@@ -306,7 +350,7 @@ public abstract class AbstractConfigFactory {
         return identityObject.equals(args[0]);
       }
 
-      System.out.println("Called method " + method.getName());
+//      System.out.println("Called method " + method.getName());
 
       return hotConfig.getElementValue(method.getName());
     };

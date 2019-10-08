@@ -9,6 +9,14 @@ import java.util.Date;
 public interface ConfigStorage {
 
   /**
+   * Loads and returns config content from cloud
+   *
+   * @return config content
+   */
+  String loadCloudConfigContent() throws Exception;
+
+
+  /**
    * Loads and returns config content
    *
    * @param configLocation config location

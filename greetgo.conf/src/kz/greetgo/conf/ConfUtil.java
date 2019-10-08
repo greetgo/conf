@@ -8,6 +8,7 @@ import kz.greetgo.conf.hot.DefaultIntValue;
 import kz.greetgo.conf.hot.DefaultLongValue;
 import kz.greetgo.conf.hot.DefaultStrValue;
 import kz.greetgo.conf.hot.TooManyDefaultAnnotations;
+import kz.greetgo.conf.in_service.InServiceUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -101,6 +102,12 @@ public class ConfUtil {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static String readCloudFileContent(String baseUrl) {
+    System.out.println("-----------------------------------");
+    System.out.println(baseUrl);
+    return InServiceUtil.getCloudContent(baseUrl);
   }
 
   public static void writeFile(File file, String content) {

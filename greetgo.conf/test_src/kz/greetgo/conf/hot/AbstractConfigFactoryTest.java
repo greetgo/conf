@@ -28,6 +28,11 @@ public class AbstractConfigFactoryTest {
     }
 
     @Override
+    protected <T> boolean isCloud() {
+      return false;
+    }
+
+    @Override
     protected String replaceParametersInDefaultStrValue(String value) {
       return value.replaceAll("T1001", "Жыдкий терминатор");
     }

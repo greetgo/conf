@@ -1,11 +1,12 @@
 package kz.greetgo.conf.hot;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kz.greetgo.conf.in_service.model.CloudPropertyModel;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class LoadingLines {
@@ -28,6 +29,18 @@ class LoadingLines {
 
     LineStructure lineStructure = ed.createLineStructure();
 
+    fillMaps(lineStructure);
+  }
+
+  public void putCloudDefinition(Class<?> configInterface, ElementDefinition ed) {
+
+    LineStructure lineStructure = ed.createCloudLineStructure(configInterface.getSimpleName());
+
+    fillMaps(lineStructure);
+
+  }
+
+  private void fillMaps(LineStructure lineStructure) {
     for (ConfigLine configLine : lineStructure.configLineList) {
       configLineMap.put(configLine.fullName(), configLine);
     }
@@ -49,6 +62,19 @@ class LoadingLines {
       String value = line.substring(index + 1).trim();
 
       readStorageLine(key, value, commented);
+    }
+  }
+
+  public void readCloudContent(String content) {
+    if(Objects.isNull(content)) return;
+    try {
+      CloudPropertyModel model = new ObjectMapper().readValue(content, CloudPropertyModel.class);
+      if(model.propertySources!=null && !model.propertySources.isEmpty()) {
+        Map<String, Object> propertyMap = model.propertySources.get(0).source;
+        propertyMap.forEach((key, value) -> readStorageLine(key, String.valueOf(value), false));
+      }
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
     }
   }
 

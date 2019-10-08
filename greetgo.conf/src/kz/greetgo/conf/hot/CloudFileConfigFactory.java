@@ -1,16 +1,23 @@
 package kz.greetgo.conf.hot;
 
+
 import kz.greetgo.conf.ConfUtil;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Creates proxy-instances to access to config data with method {@link #createConfig(Class)}
  * <p/>
  * <p>
- * Config file located in folder returning with method {@link #getBaseDir()}.
+ * Cloud server url for config files returning with method {@link #getServerBaseUrl()}
+ * </p>
+ * <p>
+ * <p/>
+ * <p>
+ * Default config file located in folder of running server returning with method {@link #getBaseDir()}.
  * </p>
  * <p>
  * Config file name is config interface name
@@ -21,7 +28,7 @@ import java.util.Date;
  *
  * @author pompei
  */
-public abstract class FileConfigFactory extends AbstractConfigFactory {
+public abstract class CloudFileConfigFactory extends AbstractConfigFactory {
 
   /**
    * Returns folder path where config files will be created
@@ -30,17 +37,49 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
    */
   protected abstract Path getBaseDir();
 
+  /**
+   * Returns server path where config files will be stored
+   *
+   * @return server path where config files will be stored
+   */
+  protected abstract String getServerBaseUrl();
+
+  /**
+   * Returns application property file name
+   *
+   * @return application property file name
+   */
+  protected abstract String getApplication();
+
+  /**
+   * Returns an active profile (or comma-separated list of properties)
+   *
+   * @return an active profile (or comma-separated list of properties)
+   */
+  protected String getProfile() {
+    return null;
+  }
+
+  /**
+   * Returns an optional git label (defaults to master.)
+   *
+   * @return an optional git label (defaults to master.)
+   */
+  protected String getLabel() {
+    return "master";
+  };
+
+
   @Override
   protected <T> String configLocationFor(Class<T> configInterface) {
     return configInterface.getSimpleName() + getConfigFileExt();
   }
 
-  @Override
-  protected <T> boolean isCloud() {
-    return false;
+  protected String nvl(String value) {
+    return Objects.isNull(value)?"":"/"+value;
   }
 
-  private File configStorageFile(String configLocation) {
+  protected File configStorageFile(String configLocation) {
     return getBaseDir().resolve(configLocation).toFile();
   }
 
@@ -52,11 +91,16 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
     return ".hotconfig";
   }
 
-  private final ConfigStorage configStorage = new ConfigStorage() {
+  @Override
+  protected final <T> boolean isCloud() {
+    return true;
+  }
+
+  private final ConfigStorage cloudConfigStorage = new ConfigStorage() {
 
     @Override
-    public String loadCloudConfigContent() throws Exception {
-      throw new UnsupportedOperationException("File doesn't have cloud content");
+    public String loadCloudConfigContent() {
+      return ConfUtil.readCloudFileContent(getServerBaseUrl() + "/" + getApplication() + nvl(getProfile()) + nvl(getLabel()) );
     }
 
     @Override
@@ -88,7 +132,6 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
 
   @Override
   protected ConfigStorage getConfigStorage() {
-    return configStorage;
+    return cloudConfigStorage;
   }
-
 }

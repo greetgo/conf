@@ -66,6 +66,10 @@ public class ElementDefinition {
     return typeManager.createLineStructure(name, defaultValue, description, defaultListSize);
   }
 
+  public LineStructure createCloudLineStructure(String classSimpleName) {
+    return typeManager.createLineStructure(classSimpleName + "." + name, null, description, defaultListSize);
+  }
+
   public static ElementDefinition newList(String name, Class<?> type, Object defaultValue, String description) {
     return new ElementDefinition(name, TypeManagerCache.getOrCreate(type), defaultValue, description, 1, null);
   }
