@@ -32,7 +32,7 @@ import java.util.Objects;
  *
  * @author pompei
  */
-public abstract class CloudFileConfigFactory extends AbstractConfigFactory {
+public abstract class CloudFileConfigFactory extends AbstractCloudConfigFactory {
 
   /**
    * Returns folder path where config files will be created
@@ -95,12 +95,7 @@ public abstract class CloudFileConfigFactory extends AbstractConfigFactory {
     return ".hotconfig";
   }
 
-  @Override
-  protected final <T> boolean isCloud() {
-    return true;
-  }
-
-  private final ConfigStorage cloudConfigStorage = new ConfigStorage() {
+  private final CloudConfigStorage cloudConfigStorage = new CloudConfigStorage() {
 
     @Override
     public Map<String, Object> loadCloudConfigContent() {

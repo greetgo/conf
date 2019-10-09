@@ -1,21 +1,12 @@
 package kz.greetgo.conf.hot;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Config storage interface. Is is used by library to store config data. You can redefine it to store config any where.
  * It is used in {@link AbstractConfigFactory} to access to config storing data.
  */
 public interface ConfigStorage {
-
-  /**
-   * Loads and returns config content from cloud
-   *
-   * @return config content
-   */
-  Map<String, Object> loadCloudConfigContent() throws Exception;
-
 
   /**
    * Loads and returns config content

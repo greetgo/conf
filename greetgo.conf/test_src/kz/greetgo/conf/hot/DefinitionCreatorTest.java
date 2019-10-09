@@ -170,7 +170,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition(location, ForCheckDefaultValue.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition(location, ForCheckDefaultValue.class, Function.identity());
     //
     //
 
@@ -202,7 +202,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition("", ForReplacer.class, replacer, false);
+    HotConfigDefinition definition = createDefinition("", ForReplacer.class, replacer);
     //
     //
 
@@ -224,7 +224,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition("", ForDescription.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition("", ForDescription.class, Function.identity());
     //
     //
 
@@ -245,7 +245,7 @@ public class DefinitionCreatorTest {
     try {
       //
       //
-      createDefinition("", ForLeftType.class, Function.identity(), false);
+      createDefinition("", ForLeftType.class, Function.identity());
       //
       //
       Assertions.fail("Must be error");
@@ -272,7 +272,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition(location, ForLocation.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition(location, ForLocation.class, Function.identity());
     //
     //
 
@@ -299,7 +299,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition("", ElemClassConfig.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition("", ElemClassConfig.class, Function.identity());
     //
     //
 
@@ -330,7 +330,7 @@ public class DefinitionCreatorTest {
     try {
       //
       //
-      createDefinition("", ForTooManyDefaultAnnotations.class, Function.identity(), false);
+      createDefinition("", ForTooManyDefaultAnnotations.class, Function.identity());
       //
       //
 
@@ -362,7 +362,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition("", ListElemClassConfig.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition("", ListElemClassConfig.class, Function.identity());
     //
     //
 
@@ -390,7 +390,7 @@ public class DefinitionCreatorTest {
 
     //
     //
-    HotConfigDefinition definition = createDefinition("", ListElemPrimitiveConfig.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition("", ListElemPrimitiveConfig.class, Function.identity());
     //
     //
 
@@ -445,7 +445,7 @@ public class DefinitionCreatorTest {
   public void extractClass_DefaultListSize() {
     //
     //
-    HotConfigDefinition definition = createDefinition("", HasDefListSize.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition("", HasDefListSize.class, Function.identity());
     //
     //
 
@@ -465,7 +465,7 @@ public class DefinitionCreatorTest {
   public void extractClass_DefaultListSize_for_SomeClass() {
     //
     //
-    HotConfigDefinition definition = createDefinition("", HasDefListSizeForSomeClass.class, Function.identity(), false);
+    HotConfigDefinition definition = createDefinition("", HasDefListSizeForSomeClass.class, Function.identity());
     //
     //
 

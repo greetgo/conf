@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class ConfigDataLoader {
 
-  static void loadConfigDataTo(Map<String, Object> target,
-                               HotConfigDefinition configDefinition,
-                               ConfigStorage configStorage, Date now) {
+  public static void loadConfigDataTo(Map<String, Object> target,
+                                      HotConfigDefinition configDefinition,
+                                      ConfigStorage configStorage, Date now) {
 
     try {
       new ConfigDataLoader(target, configDefinition, configStorage, now).load();
@@ -18,33 +18,20 @@ public class ConfigDataLoader {
 
   }
 
-  static void loadConfigDataToCloud(Map<String, Object> target,
-                               HotConfigDefinition configDefinition,
-                               ConfigStorage configStorage, Date now) {
+  protected final Map<String, Object> target;
+  protected final HotConfigDefinition configDefinition;
+  protected final ConfigStorage configStorage;
+  protected final LoadingLines loadingLines;
 
-    try {
-      new ConfigDataLoader(target, configDefinition, configStorage, now).loadCloud();
-    } catch (Exception e) {
-      if (e instanceof RuntimeException) throw (RuntimeException) e;
-      throw new RuntimeException(e);
-    }
-
-  }
-
-  private final Map<String, Object> target;
-  private final HotConfigDefinition configDefinition;
-  private final ConfigStorage configStorage;
-  private final LoadingLines loadingLines;
-
-  private ConfigDataLoader(Map<String, Object> target, HotConfigDefinition configDefinition,
-                           ConfigStorage configStorage, Date now) {
+  protected ConfigDataLoader(Map<String, Object> target, HotConfigDefinition configDefinition,
+                             ConfigStorage configStorage, Date now) {
     this.target = target;
     this.configDefinition = configDefinition;
     this.configStorage = configStorage;
     loadingLines = new LoadingLines(now, configDefinition.description());
   }
 
-  private void load() throws Exception {
+  protected void load() throws Exception {
 
     for (ElementDefinition ed : configDefinition.elementList()) {
       loadingLines.putDefinition(ed);
@@ -63,17 +50,6 @@ public class ConfigDataLoader {
     if (loadingLines.needToSave()) {
       configStorage.saveConfigContent(configDefinition.location(), loadingLines.content());
     }
-  }
-
-  private void loadCloud() throws Exception {
-
-    for (ElementDefinition ed : configDefinition.elementList()) {
-      loadingLines.putCloudDefinition(configDefinition.configInterface(), ed);
-    }
-
-    loadingLines.readCloudContent(configStorage.loadCloudConfigContent());
-
-    loadingLines.saveTo(target);
   }
 
 }

@@ -12,7 +12,6 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.unmodifiableMap;
 import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
-import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataToCloud;
 
 /**
  * Factory for hot config implementations
@@ -34,13 +33,6 @@ public abstract class AbstractConfigFactory {
   protected abstract <T> String configLocationFor(Class<T> configInterface);
 
   /**
-   * Is config factory is cloud
-   *
-   * @return is config factory is cloud
-   */
-  protected abstract <T> boolean isCloud();
-
-  /**
    * Marks all configs to reread from storage
    */
   public void resetAll() {
@@ -58,7 +50,7 @@ public abstract class AbstractConfigFactory {
     }
   }
 
-  private static final Object ABSENT_ENV = new Object();
+  protected static final Object ABSENT_ENV = new Object();
 
   /**
    * Defines auto reset timeout. It is a time interval in milliseconds to check last config modification date and time.
@@ -70,7 +62,7 @@ public abstract class AbstractConfigFactory {
     return 500;
   }
 
-  private final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
+  protected final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
 
   /**
    * Creates config storage with default values if it is absent
@@ -79,24 +71,22 @@ public abstract class AbstractConfigFactory {
     workingConfigs.values().forEach(HotConfigImpl::getData);
   }
 
-  private class HotConfigImpl implements HotConfig {
-    private final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
-    private final AtomicReference<Map<String, Object>> cloudData = new AtomicReference<>(null);
-    private final HotConfigDefinition configDefinition;
+  public class HotConfigImpl implements HotConfig {
+    protected final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
+    protected final HotConfigDefinition configDefinition;
 
     public HotConfigImpl(HotConfigDefinition configDefinition) {
       this.configDefinition = configDefinition;
     }
 
-    void reset() {
-      cloudData.set(null);
+    protected void reset() {
       data.set(null);
     }
 
     private final AtomicReference<Date> lastModificationTime = new AtomicReference<>(null);
     private final AtomicLong lastChecked = new AtomicLong(System.currentTimeMillis());
 
-    private void preReset() {
+    protected void preReset() {
       try {
 
         long autoResetTimeout = autoResetTimeout();
@@ -140,33 +130,6 @@ public abstract class AbstractConfigFactory {
       }
     }
 
-    Map<String, Object> getCloudData() {
-      preReset();
-
-      {
-        Map<String, Object> x = cloudData.get();
-        if (x != null) {
-          return x;
-        }
-      }
-
-      synchronized (workingConfigs) {
-        {
-          Map<String, Object> x = cloudData.get();
-          if (x != null) {
-            return x;
-          }
-        }
-        {
-          Map<String, Object> newData = new HashMap<>();
-          loadConfigDataToCloud(newData, configDefinition, getConfigStorage(), new Date());
-          newData = unmodifiableMap(newData);
-          cloudData.set(newData);
-          return newData;
-        }
-      }
-    }
-
     Map<String, Object> getData() {
       preReset();
 
@@ -195,20 +158,13 @@ public abstract class AbstractConfigFactory {
     }
 
 
-    private final ConcurrentHashMap<String, Object> environmentValues = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<String, Object> environmentValues = new ConcurrentHashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")
     public Object getElementValue(String elementName) {
-      Object envValue = null;
 
-      if(configDefinition.isCloud()) {
-        envValue = getCloudData().get(configDefinition.configInterface().getSimpleName() + "." + elementName);
-      }
-
-      if(envValue!=null) return envValue;
-
-      envValue = environmentValues.get(elementName);
+      Object envValue = environmentValues.get(elementName);
 
       if (envValue == null) {
         for (ElementDefinition definition : configDefinition.elementList()) {
@@ -322,13 +278,13 @@ public abstract class AbstractConfigFactory {
     }
 
     return createInvocationHandlerOnHotConfig(
-        getOrCreateConfig(
+      getOrCreateConfig(
 
-            DefinitionCreator.createDefinition(
-                configLocation, configInterface, this::replaceParametersInDefaultStrValue, isCloud()
-            )
+        DefinitionCreator.createDefinition(
+          configLocation, configInterface, this::replaceParametersInDefaultStrValue
+        )
 
-        ), configInterface
+      ), configInterface
     );
   }
 

@@ -47,7 +47,7 @@ public class TestCloudHotConfigFab extends CloudFileConfigFactory {
     return createConfig(HotConfig2.class);
   }
 
-  private final ConfigStorage cloudConfigStorage = new ConfigStorage() {
+  private final ConfigStorage cloudConfigStorage = new CloudConfigStorage() {
 
     @Override
     public Map<String, Object> loadCloudConfigContent() {

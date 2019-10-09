@@ -29,7 +29,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", int.class, 1300, "")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     if (!useDefault) configContent.contentMap.put("some", "field=8156");
@@ -50,7 +50,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", long.class, 17_000L, "")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     if (!useDefault) configContent.contentMap.put("some", "field=65365424");
@@ -71,7 +71,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", String.class, "DEF_STR", "")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     if (!useDefault) configContent.contentMap.put("some", "field=good value");
@@ -92,7 +92,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", boolean.class, true, "")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     if (!useDefault) configContent.contentMap.put("some", "field=off");
@@ -113,7 +113,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("field", boolean.class, false, "")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     if (!useDefault) configContent.contentMap.put("some", "field=on");
@@ -134,7 +134,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "some", Object.class, "some", Collections.singletonList(
       ElementDefinition.newOne("hello", FieldClass.class, null, "")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     if (!useDefault) configContent.contentMap.put("some", "hello.field1=7654\nhello.field2=Good string");
@@ -162,7 +162,7 @@ public class ConfigDataLoaderTest {
       ElementDefinition.newOne("intElement", int.class, 100, "int element description\nin two lines"),
       ElementDefinition.newOne("strElement", String.class, "asd", "str element description\nin two lines"),
       ElementDefinition.newOne("boolElement", boolean.class, true, "bool element description\nin two lines")
-    ), false);
+    ));
     ConfigStorageForTests configContent = new ConfigStorageForTests();
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -208,7 +208,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "hello/asd.txt", Object.class, "hello world\nsingle", Collections.singletonList(
       ElementDefinition.newOne("intElement", int.class, 123, "int element description\nin two lines")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     configContent.contentMap.put("hello/asd.txt", "\nhello=wow\n");
@@ -247,7 +247,7 @@ public class ConfigDataLoaderTest {
       "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement1", int.class, 123, "int element 1 description\nin two lines"),
       ElementDefinition.newOne("intElement2", int.class, 567, "int element 2 description\nin two lines")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     configContent.contentMap.put("hello/asd.txt", "\nintElement1=809\n");
@@ -287,7 +287,7 @@ public class ConfigDataLoaderTest {
       "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement1", int.class, 876, "int element 1 description\nin two lines"),
       ElementDefinition.newOne("intElement2", int.class, 543, "int element 2 description\nin two lines")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     configContent.contentMap.put("hello/asd.txt", "\nintElement1=xx809\n");
@@ -327,7 +327,7 @@ public class ConfigDataLoaderTest {
       "hello/asd.txt", Object.class, "hello world\nsingle", Arrays.asList(
       ElementDefinition.newOne("intElement1", int.class, 311, "int element 1 description\nin two lines"),
       ElementDefinition.newOne("intElement2", Integer.class, 544, "int element 2 description\nin two lines")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     String initialContent = "\nintElement1=777\nintElement2=888\n";
@@ -358,7 +358,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "hello/asd.txt", Object.class, "hello world\nsingle", Collections.singletonList(
       ElementDefinition.newOne("intElement1", int.class, 311, "int element 1 description\nin two lines")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     String initialContent = "#intElement1=777";
@@ -388,7 +388,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       "hello/asd.txt", Object.class, "hello world\nsingle", Collections.singletonList(
       ElementDefinition.newOne("intElement1", int.class, 311, "int element 1 description\nin two lines")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     configContent.contentMap.put("hello/asd.txt", "##intElement1=777");
@@ -433,7 +433,7 @@ public class ConfigDataLoaderTest {
     HotConfigDefinitionModel configDefinition = new HotConfigDefinitionModel(
       location, Object.class, "title", Collections.singletonList(
       ElementDefinition.newOne("element", FieldClass.class, null, "some info")
-    ), false);
+    ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     configContent.contentMap.put(location, "#left content");

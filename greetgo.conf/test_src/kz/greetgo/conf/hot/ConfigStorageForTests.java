@@ -13,11 +13,6 @@ public class ConfigStorageForTests implements ConfigStorage {
   public final AtomicInteger callCountOfLoadConfigContent = new AtomicInteger(0);
 
   @Override
-  public Map<String, Object> loadCloudConfigContent() throws Exception {
-    return null;
-  }
-
-  @Override
   public String loadConfigContent(String configLocation) {
     callCountOfLoadConfigContent.incrementAndGet();
     if (!contentMap.containsKey(configLocation)) {

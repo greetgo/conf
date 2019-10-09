@@ -16,7 +16,6 @@ class DefinitionCreator {
   private String configLocation;
   private Class<?> configInterface;
   private Function<String, String> parameterReplacer;
-  private boolean isCloud;
 
   private HotConfigDefinitionModel result;
 
@@ -24,14 +23,12 @@ class DefinitionCreator {
 
   static HotConfigDefinition createDefinition(String configLocation,
                                               Class<?> configInterface,
-                                              Function<String, String> parameterReplacer,
-                                              boolean isCloud) {
+                                              Function<String, String> parameterReplacer) {
 
     DefinitionCreator definitionCreator = new DefinitionCreator();
     definitionCreator.configLocation = configLocation;
     definitionCreator.configInterface = configInterface;
     definitionCreator.parameterReplacer = parameterReplacer;
-    definitionCreator.isCloud = isCloud;
 
     definitionCreator.create();
 
@@ -49,7 +46,7 @@ class DefinitionCreator {
     }
 
     result = new HotConfigDefinitionModel(configLocation, configInterface,
-      extractDescription(configInterface), elementDefinitions, isCloud);
+      extractDescription(configInterface), elementDefinitions);
   }
 
   private static String extractDescription(Class<?> configInterface) {

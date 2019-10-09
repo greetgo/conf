@@ -4,14 +4,12 @@ import java.nio.file.Paths;
 
 public class TestHotConfig {
   public static void main(String[] args) {
-    {
-      TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("hotAsd"), ".hotconfig");
+    TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("hotAsd"), ".hotconfig");
 
-      HotConfig1 config1 = fab.createConfig1();
-      HotConfig2 config2 = fab.createConfig2();
+    HotConfig1 config1 = fab.createConfig1();
+    HotConfig2 config2 = fab.createConfig2();
 
-      printValues(config1, config2);
-    }
+    printValues(config1, config2);
   }
 
   private static void printValues(HotConfig1 config1, HotConfig2 config2) {

@@ -1,17 +1,16 @@
 package kz.greetgo.conf.hot;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class LoadingLines {
+public class LoadingLines {
 
   private final Date now;
   private final String fileDescription;
   private boolean contentExists;
 
-  LoadingLines(Date now, String fileDescription) {
+  public LoadingLines(Date now, String fileDescription) {
     this.now = now;
     this.fileDescription = fileDescription;
   }
