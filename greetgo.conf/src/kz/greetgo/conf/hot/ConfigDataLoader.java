@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class ConfigDataLoader {
 
-  static void loadConfigDataTo(Map<String, Object> target,
-                               HotConfigDefinition configDefinition,
-                               ConfigStorage configStorage, Date now) {
+  public static void loadConfigDataTo(Map<String, Object> target,
+                                      HotConfigDefinition configDefinition,
+                                      ConfigStorage configStorage, Date now) {
 
     try {
       new ConfigDataLoader(target, configDefinition, configStorage, now).load();
@@ -18,20 +18,20 @@ public class ConfigDataLoader {
 
   }
 
-  private final Map<String, Object> target;
-  private final HotConfigDefinition configDefinition;
-  private final ConfigStorage configStorage;
-  private final LoadingLines loadingLines;
+  protected final Map<String, Object> target;
+  protected final HotConfigDefinition configDefinition;
+  protected final ConfigStorage configStorage;
+  protected final LoadingLines loadingLines;
 
-  private ConfigDataLoader(Map<String, Object> target, HotConfigDefinition configDefinition,
-                           ConfigStorage configStorage, Date now) {
+  protected ConfigDataLoader(Map<String, Object> target, HotConfigDefinition configDefinition,
+                             ConfigStorage configStorage, Date now) {
     this.target = target;
     this.configDefinition = configDefinition;
     this.configStorage = configStorage;
     loadingLines = new LoadingLines(now, configDefinition.description());
   }
 
-  private void load() throws Exception {
+  protected void load() throws Exception {
 
     for (ElementDefinition ed : configDefinition.elementList()) {
       loadingLines.putDefinition(ed);

@@ -50,7 +50,7 @@ public abstract class AbstractConfigFactory {
     }
   }
 
-  private static final Object ABSENT_ENV = new Object();
+  protected static final Object ABSENT_ENV = new Object();
 
   /**
    * Defines auto reset timeout. It is a time interval in milliseconds to check last config modification date and time.
@@ -62,7 +62,7 @@ public abstract class AbstractConfigFactory {
     return 500;
   }
 
-  private final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
+  protected final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
 
   /**
    * Creates config storage with default values if it is absent
@@ -71,22 +71,22 @@ public abstract class AbstractConfigFactory {
     workingConfigs.values().forEach(HotConfigImpl::getData);
   }
 
-  private class HotConfigImpl implements HotConfig {
-    private final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
-    private final HotConfigDefinition configDefinition;
+  public class HotConfigImpl implements HotConfig {
+    protected final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
+    protected final HotConfigDefinition configDefinition;
 
     public HotConfigImpl(HotConfigDefinition configDefinition) {
       this.configDefinition = configDefinition;
     }
 
-    void reset() {
+    protected void reset() {
       data.set(null);
     }
 
     private final AtomicReference<Date> lastModificationTime = new AtomicReference<>(null);
     private final AtomicLong lastChecked = new AtomicLong(System.currentTimeMillis());
 
-    private void preReset() {
+    protected void preReset() {
       try {
 
         long autoResetTimeout = autoResetTimeout();
@@ -158,7 +158,7 @@ public abstract class AbstractConfigFactory {
     }
 
 
-    private final ConcurrentHashMap<String, Object> environmentValues = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<String, Object> environmentValues = new ConcurrentHashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")

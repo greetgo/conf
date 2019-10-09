@@ -1,20 +1,16 @@
 package kz.greetgo.conf.hot;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-class LoadingLines {
+public class LoadingLines {
 
   private final Date now;
   private final String fileDescription;
   private boolean contentExists;
 
-  LoadingLines(Date now, String fileDescription) {
+  public LoadingLines(Date now, String fileDescription) {
     this.now = now;
     this.fileDescription = fileDescription;
   }
@@ -28,6 +24,18 @@ class LoadingLines {
 
     LineStructure lineStructure = ed.createLineStructure();
 
+    fillMaps(lineStructure);
+  }
+
+  public void putCloudDefinition(Class<?> configInterface, ElementDefinition ed) {
+
+    LineStructure lineStructure = ed.createCloudLineStructure(configInterface.getSimpleName());
+
+    fillMaps(lineStructure);
+
+  }
+
+  private void fillMaps(LineStructure lineStructure) {
     for (ConfigLine configLine : lineStructure.configLineList) {
       configLineMap.put(configLine.fullName(), configLine);
     }
@@ -49,6 +57,12 @@ class LoadingLines {
       String value = line.substring(index + 1).trim();
 
       readStorageLine(key, value, commented);
+    }
+  }
+
+  public void readCloudContent(Map<String, Object> propertyMap) {
+    if(propertyMap!=null && !propertyMap.isEmpty()) {
+      propertyMap.forEach((key, value) -> readStorageLine(key, String.valueOf(value), false));
     }
   }
 
