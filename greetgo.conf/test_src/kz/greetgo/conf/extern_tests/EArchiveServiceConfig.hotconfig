@@ -1,0 +1,26 @@
+
+#
+# Created at 2019-09-30 11:45:35.055
+#
+# Параметры Электронного Архива
+#
+
+# Использовать фэйк вместо сервиса
+useFake=true
+
+# Таймаут для получения данных
+getReceiveTimeout=5000
+
+# Имя системы от которого отправляется запрос
+callSystem=AIS_PTP
+
+# Url для сервиса TIBCO
+# url=http://esb-tibco.hq.bc:27745/EArchive_DocsByRef_Get_Ws111111
+url=http://esb-tibco.hq.bc:27745/EArchive_DocsByRef_Get_Ws111111
+
+# Таймаут для коннекшина
+getConnectionTimeout=5000
+
+
+
+
