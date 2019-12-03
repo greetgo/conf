@@ -70,7 +70,7 @@ public class InServiceUtil {
       response.isOk = false;
       response.body = ExceptionUtils.stackTraceToString(e);
       response.status = 500;
-      System.out.println(response.body);
+      System.out.println(e.getMessage());
       return response;
     }
   }
