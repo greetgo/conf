@@ -32,7 +32,8 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
 
   @Override
   protected <T> String configLocationFor(Class<T> configInterface) {
-    return configInterface.getSimpleName() + getConfigFileExt();
+    ConfigFileName x = configInterface.getAnnotation(ConfigFileName.class);
+    return (x != null ? x.value() : configInterface.getSimpleName()) + getConfigFileExt();
   }
 
   private File configStorageFile(String configLocation) {

@@ -300,7 +300,10 @@ public abstract class AbstractConfigFactory {
     final Object identityObject = new Object();
     return (proxy, method, args) -> {
 
-      if (method.getParameterTypes().length > 0) return null;
+      if (method.getParameterTypes().length > 0) {
+        //noinspection SuspiciousInvocationHandlerImplementation
+        return null;
+      }
 
       if ("toString".equals(method.getName())) {
         return "[Hot config for <" + configInterface.getName() + ">@" + identityObject.hashCode() + "]";
