@@ -71,12 +71,19 @@ public abstract class AbstractConfigFactory {
     workingConfigs.values().forEach(HotConfigImpl::getData);
   }
 
+  protected boolean isInitForcible(HotConfigDefinition configDefinition) {
+    return configDefinition.configInterface().getAnnotation(ForcibleInit.class) != null;
+  }
+
   public class HotConfigImpl implements HotConfig {
     protected final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
     protected final HotConfigDefinition configDefinition;
 
     public HotConfigImpl(HotConfigDefinition configDefinition) {
       this.configDefinition = configDefinition;
+      if (isInitForcible(configDefinition)) {
+        getData();
+      }
     }
 
     protected void reset() {

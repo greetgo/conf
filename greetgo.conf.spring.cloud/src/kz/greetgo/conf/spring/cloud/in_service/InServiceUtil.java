@@ -24,9 +24,9 @@ public class InServiceUtil {
   private static OkHttpClient client;
 
   public static OkHttpClient getClient() {
-    if(client!=null) return client;
+    if (client != null) return client;
     synchronized (InServiceUtil.class) {
-      if(client!=null) return client;
+      if (client != null) return client;
       client = new OkHttpClient();
       return client;
     }
@@ -35,7 +35,7 @@ public class InServiceUtil {
   public static CloudPropertyModel getCloudModel(String baseUrl) {
     try {
       String cloudContent = getCloudContent(baseUrl);
-      if(Objects.isNull(cloudContent)) return null;
+      if (Objects.isNull(cloudContent)) return null;
       return new ObjectMapper().readValue(cloudContent, CloudPropertyModel.class);
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -46,12 +46,11 @@ public class InServiceUtil {
     HttpUrl.Builder builder = HttpUrl.parse(baseUrl).newBuilder();
 
     var request = new Request.Builder()
-        .url(builder.build())
-        .build();
-
+      .url(builder.build())
+      .build();
 
     Response<String> stringResponse = doRequest(request);
-    if(stringResponse.isOk)
+    if (stringResponse.isOk)
       return stringResponse.body;
     return null;
   }
@@ -76,9 +75,9 @@ public class InServiceUtil {
   }
 
   protected static MediaType JSON
-      = MediaType.parse("application/json; charset=utf-8");
+    = MediaType.parse("application/json; charset=utf-8");
 
   protected static MediaType TEXT
-      = MediaType.parse("application/json; charset=utf-8");
+    = MediaType.parse("application/json; charset=utf-8");
 
 }

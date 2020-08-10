@@ -1,15 +1,11 @@
-import kz.greetgo.gradle.plugins.MavenUploadPlugin
-
-apply plugin: MavenUploadPlugin
-
-configurations { repoUpload }
-
-dependencies {
-  // needed for DAV protocol on maven uploads
-  repoUpload "org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6"
+plugins {
+  id "kz.greetgo.upload-to-maven"
+  id "kz.greetgo.upload-to-gg-repo"
 }
 
-test { useTestNG() }
+dependencies {
+
+}
 
 uploadToMavenCentral {
   description = "System parameters from environment using in greetgo!'s projects"

@@ -5,7 +5,6 @@ import java.io.StringWriter;
 
 public class ExceptionUtils {
 
-
   public static String stackTraceToString(Exception e) {
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);

@@ -1,4 +1,4 @@
-rootProject.name = 'greetgo.conf.root'
+rootProject.name = 'greetgo.conf'
 
 include "greetgo.conf.spring.cloud"
 include "greetgo.conf"

@@ -1,24 +1,19 @@
-import kz.greetgo.gradle.plugins.MavenUploadPlugin
-
-apply plugin: MavenUploadPlugin
-
-configurations { repoUpload }
+plugins {
+  id "kz.greetgo.upload-to-maven"
+  id "kz.greetgo.upload-to-gg-repo"
+}
 
 dependencies {
   compile project(":greetgo.conf")
-  // needed for DAV protocol on maven uploads
-  repoUpload "org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6"
+
+  //noinspection SpellCheckingInspection
   compile 'com.squareup.okhttp3:okhttp:3.13.1'
+  //noinspection SpellCheckingInspection
   compile group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
   compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
-}
 
-test { useTestNG() }
-
-tasks.withType(Javadoc) {
-  options.addStringOption('Xdoclint:none', '-quiet')
-  options.addStringOption('encoding', 'UTF-8')
-  options.addStringOption('charSet', 'UTF-8')
+  compileOnly "org.projectlombok:lombok:$lombokVersion"
+  annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
 uploadToMavenCentral {
