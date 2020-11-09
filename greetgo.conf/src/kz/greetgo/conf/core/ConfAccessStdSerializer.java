@@ -3,7 +3,7 @@ package kz.greetgo.conf.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfAccessStdSerializer {
+public class ConfAccessStdSerializer implements ConfContentSerializer {
 
   private static String uncomment(String str) {
     if (str == null || str.isEmpty()) {
@@ -24,7 +24,7 @@ public class ConfAccessStdSerializer {
     return str.startsWith(" ") ? str.substring(1) : str;
   }
 
-  public static List<ConfRecord> deserialize(String text) {
+  public ConfContent deserialize(String text) {
     List<ConfRecord> ret = new ArrayList<>();
     List<String> comments = new ArrayList<>();
     String[] lines = text.split("\n");
@@ -54,14 +54,14 @@ public class ConfAccessStdSerializer {
     if (comments.size() > 0) {
       ret.add(ConfRecord.ofComments(comments));
     }
-    return ret;
+    return ConfContent.of(ret);
   }
 
-  public static String serialize(List<ConfRecord> confRecordList) {
+  public String serialize(ConfContent confContent) {
 
     StringBuilder sb = new StringBuilder(1024);
 
-    for (ConfRecord confRecord : confRecordList) {
+    for (ConfRecord confRecord : confContent.records) {
       if (sb.length() > 0) {
         sb.append("\n");
       }

@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface ConfAccess {
 
-  List<ConfRecord> load();
+  ConfContent load();
 
-  void write(List<ConfRecord> recordList);
+  void write(ConfContent confContent);
 
   Date lastModifiedAt();
 

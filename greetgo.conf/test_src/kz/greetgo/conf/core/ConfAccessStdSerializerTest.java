@@ -10,6 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfAccessStdSerializerTest {
 
+  ConfContentSerializer serializer = new ConfAccessStdSerializer();
+
   @Test
   public void deserialize() {
 
@@ -45,39 +47,39 @@ public class ConfAccessStdSerializerTest {
 
     //
     //
-    List<ConfRecord> confRecordList = ConfAccessStdSerializer.deserialize(text);
+    ConfContent cc = serializer.deserialize(text);
     //
     //
 
-    assertThat(confRecordList).isNotNull();
+    assertThat(cc.records).isNotNull();
 
-    assertThat(confRecordList.get(0).key).isNull();
-    assertThat(confRecordList.get(0).value).isNull();
-    assertThat(confRecordList.get(0).comments)
+    assertThat(cc.records.get(0).key).isNull();
+    assertThat(cc.records.get(0).value).isNull();
+    assertThat(cc.records.get(0).comments)
       .isEqualTo(asList("Common Header1", "Common Header2", "", "  Common Header3", "Common Header4"));
 
-    assertThat(confRecordList.get(1).key).isNull();
-    assertThat(confRecordList.get(1).value).isNull();
-    assertThat(confRecordList.get(1).comments).isEqualTo(asList("Left comment 1", "Left comment 2"));
+    assertThat(cc.records.get(1).key).isNull();
+    assertThat(cc.records.get(1).value).isNull();
+    assertThat(cc.records.get(1).comments).isEqualTo(asList("Left comment 1", "Left comment 2"));
 
-    assertThat(confRecordList.get(2).key).isEqualTo("param1");
-    assertThat(confRecordList.get(2).value).isEqualTo("value1");
-    assertThat(confRecordList.get(2).comments).isEqualTo(asList("Comment 1 to param 1", "Comment 2 to param 1"));
+    assertThat(cc.records.get(2).key).isEqualTo("param1");
+    assertThat(cc.records.get(2).value).isEqualTo("value1");
+    assertThat(cc.records.get(2).comments).isEqualTo(asList("Comment 1 to param 1", "Comment 2 to param 1"));
 
-    assertThat(confRecordList.get(3).key).isEqualTo("param2");
-    assertThat(confRecordList.get(3).value).isEqualTo("value2");
-    assertThat(confRecordList.get(3).comments)
+    assertThat(cc.records.get(3).key).isEqualTo("param2");
+    assertThat(cc.records.get(3).value).isEqualTo("value2");
+    assertThat(cc.records.get(3).comments)
       .isEqualTo(asList("Comment 1 to param 2", "Comment 2 to param 2", "Comment 3 to param 2"));
 
-    assertThat(confRecordList.get(4).key).isNull();
-    assertThat(confRecordList.get(4).value).isNull();
-    assertThat(confRecordList.get(4).comments).isEqualTo(asList("Left comment 3", "Left comment 4"));
+    assertThat(cc.records.get(4).key).isNull();
+    assertThat(cc.records.get(4).value).isNull();
+    assertThat(cc.records.get(4).comments).isEqualTo(asList("Left comment 3", "Left comment 4"));
 
-    assertThat(confRecordList.get(5).key).isEqualTo("param3");
-    assertThat(confRecordList.get(5).value).isEqualTo("value3");
-    assertThat(confRecordList.get(5).comments).isEqualTo(asList("Comment 1 to param 3", "Comment 2 to param 3"));
+    assertThat(cc.records.get(5).key).isEqualTo("param3");
+    assertThat(cc.records.get(5).value).isEqualTo("value3");
+    assertThat(cc.records.get(5).comments).isEqualTo(asList("Comment 1 to param 3", "Comment 2 to param 3"));
 
-    assertThat(confRecordList).hasSize(6);
+    assertThat(cc.records).hasSize(6);
   }
 
   @Test
@@ -124,7 +126,7 @@ public class ConfAccessStdSerializerTest {
 
     //
     //
-    String text = ConfAccessStdSerializer.serialize(records);
+    String text = serializer.serialize(ConfContent.of(records));
     //
     //
 
