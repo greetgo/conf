@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfAccessStdSerializerTest {
@@ -52,33 +53,29 @@ public class ConfAccessStdSerializerTest {
 
     assertThat(confRecordList.get(0).key).isNull();
     assertThat(confRecordList.get(0).value).isNull();
-    assertThat(confRecordList.get(0).hasValue).isFalse();
-    assertThat(confRecordList.get(0).comment).isEqualTo("Common Header1\nCommon Header2\n\n  Common Header3\nCommon Header4");
+    assertThat(confRecordList.get(0).comments)
+      .isEqualTo(asList("Common Header1", "Common Header2", "", "  Common Header3", "Common Header4"));
 
     assertThat(confRecordList.get(1).key).isNull();
     assertThat(confRecordList.get(1).value).isNull();
-    assertThat(confRecordList.get(1).hasValue).isFalse();
-    assertThat(confRecordList.get(1).comment).isEqualTo("Left comment 1\nLeft comment 2");
+    assertThat(confRecordList.get(1).comments).isEqualTo(asList("Left comment 1", "Left comment 2"));
 
     assertThat(confRecordList.get(2).key).isEqualTo("param1");
     assertThat(confRecordList.get(2).value).isEqualTo("value1");
-    assertThat(confRecordList.get(2).hasValue).isTrue();
-    assertThat(confRecordList.get(2).comment).isEqualTo("Comment 1 to param 1\nComment 1 to param 2");
+    assertThat(confRecordList.get(2).comments).isEqualTo(asList("Comment 1 to param 1", "Comment 2 to param 1"));
 
     assertThat(confRecordList.get(3).key).isEqualTo("param2");
     assertThat(confRecordList.get(3).value).isEqualTo("value2");
-    assertThat(confRecordList.get(3).hasValue).isTrue();
-    assertThat(confRecordList.get(3).comment).isEqualTo("Comment 1 to param 2\nComment 2 to param 2\nComment 3 to param 2");
+    assertThat(confRecordList.get(3).comments)
+      .isEqualTo(asList("Comment 1 to param 2", "Comment 2 to param 2", "Comment 3 to param 2"));
 
     assertThat(confRecordList.get(4).key).isNull();
     assertThat(confRecordList.get(4).value).isNull();
-    assertThat(confRecordList.get(4).hasValue).isFalse();
-    assertThat(confRecordList.get(4).comment).isEqualTo("Left comment 3\nLeft comment 4");
+    assertThat(confRecordList.get(4).comments).isEqualTo(asList("Left comment 3", "Left comment 4"));
 
     assertThat(confRecordList.get(5).key).isEqualTo("param3");
     assertThat(confRecordList.get(5).value).isEqualTo("value3");
-    assertThat(confRecordList.get(5).hasValue).isTrue();
-    assertThat(confRecordList.get(5).comment).isEqualTo("Comment 1 to param 3\nComment 2 to param 3");
+    assertThat(confRecordList.get(5).comments).isEqualTo(asList("Comment 1 to param 3", "Comment 2 to param 3"));
 
     assertThat(confRecordList).hasSize(6);
   }
