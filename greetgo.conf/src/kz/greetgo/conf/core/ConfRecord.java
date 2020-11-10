@@ -11,6 +11,29 @@ public class ConfRecord {
   public String key;
   public String value;
 
+  @Override
+  public String toString() {
+    List<String> ss = new ArrayList<>();
+
+    if (key != null) {
+      ss.add(value == null ? key : key + '=' + value);
+    }
+
+    String oneLineComment = oneLineComment();
+    if (oneLineComment != null) {
+      ss.add("// " + oneLineComment);
+    }
+    return getClass().getSimpleName() + '{' + String.join(" ", ss) + '}';
+  }
+
+  private String oneLineComment() {
+    if (comments.isEmpty()) {
+      return null;
+    }
+    String comment = String.join("\n", comments);
+    return comment.replaceAll("\n", "\\n");
+  }
+
   public static ConfRecord ofComment(String comment) {
     List<String> comments = comment == null ? Collections.emptyList() : Arrays.asList(comment.split("\n"));
     return ofComments(comments);

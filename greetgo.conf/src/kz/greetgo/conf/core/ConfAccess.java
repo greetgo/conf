@@ -1,7 +1,6 @@
 package kz.greetgo.conf.core;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Интерфейс доступа к хранилищу конфигурационного файла в структурированном виде.

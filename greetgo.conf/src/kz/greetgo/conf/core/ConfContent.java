@@ -11,4 +11,8 @@ public class ConfContent {
     ret.records = records;
     return ret;
   }
+
+  public static ConfContent empty() {
+    return new ConfContent();
+  }
 }
