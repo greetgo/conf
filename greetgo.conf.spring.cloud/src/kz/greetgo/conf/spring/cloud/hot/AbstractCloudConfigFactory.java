@@ -1,6 +1,8 @@
 package kz.greetgo.conf.spring.cloud.hot;
 
-import kz.greetgo.conf.hot.*;
+import kz.greetgo.conf.hot.AbstractConfigFactory;
+import kz.greetgo.conf.hot.HotConfig;
+import kz.greetgo.conf.hot.HotConfigDefinition;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import static kz.greetgo.conf.spring.cloud.hot.CloudConfigDataLoader.loadConfigD
 /**
  * Factory for hot config implementations
  */
-public abstract class AbstractCloudConfigFactory extends AbstractConfigFactory{
+public abstract class AbstractCloudConfigFactory extends AbstractConfigFactory {
 
   private class HotConfigImpl extends AbstractConfigFactory.HotConfigImpl {
     private final AtomicReference<Map<String, Object>> cloudData = new AtomicReference<>(null);
@@ -56,11 +58,10 @@ public abstract class AbstractCloudConfigFactory extends AbstractConfigFactory{
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object getElementValue(String elementName) {
       Object envValue = getCloudData().get(configDefinition.configInterface().getSimpleName() + "." + elementName);
 
-      if(envValue!=null) return envValue;
+      if (envValue != null) return envValue;
 
       return super.getElementValue(elementName);
     }

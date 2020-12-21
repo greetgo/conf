@@ -62,7 +62,6 @@ public class ConfAccessFileTest {
     }
   }
 
-
   @Test
   public void read__noFile() {
 
@@ -99,7 +98,7 @@ public class ConfAccessFileTest {
   }
 
   @Test
-  public void lastModifiedAt__noFile() throws Exception {
+  public void lastModifiedAt__noFile() {
 
     File configFile = testDir.resolve("config-read-" + RND.str(5) + ".txt").toFile();
 

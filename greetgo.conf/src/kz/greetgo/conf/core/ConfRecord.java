@@ -6,9 +6,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Запись конфига
+ */
 public class ConfRecord {
+  /**
+   * Комментарии перед записью
+   */
   public final List<String> comments = new ArrayList<>();
+
+  /**
+   * Ключ, которому присваивается значение
+   * <p>
+   * Если null, то данная запись содержит только комментарий
+   */
   public String key;
+
+  /**
+   * Присваиваемое значение
+   * <p>
+   * Должен быть null, если <code>{@link #key} == null</code>
+   */
   public String value;
 
   @Override
