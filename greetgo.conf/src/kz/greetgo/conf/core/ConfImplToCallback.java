@@ -1,8 +1,10 @@
 package kz.greetgo.conf.core;
 
+import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.core.fields.ConfIgnore;
 import kz.greetgo.conf.core.fields.FieldAccess;
 import kz.greetgo.conf.core.fields.FieldParserDefault;
+import kz.greetgo.conf.hot.Description;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -17,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
 import static kz.greetgo.conf.ConfUtil.convertToType;
 import static kz.greetgo.conf.ConfUtil.convertibleTypeList;
+import static kz.greetgo.conf.ConfUtil.findAnnotation;
 import static kz.greetgo.conf.ConfUtil.isConvertingType;
 
 public class ConfImplToCallback<T> implements InvocationHandler {
@@ -175,7 +178,39 @@ public class ConfImplToCallback<T> implements InvocationHandler {
 
   public ConfContent defaultContent() {
     // этот метод должен работать в ленивом режиме
-    throw new RuntimeException("5yrFsNrM9K");
+    ConfContent confContent = new ConfContent();
+    appendContent(confContent, "");
+    return confContent;
+  }
+
+  private void appendContent(ConfContent confContent, String prefix) {
+    {
+      Description description = findAnnotation(interfaceClass, Description.class);
+      if (description != null) {
+        if (prefix.isEmpty()) {
+          confContent.records.add(ConfRecord.ofComment(description.value()));
+        } else {
+          confContent.records.add(ConfRecord.of(prefix, null, description.value()));
+        }
+      }
+    }
+
+    for (Method method : interfaceClass.getMethods()) {
+
+      Class<?> returnType = method.getReturnType();
+      String name = prefix + method.getName();
+      Description description = method.getAnnotation(Description.class);
+
+      if (isConvertingType(returnType)) {
+        String defaultValue = ConfUtil.extractStrDefaultValue(method.getAnnotations(), x -> x);
+        confContent.records.add(ConfRecord.ofDescription(name, defaultValue, description));
+        continue;
+      }
+
+      throw new RuntimeException("R35uE028Qr :: " + method);
+
+    }
+
   }
 
 }

@@ -1,5 +1,7 @@
 package kz.greetgo.conf.core;
 
+import kz.greetgo.conf.hot.Description;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +30,7 @@ public class ConfRecord {
    * Должен быть null, если <code>{@link #key} == null</code>
    */
   public String value;
+
 
   @Override
   public String toString() {
@@ -63,6 +66,10 @@ public class ConfRecord {
     ret.key = key;
     ret.value = value;
     return ret;
+  }
+
+  public static ConfRecord ofDescription(String key, String value, Description description) {
+    return of(key, value, description == null ? null : description.value());
   }
 
   public static ConfRecord of(String key, String value, String comment) {

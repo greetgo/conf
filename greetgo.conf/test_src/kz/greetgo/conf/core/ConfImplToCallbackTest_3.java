@@ -18,7 +18,7 @@ public class ConfImplToCallbackTest_3 {
   }
 
   @Test
-  public void model() {
+  public void impl__model() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);

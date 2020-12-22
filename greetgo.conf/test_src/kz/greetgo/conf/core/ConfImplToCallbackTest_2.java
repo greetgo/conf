@@ -35,7 +35,7 @@ public class ConfImplToCallbackTest_2 {
   }
 
   @Test
-  public void listConf2__paramStr__1() {
+  public void impl__listConf2__paramStr__1() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf3> callback = new ConfImplToCallback<>(Conf3.class, confCallback);
@@ -53,7 +53,7 @@ public class ConfImplToCallbackTest_2 {
   }
 
   @Test
-  public void listConf2__paramStr__2() {
+  public void impl__listConf2__paramStr__2() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf3> callback = new ConfImplToCallback<>(Conf3.class, confCallback);
@@ -78,7 +78,7 @@ public class ConfImplToCallbackTest_2 {
   }
 
   @Test
-  public void listConf2__paramStr__3() {
+  public void impl__listConf2__paramStr__3() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf3> callback = new ConfImplToCallback<>(Conf3.class, confCallback);
@@ -103,7 +103,7 @@ public class ConfImplToCallbackTest_2 {
   }
 
   @Test
-  public void conf1__strParam() {
+  public void impl__conf1__strParam() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf2> callback = new ConfImplToCallback<>(Conf2.class, confCallback);
@@ -120,7 +120,7 @@ public class ConfImplToCallbackTest_2 {
   }
 
   @Test
-  public void listConf2__conf1__longParam() {
+  public void impl__listConf2__conf1__longParam() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf3> callback = new ConfImplToCallback<>(Conf3.class, confCallback);

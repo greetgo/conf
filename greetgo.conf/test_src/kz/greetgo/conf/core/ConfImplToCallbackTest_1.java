@@ -43,7 +43,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramStr() {
+  public void impl__paramStr() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -59,7 +59,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramBool() {
+  public void impl__paramBool() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -81,7 +81,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramBoolBox() {
+  public void impl__paramBoolBox() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -103,7 +103,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramInt() {
+  public void impl__paramInt() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -132,7 +132,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramIntBox() {
+  public void impl__paramIntBox() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -155,7 +155,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void call__equals() {
+  public void impl__call__equals() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -171,7 +171,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void call__hashCode() {
+  public void impl__call__hashCode() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -187,7 +187,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramFloat() {
+  public void impl__paramFloat() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -216,7 +216,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramFloatBox() {
+  public void impl__paramFloatBox() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -239,7 +239,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test(expectedExceptions = CannotConvertToType.class)
-  public void paramFloat__CannotConvertToType() {
+  public void impl__paramFloat__CannotConvertToType() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -256,7 +256,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test(expectedExceptions = CannotConvertToType.class)
-  public void paramDouble__CannotConvertToType() {
+  public void impl__paramDouble__CannotConvertToType() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -273,7 +273,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramDouble() {
+  public void impl__paramDouble() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
@@ -302,7 +302,7 @@ public class ConfImplToCallbackTest_1 {
   }
 
   @Test
-  public void paramDoubleBox() {
+  public void impl__paramDoubleBox() {
 
     ConfCallbackMap confCallback = new ConfCallbackMap();
     ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
