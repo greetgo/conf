@@ -1,4 +1,4 @@
-package kz.greetgo.conf.hot;
+package kz.greetgo.conf.core.fields;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -9,20 +9,9 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 
 /**
- * Perform default parameter value
- *
- * @author pompei
+ * Игнорировать это поле при заполнении данных конфига
  */
 @Documented
 @Target({METHOD, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DefaultIntValue {
-
-  /**
-   * Perform default parameter value
-   *
-   * @return default parameter value
-   */
-  int value();
-
-}
+public @interface ConfIgnore {}

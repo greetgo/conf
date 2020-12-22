@@ -239,19 +239,57 @@ public class ConfUtil {
     addPatternFormat("(\\d{2}\\.\\d{2}\\.\\d{4})", "dd.MM.yyyy");
   }
 
+  private static final Set<Class<?>> CONVERTING_TYPES;
+
+  static {
+    Set<Class<?>> m = new HashSet<>();
+    m.add(boolean.class);
+    m.add(Boolean.class);
+    m.add(int.class);
+    m.add(Integer.class);
+    m.add(long.class);
+    m.add(Long.class);
+    m.add(String.class);
+    m.add(Date.class);
+    m.add(double.class);
+    m.add(Double.class);
+    m.add(float.class);
+    m.add(Float.class);
+    m.add(BigDecimal.class);
+    CONVERTING_TYPES = Collections.unmodifiableSet(m);
+  }
+
+  public static boolean isConvertingType(Class<?> type) {
+    return CONVERTING_TYPES.contains(type);
+  }
+
+  public static String convertibleTypeList() {
+    return CONVERTING_TYPES.stream().map(Class::getSimpleName).sorted().collect(Collectors.joining(", "));
+  }
+
   public static Object convertToType(String str, Class<?> type) {
-    if (type == null) {return null;}
+    if (type == null) {
+      return null;
+    }
     if (type.isAssignableFrom(String.class)) {
       return str;
     }
     if (type == boolean.class || type == Boolean.class) {
-      if (str == null) {return type == Boolean.class ? null : false;}
+      if (str == null) {
+        return type == Boolean.class ? null : false;
+      }
       return strToBool(str);
     }
     if (type == int.class || type == Integer.class) {
-      if (str == null || str.trim().length() == 0) {return type == Integer.class ? null : 0;}
-      if ("true".equals(str))  {return 1;}
-      if ("false".equals(str)) {return 0;}
+      if (str == null || str.trim().length() == 0) {
+        return type == Integer.class ? null : 0;
+      }
+      if ("true".equals(str)) {
+        return 1;
+      }
+      if ("false".equals(str)) {
+        return 0;
+      }
       try {
         return Integer.parseInt(str);
       } catch (NumberFormatException e) {
@@ -259,9 +297,15 @@ public class ConfUtil {
       }
     }
     if (type == long.class || type == Long.class) {
-      if (str == null || str.trim().length() == 0) {return type == Long.class ? null : 0L;}
-      if ("true".equals(str))  {return 1L;}
-      if ("false".equals(str)) {return 0L;}
+      if (str == null || str.trim().length() == 0) {
+        return type == Long.class ? null : 0L;
+      }
+      if ("true".equals(str)) {
+        return 1L;
+      }
+      if ("false".equals(str)) {
+        return 0L;
+      }
       try {
         return Long.parseLong(str);
       } catch (NumberFormatException e) {
@@ -269,7 +313,15 @@ public class ConfUtil {
       }
     }
     if (type == Double.TYPE || type.isAssignableFrom(Double.class)) {
-      if (str == null) {return 0d;}
+      if (str == null) {
+        return type.isPrimitive() ? 0d : null;
+      }
+      if ("true".equals(str)) {
+        return 1d;
+      }
+      if ("false".equals(str)) {
+        return 0d;
+      }
       try {
         return Double.parseDouble(str);
       } catch (NumberFormatException e) {
@@ -277,11 +329,25 @@ public class ConfUtil {
       }
     }
     if (type == Float.TYPE || type.isAssignableFrom(Float.class)) {
-      if (str == null) {return 0f;}
-      return Float.parseFloat(str);
+      if (str == null) {
+        return type.isPrimitive() ? 0f : null;
+      }
+      if ("true".equals(str)) {
+        return 1f;
+      }
+      if ("false".equals(str)) {
+        return 0f;
+      }
+      try {
+        return Float.parseFloat(str);
+      } catch (NumberFormatException e) {
+        throw new CannotConvertToType(str, type, e);
+      }
     }
     if (type.isAssignableFrom(BigDecimal.class)) {
-      if (str == null) {return BigDecimal.ZERO;}
+      if (str == null) {
+        return BigDecimal.ZERO;
+      }
       try {
         return new BigDecimal(str);
       } catch (NumberFormatException e) {
@@ -289,7 +355,9 @@ public class ConfUtil {
       }
     }
     if (type.isAssignableFrom(Date.class)) {
-      if (str == null) {return null;}
+      if (str == null) {
+        return null;
+      }
       for (PatternFormat pf : PATTERN_FORMAT_LIST) {
         Matcher m = pf.pattern.matcher(str);
         if (m.matches()) {
@@ -338,6 +406,27 @@ public class ConfUtil {
 
   public static boolean isWrapper(Class<?> aClass) {
     return WRAPPER_TYPES.contains(aClass);
+  }
+
+  public static <T extends Annotation> T findAnnotation(Class<?> sourceClass, Class<T> annotationClass) {
+
+    while (true) {
+      if (sourceClass == null) {
+        return null;
+      }
+
+      T annotation = sourceClass.getAnnotation(annotationClass);
+      if (annotation != null) {
+        return annotation;
+      }
+
+      if (Object.class.equals(sourceClass)) {
+        return null;
+      }
+
+      sourceClass = sourceClass.getSuperclass();
+    }
+
   }
 
 }

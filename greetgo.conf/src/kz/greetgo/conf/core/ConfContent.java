@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfContent {
+
   public List<ConfRecord> records = new ArrayList<>();
 
   public static ConfContent of(List<ConfRecord> records) {
@@ -15,4 +16,5 @@ public class ConfContent {
   public static ConfContent empty() {
     return new ConfContent();
   }
+
 }

@@ -30,7 +30,7 @@ import static java.lang.annotation.ElementType.METHOD;
  * @author pompei
  */
 @Documented
-@Target({METHOD})
+@Target({METHOD, FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DefaultStrValue {
 
