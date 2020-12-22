@@ -24,7 +24,7 @@ public class ConfImplToCallbackTest_4 {
 
     @Description("Description gO7aCqMz16\njUzfLJtzIU")
     @DefaultIntValue(54267)
-    int paramInt();
+    int param2();
 
   }
 
