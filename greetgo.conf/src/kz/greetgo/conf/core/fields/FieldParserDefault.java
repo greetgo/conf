@@ -1,5 +1,8 @@
 package kz.greetgo.conf.core.fields;
 
+import kz.greetgo.conf.core.MethodName;
+import kz.greetgo.conf.core.StrLow;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -95,14 +98,7 @@ public class FieldParserDefault implements FieldParser {
 
         if (method.getParameterCount() == 0) {
 
-          String methodName = method.getName();
-
-          String name = null;
-          if (methodName.startsWith("is")) {
-            name = firstLow(methodName.substring(2));
-          } else if (methodName.startsWith("get")) {
-            name = firstLow(methodName.substring(3));
-          }
+          String name = MethodName.extractGet(method.getName());
 
           if (name == null) {
             continue;
@@ -112,8 +108,6 @@ public class FieldParserDefault implements FieldParser {
             ignorableNames.add(name);
             continue;
           }
-
-          String fieldName = name;
 
           getters.put(name, new FieldGetter() {
             @Override
@@ -127,7 +121,7 @@ public class FieldParserDefault implements FieldParser {
 
             @Override
             public String name() {
-              return fieldName;
+              return name;
             }
 
             @Override
@@ -144,7 +138,7 @@ public class FieldParserDefault implements FieldParser {
 
           if (!methodName.startsWith("set")) continue;
 
-          String name = firstLow(methodName.substring(3));
+          String name = StrLow.first(methodName.substring(3));
 
           if (method.getAnnotation(ConfIgnore.class) != null) {
             ignorableNames.add(name);
@@ -216,12 +210,6 @@ public class FieldParserDefault implements FieldParser {
         return ret;
       }
     }
-  }
-
-  private static String firstLow(String str) {
-    if (str == null) return null;
-    if (str.length() <= 1) return str.toLowerCase();
-    return str.substring(0, 1).toLowerCase() + str.substring(1);
   }
 
 }

@@ -17,4 +17,12 @@ public class ConfContent {
     return new ConfContent();
   }
 
+  public void appendTo(List<String> lines) {
+    for (ConfRecord confRecord : records) {
+      if (lines.size() > 0) {
+        lines.add("");
+      }
+      confRecord.appendTo(lines);
+    }
+  }
 }

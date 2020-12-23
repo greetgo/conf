@@ -61,16 +61,8 @@ public class ConfAccessStdSerializer implements ConfContentSerializer {
   }
 
   public String serialize(ConfContent confContent) {
-
-    StringBuilder sb = new StringBuilder(1024);
-
-    for (ConfRecord confRecord : confContent.records) {
-      if (sb.length() > 0) {
-        sb.append("\n");
-      }
-      confRecord.appendTo(sb);
-    }
-
-    return sb.toString();
+    List<String> lines = new ArrayList<>();
+    confContent.appendTo(lines);
+    return String.join("\n", lines);
   }
 }

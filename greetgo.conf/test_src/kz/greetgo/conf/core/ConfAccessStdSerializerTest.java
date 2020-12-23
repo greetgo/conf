@@ -85,35 +85,35 @@ public class ConfAccessStdSerializerTest {
   @Test
   public void serialize() {
 
-    String expectedText = ""
-      + "# Common Header1\n"
-      + "# Common Header2\n"
-      + "#\n"
-      + "#   Common Header3\n"
-      + "# Common Header4\n"
-      + "\n"
-      + "# Left comment 1\n"
-      + "# Left comment 2\n"
-      + "\n"
-      + "# Comment 1 to param 1\n"
-      + "# Comment 2 to param 1\n"
-      + "param1=value1\n"
-      + "\n"
-      + "# Comment 1 to param 2\n"
-      + "# Comment 2 to param 2\n"
-      + "# Comment 3 to param 2\n"
-      + "param2=value2\n"
-      + "\n"
-      + "# Left comment 3\n"
-      + "# Left comment 4\n"
-      + "\n"
-      + "# Comment 1 to param 3\n"
-      + "# Comment 2 to param 3\n"
-      + "param3=value3\n"
-      + "\n"
-      + "# Comment 1 to param 4\n"
-      + "# Comment 2 to param 4\n"
-      + "param4\n";
+    String expectedText = "" +
+      "# Common Header1\n" +
+      "# Common Header2\n" +
+      "#\n" +
+      "#   Common Header3\n" +
+      "# Common Header4\n" +
+      "\n" +
+      "# Left comment 1\n" +
+      "# Left comment 2\n" +
+      "\n" +
+      "# Comment 1 to param 1\n" +
+      "# Comment 2 to param 1\n" +
+      "param1=value1\n" +
+      "\n" +
+      "# Comment 1 to param 2\n" +
+      "# Comment 2 to param 2\n" +
+      "# Comment 3 to param 2\n" +
+      "param2=value2\n" +
+      "\n" +
+      "# Left comment 3\n" +
+      "# Left comment 4\n" +
+      "\n" +
+      "# Comment 1 to param 3\n" +
+      "# Comment 2 to param 3\n" +
+      "param3=value3\n" +
+      "\n" +
+      "# Comment 1 to param 4\n" +
+      "# Comment 2 to param 4\n" +
+      "param4";
 
     List<ConfRecord> records = new ArrayList<>();
     records.add(ConfRecord.ofComment("Common Header1\nCommon Header2\n\n  Common Header3\nCommon Header4"));

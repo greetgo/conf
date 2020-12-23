@@ -77,6 +77,10 @@ public class ConfRecord {
     return of(key, value, comments);
   }
 
+  public static ConfRecord of(String key, String value) {
+    return of(key, value, Collections.emptyList());
+  }
+
   public static ConfRecord ofComments(List<String> comments) {
     ConfRecord ret = new ConfRecord();
     ret.comments.addAll(comments);
@@ -85,19 +89,19 @@ public class ConfRecord {
     return ret;
   }
 
-  public void appendTo(StringBuilder sb) {
+  public void appendTo(List<String> lines) {
     for (String comment : comments) {
       if (comment == null || comment.isEmpty()) {
-        sb.append("#\n");
+        lines.add("#");
       } else {
-        sb.append("# ").append(comment).append("\n");
+        lines.add("# " + comment);
       }
     }
     if (value != null) {
       Objects.requireNonNull(key);
-      sb.append(key).append('=').append(value).append("\n");
+      lines.add(key + '=' + value);
     } else if (key != null) {
-      sb.append(key).append("\n");
+      lines.add(key);
     }
   }
 }

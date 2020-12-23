@@ -3,7 +3,10 @@ package kz.greetgo.conf.core;
 import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.core.fields.ConfIgnore;
 import kz.greetgo.conf.core.fields.FieldAccess;
+import kz.greetgo.conf.core.fields.FieldDef;
+import kz.greetgo.conf.core.fields.FieldDefParserDefault;
 import kz.greetgo.conf.core.fields.FieldParserDefault;
+import kz.greetgo.conf.hot.DefaultListSize;
 import kz.greetgo.conf.hot.Description;
 
 import java.lang.reflect.Constructor;
@@ -13,8 +16,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.stream.Collectors.toList;
 import static kz.greetgo.conf.ConfUtil.convertToType;
@@ -176,21 +181,32 @@ public class ConfImplToCallback<T> implements InvocationHandler {
     throw new RuntimeException("spE6Q3TS9n :: cannot extractFirstArgumentClass from " + type);
   }
 
+  private final AtomicReference<ConfContent> defaultContent = new AtomicReference<>(null);
+
   public ConfContent defaultContent() {
     // этот метод должен работать в ленивом режиме
-    ConfContent confContent = new ConfContent();
-    appendContent(confContent, "");
-    return confContent;
+    {
+      ConfContent cc = defaultContent.get();
+      if (cc != null) return cc;
+    }
+    {
+      ConfContent confContent = new ConfContent();
+      appendContent(confContent, null, null);
+      defaultContent.set(confContent);
+      return confContent;
+    }
   }
 
-  private void appendContent(ConfContent confContent, String prefix) {
+  private void appendContent(ConfContent confContent, String prefix, Description superDescription) {
     {
       Description description = findAnnotation(interfaceClass, Description.class);
+      List<String> descriptionLines = unionDescriptions(description, superDescription);
+
       if (description != null) {
-        if (prefix.isEmpty()) {
-          confContent.records.add(ConfRecord.ofComment(description.value()));
+        if (prefix == null) {
+          confContent.records.add(ConfRecord.ofComments(descriptionLines));
         } else {
-          confContent.records.add(ConfRecord.of(prefix, null, description.value()));
+          confContent.records.add(ConfRecord.of(prefix, null, descriptionLines));
         }
       }
     }
@@ -198,19 +214,76 @@ public class ConfImplToCallback<T> implements InvocationHandler {
     for (Method method : interfaceClass.getMethods()) {
 
       Class<?> returnType = method.getReturnType();
-      String name = prefix + method.getName();
+      String name = (prefix == null ? "" : (prefix + '.')) + method.getName();
       Description description = method.getAnnotation(Description.class);
+      String defaultValue = ConfUtil.extractStrDefaultValue(method.getAnnotations(), x -> x);
 
       if (isConvertingType(returnType)) {
-        String defaultValue = ConfUtil.extractStrDefaultValue(method.getAnnotations(), x -> x);
         confContent.records.add(ConfRecord.ofDescription(name, defaultValue, description));
         continue;
       }
 
-      throw new RuntimeException("R35uE028Qr :: " + method);
+      if (List.class.isAssignableFrom(returnType)) {
+        Class<?> argClass = extractFirstArgumentClass(method.getAnnotatedReturnType().getType());
+        if (isConvertingType(argClass)) {
+
+          DefaultListSize defaultListSize = method.getAnnotation(DefaultListSize.class);
+          int listSize = defaultListSize == null ? 1 : defaultListSize.value();
+
+          confContent.records.add(ConfRecord.ofDescription(name + ".0", defaultValue, description));
+          for (int i = 1; i < listSize; i++) {
+            confContent.records.add(ConfRecord.of(name + '.' + i, defaultValue));
+          }
+
+          continue;
+        }
+        throw new RuntimeException("szOckL3MyQ :: " + method);
+      }
+
+      if (returnType.isInterface()) {
+
+        ConfCallbackPrefix callbackPrefix = new ConfCallbackPrefix(method.getName() + '.', confCallback);
+        ConfImplToCallback<?> callback = new ConfImplToCallback<>(method.getReturnType(), callbackPrefix);
+
+        callback.appendContent(confContent, name, description);
+
+        continue;
+      }
+
+      {
+        List<String> lines = unionDescriptions(findAnnotation(returnType, Description.class), description);
+        confContent.records.add(ConfRecord.of(name, null, lines));
+
+        for (FieldDef fd : FieldDefParserDefault.instance.parse(returnType)) {
+          confContent.records.add(ConfRecord.of(name + '.' + fd.name(), fd.defaultValue(), fd.descriptionLines()));
+        }
+
+        continue;
+      }
 
     }
+  }
 
+  private List<String> unionDescriptions(Description... descriptions) {
+    List<String> ret = new ArrayList<>();
+
+    boolean needSpace = false;
+
+    for (Description description : descriptions) {
+      if (description != null) {
+
+        if (needSpace) {
+          ret.add("");
+        } else {
+          needSpace = true;
+        }
+
+        ret.addAll(Arrays.asList(description.value().split("\n")));
+
+      }
+    }
+
+    return ret;
   }
 
 }
