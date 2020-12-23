@@ -104,4 +104,15 @@ public class ConfRecord {
       lines.add(key);
     }
   }
+
+  public void insertTopComment(String comment) {
+    List<String> addingComments = ConfRecord.ofComment(comment).comments;
+    int addingCommentsCount = addingComments.size();
+    for (int i = 0; i < addingCommentsCount; i++) {
+      comments.add(0, null);
+    }
+    for (int i = 0; i < addingCommentsCount; i++) {
+      comments.set(i, addingComments.get(i));
+    }
+  }
 }

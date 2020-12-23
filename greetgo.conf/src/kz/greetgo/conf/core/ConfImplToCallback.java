@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.stream.Collectors.toList;
 import static kz.greetgo.conf.ConfUtil.convertToType;
@@ -181,20 +180,11 @@ public class ConfImplToCallback<T> implements InvocationHandler {
     throw new RuntimeException("spE6Q3TS9n :: cannot extractFirstArgumentClass from " + type);
   }
 
-  private final AtomicReference<ConfContent> defaultContent = new AtomicReference<>(null);
-
   public ConfContent defaultContent() {
-    // этот метод должен работать в ленивом режиме
-    {
-      ConfContent cc = defaultContent.get();
-      if (cc != null) return cc;
-    }
-    {
-      ConfContent confContent = new ConfContent();
-      appendContent(confContent, null, null);
-      defaultContent.set(confContent);
-      return confContent;
-    }
+    // этот метод кэшировать НЕ нужно
+    ConfContent confContent = new ConfContent();
+    appendContent(confContent, null, null);
+    return confContent;
   }
 
   private void appendContent(ConfContent confContent, String prefix, Description superDescription) {
