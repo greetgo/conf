@@ -1,9 +1,13 @@
 package kz.greetgo.conf.core;
 
+import kz.greetgo.conf.hot.ForcibleInit;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static kz.greetgo.conf.ConfUtil.findAnnotation;
 
 public class ConfImplBuilder<T> {
 
@@ -54,6 +58,13 @@ public class ConfImplBuilder<T> {
       this.confAccess    = confAccess;
       confCallbackCached = new ConfCallbackCached(confCallbackImpl, changeCheckTimeoutMs);
       confImplToCallback = new ConfImplToCallback<>(confClass, confCallbackCached);
+
+      {
+        ForcibleInit forcibleInit = findAnnotation(confClass, ForcibleInit.class);
+        if (forcibleInit != null) {
+          prepareData();
+        }
+      }
     }
 
     boolean freeze = false;

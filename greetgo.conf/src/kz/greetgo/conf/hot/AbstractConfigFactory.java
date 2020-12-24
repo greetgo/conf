@@ -59,7 +59,7 @@ public abstract class AbstractConfigFactory {
    * @return auto reset timeout. Zero - auto resetting is off
    */
   protected long autoResetTimeout() {
-    return 500;
+    return 2000;
   }
 
   protected final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
