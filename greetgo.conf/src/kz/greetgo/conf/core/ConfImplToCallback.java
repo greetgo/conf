@@ -10,13 +10,11 @@ import kz.greetgo.conf.hot.DefaultListSize;
 import kz.greetgo.conf.hot.Description;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,17 +23,21 @@ import static kz.greetgo.conf.ConfUtil.convertToType;
 import static kz.greetgo.conf.ConfUtil.convertibleTypeList;
 import static kz.greetgo.conf.ConfUtil.findAnnotation;
 import static kz.greetgo.conf.ConfUtil.isConvertingType;
+import static kz.greetgo.conf.core.util.UnionDescriptions.unionDescriptions;
 
-public class ConfImplToCallback<T> implements InvocationHandler {
-  private final Class<T> interfaceClass;
+public class ConfImplToCallback<T> {
+  private final Class<T>     interfaceClass;
   private final ConfCallback confCallback;
-  private final T impl;
+  private final T            impl;
 
   public ConfImplToCallback(Class<T> interfaceClass, ConfCallback confCallback) {
     this.interfaceClass = interfaceClass;
-    this.confCallback = confCallback;
+    this.confCallback   = confCallback;
     //noinspection unchecked
-    impl = (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{interfaceClass}, this);
+    impl = (T) Proxy.newProxyInstance(
+      getClass().getClassLoader(),
+      new Class[]{interfaceClass},
+      this::invokeInterfaceMethod);
   }
 
   public T impl() {
@@ -43,16 +45,15 @@ public class ConfImplToCallback<T> implements InvocationHandler {
   }
 
   private final ConcurrentHashMap<String, List<ConfImplToCallback<?>>> subCallbackLists = new ConcurrentHashMap<>();
-  private final ConcurrentHashMap<String, ConfImplToCallback<?>> subCallbacks = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, ConfImplToCallback<?>>       subCallbacks     = new ConcurrentHashMap<>();
 
-  @Override
-  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    String methodName = method.getName();
+  public Object invokeInterfaceMethod(Object proxy, Method method, Object[] args) throws Throwable {
+    String   methodName = method.getName();
     Class<?> returnType = method.getReturnType();
 
     if ("equals".equals(methodName)
-      && method.getParameterCount() == 1
-      && Object.class.equals(method.getParameterTypes()[0])
+          && method.getParameterCount() == 1
+          && Object.class.equals(method.getParameterTypes()[0])
     ) {
       return equals(args[0]);
     }
@@ -113,7 +114,7 @@ public class ConfImplToCallback<T> implements InvocationHandler {
       }
 
       throw new Exception("Yxz55c8nKQ :: Config parameter " + methodName + " in " + interfaceClass
-        + " has incorrect type. Use an interface instead of a class");
+                            + " has incorrect type. Use an interface instead of a class");
     }
 
     if (returnType.isInterface()) {
@@ -122,8 +123,8 @@ public class ConfImplToCallback<T> implements InvocationHandler {
         if (ret != null) return ret.impl();
       }
       {
-        ConfCallbackPrefix callbackPrefix = new ConfCallbackPrefix(method.getName() + '.', confCallback);
-        ConfImplToCallback<?> ret = new ConfImplToCallback<>(method.getReturnType(), callbackPrefix);
+        ConfCallbackPrefix    callbackPrefix = new ConfCallbackPrefix(method.getName() + '.', confCallback);
+        ConfImplToCallback<?> ret            = new ConfImplToCallback<>(method.getReturnType(), callbackPrefix);
         subCallbacks.put(method.getName(), ret);
         return ret.impl();
       }
@@ -140,9 +141,9 @@ public class ConfImplToCallback<T> implements InvocationHandler {
 
         if (!isConvertingType(fieldType)) {
           throw new RuntimeException("va8zf1h5fZ :: Cannot write to field with type "
-            + fieldType + ". Remove, hide, or mark with annotation @"
-            + ConfIgnore.class.getSimpleName()
-            + " this field. You can use the following field types: " + convertibleTypeList());
+                                       + fieldType + ". Remove, hide, or mark with annotation @"
+                                       + ConfIgnore.class.getSimpleName()
+                                       + " this field. You can use the following field types: " + convertibleTypeList());
         }
 
         String strValue = confCallback.readParam(methodName + '.' + field.name());
@@ -161,7 +162,9 @@ public class ConfImplToCallback<T> implements InvocationHandler {
     }
 
     ParameterizedType p = (ParameterizedType) type;
+
     Type[] actualTypeArguments = p.getActualTypeArguments();
+
     if (actualTypeArguments.length == 0) {
       throw new RuntimeException("aB98tR0cdq :: cannot extractFirstArgumentClass from " + type);
     }
@@ -177,7 +180,7 @@ public class ConfImplToCallback<T> implements InvocationHandler {
       return (Class<?>) p2.getRawType();
     }
 
-    throw new RuntimeException("spE6Q3TS9n :: cannot extractFirstArgumentClass from " + type);
+    throw new RuntimeException("spE6Q3TS9n :: Cannot extractFirstArgumentClass from " + type);
   }
 
   public ConfContent defaultContent() {
@@ -189,7 +192,7 @@ public class ConfImplToCallback<T> implements InvocationHandler {
 
   private void appendContent(ConfContent confContent, String prefix, Description superDescription) {
     {
-      Description description = findAnnotation(interfaceClass, Description.class);
+      Description  description      = findAnnotation(interfaceClass, Description.class);
       List<String> descriptionLines = unionDescriptions(description, superDescription);
 
       if (description != null) {
@@ -203,10 +206,10 @@ public class ConfImplToCallback<T> implements InvocationHandler {
 
     for (Method method : interfaceClass.getMethods()) {
 
-      Class<?> returnType = method.getReturnType();
-      String name = (prefix == null ? "" : (prefix + '.')) + method.getName();
-      Description description = method.getAnnotation(Description.class);
-      String defaultValue = ConfUtil.extractStrDefaultValue(method.getAnnotations(), x -> x);
+      Class<?>    returnType   = method.getReturnType();
+      String      name         = (prefix == null ? "" : (prefix + '.')) + method.getName();
+      Description description  = method.getAnnotation(Description.class);
+      String      defaultValue = ConfUtil.extractStrDefaultValue(method.getAnnotations(), x -> x);
 
       if (isConvertingType(returnType)) {
         confContent.records.add(ConfRecord.ofDescription(name, defaultValue, description));
@@ -218,7 +221,7 @@ public class ConfImplToCallback<T> implements InvocationHandler {
         if (isConvertingType(argClass)) {
 
           DefaultListSize defaultListSize = method.getAnnotation(DefaultListSize.class);
-          int listSize = defaultListSize == null ? 1 : defaultListSize.value();
+          int             listSize        = defaultListSize == null ? 1 : defaultListSize.value();
 
           confContent.records.add(ConfRecord.ofDescription(name + ".0", defaultValue, description));
           for (int i = 1; i < listSize; i++) {
@@ -232,8 +235,8 @@ public class ConfImplToCallback<T> implements InvocationHandler {
 
       if (returnType.isInterface()) {
 
-        ConfCallbackPrefix callbackPrefix = new ConfCallbackPrefix(method.getName() + '.', confCallback);
-        ConfImplToCallback<?> callback = new ConfImplToCallback<>(method.getReturnType(), callbackPrefix);
+        ConfCallbackPrefix    callbackPrefix = new ConfCallbackPrefix(method.getName() + '.', confCallback);
+        ConfImplToCallback<?> callback       = new ConfImplToCallback<>(method.getReturnType(), callbackPrefix);
 
         callback.appendContent(confContent, name, description);
 
@@ -252,28 +255,6 @@ public class ConfImplToCallback<T> implements InvocationHandler {
       }
 
     }
-  }
-
-  private List<String> unionDescriptions(Description... descriptions) {
-    List<String> ret = new ArrayList<>();
-
-    boolean needSpace = false;
-
-    for (Description description : descriptions) {
-      if (description != null) {
-
-        if (needSpace) {
-          ret.add("");
-        } else {
-          needSpace = true;
-        }
-
-        ret.addAll(Arrays.asList(description.value().split("\n")));
-
-      }
-    }
-
-    return ret;
   }
 
 }

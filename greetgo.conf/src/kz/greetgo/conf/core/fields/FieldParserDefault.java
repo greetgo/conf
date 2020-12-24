@@ -1,7 +1,7 @@
 package kz.greetgo.conf.core.fields;
 
-import kz.greetgo.conf.core.MethodName;
-import kz.greetgo.conf.core.StrLow;
+import kz.greetgo.conf.core.util.MethodName;
+import kz.greetgo.conf.core.util.StrLow;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

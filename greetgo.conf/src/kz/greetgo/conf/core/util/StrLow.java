@@ -1,4 +1,4 @@
-package kz.greetgo.conf.core;
+package kz.greetgo.conf.core.util;
 
 public class StrLow {
   public static String first(String str) {

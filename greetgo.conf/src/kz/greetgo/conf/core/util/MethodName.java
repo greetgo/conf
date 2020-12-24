@@ -1,6 +1,7 @@
-package kz.greetgo.conf.core;
+package kz.greetgo.conf.core.util;
 
 public class MethodName {
+
   public static String extractGet(String getMethodName) {
 
     if (getMethodName.startsWith("is")) {
@@ -22,4 +23,5 @@ public class MethodName {
 
     return null;
   }
+
 }

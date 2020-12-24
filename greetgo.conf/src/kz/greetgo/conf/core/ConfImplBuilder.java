@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-// TODO pompei протестировать этот класс
 public class ConfImplBuilder<T> {
 
   public static <T> ConfImplBuilder<T> confImplBuilder(Class<T> confClass, ConfAccess confAccess) {
@@ -14,8 +13,9 @@ public class ConfImplBuilder<T> {
 
   private long changeCheckTimeoutMs = 2500;
 
-  public void changeCheckTimeoutMs(long changeCheckTimeoutMs) {
+  public ConfImplBuilder<T> changeCheckTimeoutMs(long changeCheckTimeoutMs) {
     this.changeCheckTimeoutMs = changeCheckTimeoutMs;
+    return this;
   }
 
   public T build() {

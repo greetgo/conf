@@ -46,6 +46,7 @@ public class ConfAccessStdSerializer implements ConfContentSerializer {
         continue;
       }
       int i = line.indexOf('=');
+      //noinspection IfStatementWithIdenticalBranches
       if (i < 0) {
         ret.add(ConfRecord.of(line, null, comments));
         comments.clear();
@@ -65,4 +66,5 @@ public class ConfAccessStdSerializer implements ConfContentSerializer {
     confContent.appendTo(lines);
     return String.join("\n", lines);
   }
+
 }
