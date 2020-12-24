@@ -17,24 +17,27 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static kz.greetgo.conf.core.util.GetAndToLen.getAndToLen;
+import static kz.greetgo.conf.core.util.SplitToList.splitToList;
+import static kz.greetgo.conf.core.util.StrToLen.strToLen;
 
 public class EnvConfigImplementor {
 
   private static class Param {
 
-    final String methodName;
-    final String envName;
-    final String value;
-    final String description;
+    final         String   methodName;
+    final         String   envName;
+    final         String   value;
+    final         String   description;
     private final Class<?> paramType;
-    public Object typedValue;
+    public        Object   typedValue;
 
     public Param(String methodName, String envName, String value, String description, Class<?> paramType) {
-      this.methodName = methodName;
-      this.envName = envName;
-      this.value = value;
+      this.methodName  = methodName;
+      this.envName     = envName;
+      this.value       = value;
       this.description = description;
-      this.paramType = paramType;
+      this.paramType   = paramType;
     }
 
     final List<String> errors = new ArrayList<>();
@@ -57,16 +60,6 @@ public class EnvConfigImplementor {
       if (errors.isEmpty() && (value == null || value.trim().length() == 0)) {
         errors.add("Значение не указано либо пустое");
       }
-    }
-
-    private List<String> splitToList(String str) {
-      List<String> ret = new ArrayList<>();
-      if (str != null) {
-        for (String s : str.split("\n")) {
-          ret.add(s.trim());
-        }
-      }
-      return ret;
     }
 
     public String methodName() {
@@ -96,7 +89,7 @@ public class EnvConfigImplementor {
 
         final String ERROR = "ОШИБКА: ";
         final String SPACE = "        ";
-        boolean first = true;
+        boolean      first = true;
         for (String error : errors) {
           ret.add((first ? ERROR : SPACE) + error);
           first = false;
@@ -174,10 +167,10 @@ public class EnvConfigImplementor {
 
       }
 
-      err.append("    ").append(toLen(head1, col1len)).append(' ');
-      err.append("    ").append(toLen(head2, col2len)).append(' ');
-      err.append("    ").append(toLen(head3, col3len)).append(' ');
-      err.append("    ").append(toLen(head4, col4len)).append('\n');
+      err.append("    ").append(strToLen(head1, col1len)).append(' ');
+      err.append("    ").append(strToLen(head2, col2len)).append(' ');
+      err.append("    ").append(strToLen(head3, col3len)).append(' ');
+      err.append("    ").append(strToLen(head4, col4len)).append('\n');
 
       for (Param param : params) {
 
@@ -232,30 +225,15 @@ public class EnvConfigImplementor {
         constructor.setAccessible(true);
 
         return constructor.newInstance(configInterface)
-          .in(configInterface)
-          .unreflectSpecial(method, configInterface)
-          .bindTo(proxy)
-          .invokeWithArguments();
+                 .in(configInterface)
+                 .unreflectSpecial(method, configInterface)
+                 .bindTo(proxy)
+                 .invokeWithArguments();
 
       }
 
       return null;
     });
-  }
-
-  private static String toLen(String str, int length) {
-    StringBuilder sb = new StringBuilder();
-    if (str != null) {
-      sb.append(str);
-    }
-    while (sb.length() < length) {
-      sb.append(" ");
-    }
-    return sb.toString();
-  }
-
-  private static String getAndToLen(List<String> list, int i, int length) {
-    return toLen(i < list.size() ? list.get(i) : null, length);
   }
 
 }

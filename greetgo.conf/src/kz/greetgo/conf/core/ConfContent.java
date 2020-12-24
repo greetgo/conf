@@ -1,5 +1,7 @@
 package kz.greetgo.conf.core;
 
+import kz.greetgo.conf.core.util.CalculateSizes;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package kz.greetgo.conf.core;
 
-import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.core.fields.ConfIgnore;
 import kz.greetgo.conf.core.fields.FieldAccess;
 import kz.greetgo.conf.core.fields.FieldDef;
@@ -21,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
 import static kz.greetgo.conf.ConfUtil.convertToType;
 import static kz.greetgo.conf.ConfUtil.convertibleTypeList;
+import static kz.greetgo.conf.ConfUtil.extractStrDefaultValue;
 import static kz.greetgo.conf.ConfUtil.findAnnotation;
 import static kz.greetgo.conf.ConfUtil.isConvertingType;
 import static kz.greetgo.conf.core.util.UnionDescriptions.unionDescriptions;
@@ -209,7 +209,7 @@ public class ConfImplToCallback<T> {
       Class<?>    returnType   = method.getReturnType();
       String      name         = (prefix == null ? "" : (prefix + '.')) + method.getName();
       Description description  = method.getAnnotation(Description.class);
-      String      defaultValue = ConfUtil.extractStrDefaultValue(method.getAnnotations(), x -> x);
+      String      defaultValue = extractStrDefaultValue(method.getAnnotations(), x -> x);
 
       if (isConvertingType(returnType)) {
         confContent.records.add(ConfRecord.ofDescription(name, defaultValue, description));

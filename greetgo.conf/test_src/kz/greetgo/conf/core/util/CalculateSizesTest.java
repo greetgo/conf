@@ -1,4 +1,4 @@
-package kz.greetgo.conf.core;
+package kz.greetgo.conf.core.util;
 
 import org.testng.annotations.Test;
 
