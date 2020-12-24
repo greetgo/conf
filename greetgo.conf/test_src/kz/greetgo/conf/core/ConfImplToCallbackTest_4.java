@@ -33,8 +33,8 @@ public class ConfImplToCallbackTest_4 {
 
   @Test
   public void defaultContent__plain() {
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf1> callback = new ConfImplToCallback<>(Conf1.class, confCallback);
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf1> callback     = new ConfImplToCallback<>(Conf1.class, confCallback);
 
     //
     //
@@ -46,13 +46,13 @@ public class ConfImplToCallbackTest_4 {
       .isEqualTo("Description pfE65v3Js3~1y5MJ2ct38y~1ZbF50qRv1m");
 
     Map<String, String> commentMap = confContent.records.stream()
-      .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
+                                       .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("param1", "Description Yc2O8GznYK~1U3N4RG8rZf"));
     assertThat(commentMap).contains(entry("param2", "Description gO7aCqMz16~jUzfLJtzIU"));
 
     Map<String, String> valueMap = confContent.records.stream().filter(x -> x.key != null)
-      .collect(toMap(x -> x.key, x -> x.value));
+                                     .collect(toMap(x -> x.key, x -> x.value));
 
     assertThat(valueMap).contains(entry("param1", "OlQD1fORSn"));
     assertThat(valueMap).contains(entry("param2", "54267"));
@@ -71,8 +71,8 @@ public class ConfImplToCallbackTest_4 {
 
   @Test
   public void defaultContent__plainArray() {
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf2> callback = new ConfImplToCallback<>(Conf2.class, confCallback);
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf2> callback     = new ConfImplToCallback<>(Conf2.class, confCallback);
 
     //
     //
@@ -81,14 +81,14 @@ public class ConfImplToCallbackTest_4 {
     //
 
     Map<String, String> commentMap = confContent.records.stream()
-      .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
+                                       .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("coolParam.0", "Description Hi1a0o4KLd"));
     assertThat(commentMap).contains(entry("coolParam.1", ""));
     assertThat(commentMap).contains(entry("coolParam.2", ""));
 
     Map<String, String> valueMap = confContent.records.stream().filter(x -> x.key != null)
-      .collect(toMap(x -> x.key, x -> x.value));
+                                     .collect(toMap(x -> x.key, x -> x.value));
 
     assertThat(valueMap).contains(entry("coolParam.0", "ieE5RbQZiP"));
     assertThat(valueMap).contains(entry("coolParam.1", "ieE5RbQZiP"));
@@ -119,8 +119,8 @@ public class ConfImplToCallbackTest_4 {
 
   @Test
   public void defaultContent__subConf() {
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf3> callback = new ConfImplToCallback<>(Conf3.class, confCallback);
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf3> callback     = new ConfImplToCallback<>(Conf3.class, confCallback);
 
     //
     //
@@ -135,7 +135,7 @@ public class ConfImplToCallbackTest_4 {
     }
 
     Map<String, String> commentMap = confContent.records.stream()
-      .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
+                                       .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("confParam1", "Description of SubConf3~~Description of confParam1"));
     assertThat(commentMap).contains(entry("confParam1.subParam", "Description 59l98wOg1i"));
@@ -144,7 +144,7 @@ public class ConfImplToCallbackTest_4 {
     assertThat(commentMap).contains(entry("confParam2.subParam", "Description 59l98wOg1i"));
 
     Map<String, String> valueMap = confContent.records.stream().filter(x -> x.key != null)
-      .collect(toMap(x -> x.key, x -> "" + x.value));
+                                     .collect(toMap(x -> x.key, x -> "" + x.value));
 
     assertThat(valueMap).contains(entry("confParam1", "null"));
     assertThat(valueMap).contains(entry("confParam1.subParam", "pu1ovJFvhQ"));
@@ -181,8 +181,8 @@ public class ConfImplToCallbackTest_4 {
 
   @Test
   public void defaultContent__subModel() {
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf4> callback = new ConfImplToCallback<>(Conf4.class, confCallback);
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf4> callback     = new ConfImplToCallback<>(Conf4.class, confCallback);
 
     //
     //
@@ -197,7 +197,7 @@ public class ConfImplToCallbackTest_4 {
     }
 
     Map<String, String> commentMap = confContent.records.stream().filter(x -> x.key != null)
-      .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
+                                       .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("modelParam1", "Description of SubModel4~~Description of modelParam1"));
     assertThat(commentMap).contains(entry("modelParam1.subParam1", "Description of subParam1"));
@@ -207,4 +207,118 @@ public class ConfImplToCallbackTest_4 {
     assertThat(commentMap).contains(entry("modelParam2.subParam2", "Description of subParam2"));
 
   }
+
+  @SuppressWarnings("unused")
+  @Description("Description of SubConf5")
+  interface SubConf5 {
+    @Description("Description of strParam")
+    @DefaultStrValue("h1cg7fQuw5")
+    String strParam();
+  }
+
+  @SuppressWarnings("unused")
+  @Description("Description of Conf5")
+  interface Conf5 {
+
+    @DefaultListSize(3)
+    @Description("Description of list of sub1")
+    List<SubConf5> sub1();
+
+    @DefaultListSize(2)
+    @Description("Description of list of sub2")
+    List<SubConf5> sub2();
+
+  }
+
+  @Test
+  public void defaultContent__subConfigList() {
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf5> callback     = new ConfImplToCallback<>(Conf5.class, confCallback);
+
+    //
+    //
+    ConfContent confContent = callback.defaultContent();
+    //
+    //
+
+    {
+      List<String> lines = new ArrayList<>();
+      confContent.appendTo(lines);
+      System.out.println(String.join("\n", lines));
+    }
+
+    Map<String, String> commentMap = confContent.records.stream().filter(x -> x.key != null)
+                                       .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
+
+    assertThat(commentMap).contains(entry("sub1.0", "Description of SubConf5~~Description of list of sub1"));
+    assertThat(commentMap).contains(entry("sub1.1", "Description of SubConf5~~Description of list of sub1"));
+    assertThat(commentMap).contains(entry("sub1.2", "Description of SubConf5~~Description of list of sub1"));
+    assertThat(commentMap).contains(entry("sub1.0.strParam", "Description of strParam"));
+    assertThat(commentMap).contains(entry("sub1.1.strParam", "Description of strParam"));
+    assertThat(commentMap).contains(entry("sub1.2.strParam", "Description of strParam"));
+    assertThat(commentMap).contains(entry("sub2.0", "Description of SubConf5~~Description of list of sub2"));
+    assertThat(commentMap).contains(entry("sub2.1", "Description of SubConf5~~Description of list of sub2"));
+    assertThat(commentMap).contains(entry("sub2.0.strParam", "Description of strParam"));
+    assertThat(commentMap).contains(entry("sub2.1.strParam", "Description of strParam"));
+  }
+
+  @SuppressWarnings("unused")
+  @Description("Description of SubSubConf6")
+  interface SubSubConf6 {
+
+    @DefaultStrValue("6L5uR36UVr")
+    @Description("Description of param1")
+    String param1();
+
+    @DefaultStrValue("q3CxbPt946")
+    @Description("Description of param2")
+    String param2();
+  }
+
+  @SuppressWarnings("unused")
+  @Description("Description of SubConf6")
+  interface SubConf6 {
+
+    @Description("Description of subSub1")
+    List<SubSubConf6> subSub1();
+
+    @Description("Description of subSub2")
+    List<SubSubConf6> subSub2();
+  }
+
+  @SuppressWarnings("unused")
+  @Description("Description of Conf6")
+  interface Conf6 {
+
+    @Description("Description of sub1")
+    List<SubConf6> sub1();
+
+    @Description("Description of sub2")
+    List<SubConf6> sub2();
+
+  }
+
+  @Test
+  public void defaultContent__subSubConfigList() {
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf6> callback     = new ConfImplToCallback<>(Conf6.class, confCallback);
+
+    //
+    //
+    ConfContent confContent = callback.defaultContent();
+    //
+    //
+
+    {
+      List<String> lines = new ArrayList<>();
+      confContent.appendTo(lines);
+      System.out.println(String.join("\n", lines));
+    }
+
+    Map<String, String> commentMap = confContent.records.stream().filter(x -> x.key != null)
+                                       .collect(toMap(x -> x.key, x -> String.join("~", x.comments)));
+
+    assertThat(commentMap).contains(entry("sub2.0.subSub1.0.param1", "Description of param1"));
+  }
+
 }

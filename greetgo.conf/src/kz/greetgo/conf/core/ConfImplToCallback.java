@@ -230,6 +230,24 @@ public class ConfImplToCallback<T> {
 
           continue;
         }
+
+        if (argClass.isInterface()) {
+
+          DefaultListSize defaultListSize = method.getAnnotation(DefaultListSize.class);
+          int             listSize        = defaultListSize == null ? 1 : defaultListSize.value();
+
+          for (int i = 0; i < listSize; i++) {
+
+            ConfCallbackPrefix    callbackPrefix = new ConfCallbackPrefix(name + '.' + i + '.', confCallback);
+            ConfImplToCallback<?> callback       = new ConfImplToCallback<>(argClass, callbackPrefix);
+
+            callback.appendContent(confContent, name + '.' + i, description);
+
+          }
+
+          continue;
+        }
+
         throw new RuntimeException("szOckL3MyQ :: " + method);
       }
 
