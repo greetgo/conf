@@ -22,22 +22,41 @@ public class ConfRecord {
    * <p>
    * Если null, то данная запись содержит только комментарий
    */
-  public String key;
+  private String key;
 
   /**
    * Присваиваемое значение
    * <p>
    * Должен быть null, если <code>{@link #key} == null</code>
    */
-  public String value;
+  private String value;
 
+  public String trimmedKey() {
+    String x = key;
+    if (x == null) return null;
+    String xx = x.trim();
+    return xx.isEmpty() ? null : xx;
+  }
+
+  public String trimmedValue() {
+    String x = value;
+    return x == null ? null : x.trim();
+  }
+
+  public String key() {
+    return key;
+  }
+
+  public String value() {
+    return value;
+  }
 
   @Override
   public String toString() {
     List<String> ss = new ArrayList<>();
 
     if (key != null) {
-      ss.add(value == null ? key : key + '=' + value);
+      ss.add(value == null ? '`' + key + '`' : '`' + key + '`' + '=' + '`' + value + '`');
     }
 
     String oneLineComment = oneLineComment();
@@ -63,7 +82,7 @@ public class ConfRecord {
   public static ConfRecord of(String key, String value, List<String> comments) {
     ConfRecord ret = new ConfRecord();
     ret.comments.addAll(comments);
-    ret.key = key;
+    ret.key   = key;
     ret.value = value;
     return ret;
   }
@@ -84,7 +103,7 @@ public class ConfRecord {
   public static ConfRecord ofComments(List<String> comments) {
     ConfRecord ret = new ConfRecord();
     ret.comments.addAll(comments);
-    ret.key = null;
+    ret.key   = null;
     ret.value = null;
     return ret;
   }
@@ -106,8 +125,8 @@ public class ConfRecord {
   }
 
   public void insertTopComment(String comment) {
-    List<String> addingComments = ConfRecord.ofComment(comment).comments;
-    int addingCommentsCount = addingComments.size();
+    List<String> addingComments      = ConfRecord.ofComment(comment).comments;
+    int          addingCommentsCount = addingComments.size();
     for (int i = 0; i < addingCommentsCount; i++) {
       comments.add(0, null);
     }

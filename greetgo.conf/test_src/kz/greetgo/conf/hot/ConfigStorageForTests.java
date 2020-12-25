@@ -7,10 +7,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConfigStorageForTests implements ConfigStorage {
 
-  public final Map<String, String> contentMap = new ConcurrentHashMap<>();
-  public final Map<String, Date> changeMap = new ConcurrentHashMap<>();
+  private final Map<String, String> contentMap = new ConcurrentHashMap<>();
+  private final Map<String, Date> changeMap = new ConcurrentHashMap<>();
 
-  public final AtomicInteger callCountOfLoadConfigContent = new AtomicInteger(0);
+  private final AtomicInteger callCountOfLoadConfigContent = new AtomicInteger(0);
+
+  public int callCountOfLoadConfigContent() {
+    return callCountOfLoadConfigContent.get();
+  }
 
   @Override
   public String loadConfigContent(String configLocation) {
@@ -21,7 +25,11 @@ public class ConfigStorageForTests implements ConfigStorage {
     return contentMap.get(configLocation);
   }
 
-  public final AtomicInteger callCountOfIsConfigContentExists = new AtomicInteger(0);
+  private final AtomicInteger callCountOfIsConfigContentExists = new AtomicInteger(0);
+
+  public int callCountOfIsConfigContentExists() {
+    return callCountOfIsConfigContentExists.get();
+  }
 
   @Override
   public boolean isConfigContentExists(String configLocation) {
@@ -29,7 +37,11 @@ public class ConfigStorageForTests implements ConfigStorage {
     return contentMap.containsKey(configLocation);
   }
 
-  public final AtomicInteger callCountOfSaveConfigContent = new AtomicInteger(0);
+  private final AtomicInteger callCountOfSaveConfigContent = new AtomicInteger(0);
+
+  public int callCountOfSaveConfigContent() {
+    return callCountOfSaveConfigContent.get();
+  }
 
   @Override
   public void saveConfigContent(String configLocation, String configContent) {

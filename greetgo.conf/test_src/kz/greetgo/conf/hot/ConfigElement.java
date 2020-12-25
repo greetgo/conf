@@ -1,6 +1,12 @@
 package kz.greetgo.conf.hot;
 
-public class ConfigElement {
-  public int intField = 20019;
-  public String strField = "By one";
+@SuppressWarnings("unused")
+public interface ConfigElement {
+
+  @DefaultIntValue(20019)
+  int intField();
+
+  @DefaultStrValue("By one")
+  String strField();
+
 }

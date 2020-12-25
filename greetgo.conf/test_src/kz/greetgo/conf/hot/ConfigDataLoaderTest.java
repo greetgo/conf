@@ -32,7 +32,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "field=8156");
+    if (!useDefault) configContent.saveConfigContent("some", "field=8156");
 
     //
     //
@@ -53,7 +53,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "field=65365424");
+    if (!useDefault) configContent.saveConfigContent("some", "field=65365424");
 
     //
     //
@@ -74,7 +74,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "field=good value");
+    if (!useDefault) configContent.saveConfigContent("some", "field=good value");
 
     //
     //
@@ -95,7 +95,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "field=off");
+    if (!useDefault) configContent.saveConfigContent("some", "field=off");
 
     //
     //
@@ -116,7 +116,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "field=on");
+    if (!useDefault) configContent.saveConfigContent("some", "field=on");
 
     //
     //
@@ -137,7 +137,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    if (!useDefault) configContent.contentMap.put("some", "hello.field1=7654\nhello.field2=Good string");
+    if (!useDefault) configContent.saveConfigContent("some", "hello.field1=7654\nhello.field2=Good string");
 
     //
     //
@@ -180,7 +180,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).contains(MapEntry.entry("strElement", "asd"));
     assertThat(target).contains(MapEntry.entry("boolElement", true));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
     assertThat(content).isEqualTo("\n" +
       "#\n" +
       "# Created at 2016-01-01 12:09:11.345\n" +
@@ -211,7 +211,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    configContent.contentMap.put("hello/asd.txt", "\nhello=wow\n");
+    configContent.saveConfigContent("hello/asd.txt", "\nhello=wow\n");
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -226,7 +226,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).hasSize(1);
     assertThat(target).contains(MapEntry.entry("intElement", 123));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
 
     assertThat(content).isEqualTo("\n" +
       "hello=wow\n" +
@@ -250,7 +250,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    configContent.contentMap.put("hello/asd.txt", "\nintElement1=809\n");
+    configContent.saveConfigContent("hello/asd.txt", "\nintElement1=809\n");
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -266,7 +266,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).contains(MapEntry.entry("intElement1", 809));
     assertThat(target).contains(MapEntry.entry("intElement2", 567));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
 
     assertThat(content).isEqualTo("\n" +
       "intElement1=809\n" +
@@ -290,7 +290,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    configContent.contentMap.put("hello/asd.txt", "\nintElement1=xx809\n");
+    configContent.saveConfigContent("hello/asd.txt", "\nintElement1=xx809\n");
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -306,7 +306,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).contains(MapEntry.entry("intElement1", 876));
     assertThat(target).contains(MapEntry.entry("intElement2", 543));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
 
     assertThat(content).isEqualTo("\n" +
       "intElement1=xx809\n" +
@@ -331,7 +331,7 @@ public class ConfigDataLoaderTest {
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     String initialContent = "\nintElement1=777\nintElement2=888\n";
-    configContent.contentMap.put("hello/asd.txt", initialContent);
+    configContent.saveConfigContent("hello/asd.txt", initialContent);
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -347,7 +347,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).contains(MapEntry.entry("intElement1", 777));
     assertThat(target).contains(MapEntry.entry("intElement2", 888));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
 
     assertThat(content).isEqualTo(initialContent);
   }
@@ -362,7 +362,7 @@ public class ConfigDataLoaderTest {
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
     String initialContent = "#intElement1=777";
-    configContent.contentMap.put("hello/asd.txt", initialContent);
+    configContent.saveConfigContent("hello/asd.txt", initialContent);
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -377,7 +377,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).hasSize(1);
     assertThat(target).contains(MapEntry.entry("intElement1", 311));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
 
     assertThat(content).isEqualTo(initialContent);
   }
@@ -391,7 +391,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    configContent.contentMap.put("hello/asd.txt", "##intElement1=777");
+    configContent.saveConfigContent("hello/asd.txt", "##intElement1=777");
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -406,7 +406,7 @@ public class ConfigDataLoaderTest {
     assertThat(target).hasSize(1);
     assertThat(target).contains(MapEntry.entry("intElement1", 311));
 
-    String content = configContent.contentMap.get("hello/asd.txt");
+    String content = configContent.loadConfigContent("hello/asd.txt");
     assertThat(content).isEqualTo("##intElement1=777\n" +
       "\n" +
       "#\n" +
@@ -436,7 +436,7 @@ public class ConfigDataLoaderTest {
     ));
 
     ConfigStorageForTests configContent = new ConfigStorageForTests();
-    configContent.contentMap.put(location, "#left content");
+    configContent.saveConfigContent(location, "#left content");
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -454,7 +454,7 @@ public class ConfigDataLoaderTest {
     assertThat(element.field1).isEqualTo(123);
     assertThat(element.field2).isEqualTo("Hello");
 
-    String content = configContent.contentMap.get(location);
+    String content = configContent.loadConfigContent(location);
     assertThat(content).isEqualTo("#left content\n" +
       "\n" +
       "#\n" +

@@ -1,17 +1,12 @@
 package kz.greetgo.conf.hot;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
+import kz.greetgo.conf.core.ConfAccess;
+import kz.greetgo.conf.core.ConfAccessStdSerializer;
+import kz.greetgo.conf.core.ConfContent;
+import kz.greetgo.conf.core.ConfContentSerializer;
+import kz.greetgo.conf.core.ConfImplBuilder;
 
-import static java.util.Collections.unmodifiableMap;
-import static kz.greetgo.conf.hot.ConfigDataLoader.loadConfigDataTo;
+import java.util.Date;
 
 /**
  * Factory for hot config implementations
@@ -32,25 +27,46 @@ public abstract class AbstractConfigFactory {
    */
   protected abstract <T> String configLocationFor(Class<T> configInterface);
 
-  /**
-   * Marks all configs to reread from storage
-   */
-  public void resetAll() {
-    resetIf(config -> true);
+  protected ConfContentSerializer getConfContentSerializer() {
+    return new ConfAccessStdSerializer();
   }
 
-  /**
-   * Marks specified configs to reread from storage
-   */
-  public void resetIf(Predicate<HotConfig> predicate) {
-    for (HotConfigImpl mediator : workingConfigs.values()) {
-      if (predicate.test(mediator)) {
-        mediator.reset();
+  protected ConfAccess confAccess(Class<?> configInterface) {
+    return new ConfAccess() {
+      final String configLocation = configLocationFor(configInterface);
+
+      @Override
+      public ConfContent load() {
+        try {
+          return getConfContentSerializer().deserialize(getConfigStorage().loadConfigContent(configLocation));
+        } catch (Exception e) {
+          if (e instanceof RuntimeException) throw (RuntimeException) e;
+          throw new RuntimeException(e);
+        }
       }
-    }
-  }
 
-  protected static final Object ABSENT_ENV = new Object();
+      @Override
+      public void write(ConfContent confContent) {
+        try {
+          getConfigStorage().saveConfigContent(configLocation, getConfContentSerializer().serialize(confContent));
+        } catch (Exception e) {
+          if (e instanceof RuntimeException) throw (RuntimeException) e;
+          throw new RuntimeException(e);
+        }
+      }
+
+      @Override
+      public Date lastModifiedAt() {
+        try {
+          return getConfigStorage().getLastChangedAt(configLocation);
+        } catch (Exception e) {
+          if (e instanceof RuntimeException) throw (RuntimeException) e;
+          throw new RuntimeException(e);
+        }
+      }
+    };
+
+  }
 
   /**
    * Defines auto reset timeout. It is a time interval in milliseconds to check last config modification date and time.
@@ -62,261 +78,17 @@ public abstract class AbstractConfigFactory {
     return 2000;
   }
 
-  protected final Map<String, HotConfigImpl> workingConfigs = new ConcurrentHashMap<>();
-
-  /**
-   * Creates config storage with default values if it is absent
-   */
-  public void sync() {
-    workingConfigs.values().forEach(HotConfigImpl::getData);
-  }
-
-  protected boolean isInitForcible(HotConfigDefinition configDefinition) {
-    return configDefinition.configInterface().getAnnotation(ForcibleInit.class) != null;
-  }
-
-  public class HotConfigImpl implements HotConfig {
-    protected final AtomicReference<Map<String, Object>> data = new AtomicReference<>(null);
-    protected final HotConfigDefinition configDefinition;
-
-    public HotConfigImpl(HotConfigDefinition configDefinition) {
-      this.configDefinition = configDefinition;
-      if (isInitForcible(configDefinition)) {
-        getData();
-      }
-    }
-
-    protected void reset() {
-      data.set(null);
-    }
-
-    private final AtomicReference<Date> lastModificationTime = new AtomicReference<>(null);
-    private final AtomicLong lastChecked = new AtomicLong(System.currentTimeMillis());
-
-    protected void preReset() {
-      try {
-
-        long autoResetTimeout = autoResetTimeout();
-
-        if (autoResetTimeout == 0) {
-          return;
-        }
-
-        long delay = System.currentTimeMillis() - lastChecked.get();
-
-        if (delay < autoResetTimeout) {
-          return;
-        }
-
-        Date lastModificationTime = this.lastModificationTime.get();
-        if (lastModificationTime == null) {
-          Date lastChangedAt = getConfigStorage().getLastChangedAt(configDefinition.location());
-          this.lastModificationTime.set(lastChangedAt);
-          lastChecked.set(System.currentTimeMillis());
-          return;
-        }
-
-        Date lastChangedAt = getConfigStorage().getLastChangedAt(configDefinition.location());
-        lastChecked.set(System.currentTimeMillis());
-        if (lastChangedAt == null) {
-          return;
-        }
-
-        if (lastChangedAt.equals(lastModificationTime)) {
-          return;
-        }
-
-        this.lastModificationTime.set(lastChangedAt);
-
-        reset();
-
-      } catch (RuntimeException e) {
-        throw e;
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    Map<String, Object> getData() {
-      preReset();
-
-      {
-        Map<String, Object> x = data.get();
-        if (x != null) {
-          return x;
-        }
-      }
-
-      synchronized (workingConfigs) {
-        {
-          Map<String, Object> x = data.get();
-          if (x != null) {
-            return x;
-          }
-        }
-        {
-          Map<String, Object> newData = new HashMap<>();
-          loadConfigDataTo(newData, configDefinition, getConfigStorage(), new Date());
-          newData = unmodifiableMap(newData);
-          data.set(newData);
-          return newData;
-        }
-      }
-    }
-
-
-    protected final ConcurrentHashMap<String, Object> environmentValues = new ConcurrentHashMap<>();
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Object getElementValue(String elementName) {
-
-      Object envValue = environmentValues.get(elementName);
-
-      if (envValue == null) {
-        for (ElementDefinition definition : configDefinition.elementList()) {
-          if (definition.name.equals(elementName)) {
-            if (definition.firstReadEnv == null) {
-              envValue = ABSENT_ENV;
-              break;
-            }
-
-            String strEnvValue = System.getenv(definition.firstReadEnv.value());
-            if (strEnvValue != null && strEnvValue.trim().length() > 0) {
-              envValue = definition.typeManager.fromStr(strEnvValue);
-            } else {
-              envValue = ABSENT_ENV;
-            }
-
-            break;
-          }
-        }
-        if (envValue == null) {
-          envValue = ABSENT_ENV;
-        }
-        environmentValues.put(elementName, envValue);
-      }
-
-      if (envValue == ABSENT_ENV) {
-        return getData().get(elementName);
-      }
-
-      return envValue;
-    }
-
-    @Override
-    public boolean isElementExists(String elementName) {
-      return getData().containsKey(elementName);
-    }
-
-    @Override
-    public String location() {
-      return configDefinition.location();
-    }
-
-    @Override
-    public Class<?> configInterface() {
-      return configDefinition.configInterface();
-    }
-  }
-
-  /**
-   * Creates and returns instance of hot config
-   *
-   * @param configDefinition definition of config
-   * @return instance of hot config
-   */
-  public HotConfig getOrCreateConfig(HotConfigDefinition configDefinition) {
-    {
-      HotConfigImpl config = workingConfigs.get(configDefinition.location());
-      if (config != null) {
-        return config;
-      }
-    }
-    synchronized (this) {
-      {
-        HotConfigImpl config = workingConfigs.get(configDefinition.location());
-        if (config != null) {
-          return config;
-        }
-      }
-
-      HotConfigImpl config = new HotConfigImpl(configDefinition);
-      workingConfigs.put(configDefinition.location(), config);
-
-      return config;
-    }
-  }
-
   /**
    * Creates and returns instance of config
    *
    * @param configInterface config interface
    * @return instance of config
    */
-  @SuppressWarnings("unchecked")
   public <T> T createConfig(Class<T> configInterface) {
-    return (T) Proxy.newProxyInstance(
-      getClass().getClassLoader(), new Class<?>[]{configInterface}, createInvocationHandler(configInterface)
-    );
+    return ConfImplBuilder
+             .confImplBuilder(configInterface, confAccess(configInterface))
+             .changeCheckTimeoutMs(autoResetTimeout())
+             .build();
   }
 
-
-  /**
-   * Replace parameters in <code>value</code> with what you want and return it
-   *
-   * @param value value containing parameters
-   * @return value without parameters - all parameters was replaced with it's values
-   */
-  protected String replaceParametersInDefaultStrValue(String value) {
-    value = value.replaceAll("\\{user\\.name}", System.getProperty("user.name"));
-    value = value.replaceAll("\\{user\\.home}", System.getProperty("user.home"));
-    return value;
-  }
-
-  private <T> InvocationHandler createInvocationHandler(Class<T> configInterface) {
-    String configLocation = configLocationFor(configInterface);
-
-    {
-      HotConfig hotConfig = workingConfigs.get(configLocation);
-      if (hotConfig != null) {
-        return createInvocationHandlerOnHotConfig(hotConfig, configInterface);
-      }
-    }
-
-    return createInvocationHandlerOnHotConfig(
-      getOrCreateConfig(
-
-        DefinitionCreator.createDefinition(
-          configLocation, configInterface, this::replaceParametersInDefaultStrValue
-        )
-
-      ), configInterface
-    );
-  }
-
-  private InvocationHandler createInvocationHandlerOnHotConfig(final HotConfig hotConfig,
-                                                               final Class<?> configInterface) {
-    final Object identityObject = new Object();
-    return (proxy, method, args) -> {
-
-      if (method.getParameterTypes().length > 0) {
-        //noinspection SuspiciousInvocationHandlerImplementation
-        return null;
-      }
-
-      if ("toString".equals(method.getName())) {
-        return "[Hot config for <" + configInterface.getName() + ">@" + identityObject.hashCode() + "]";
-      }
-
-      if ("hashCode".equals(method.getName()) && method.getParameterCount() == 0) {
-        return identityObject.hashCode();
-      }
-      if ("equals".equals(method.getName()) && method.getParameterCount() == 1) {
-        return identityObject.equals(args[0]);
-      }
-
-      return hotConfig.getElementValue(method.getName());
-    };
-  }
 }

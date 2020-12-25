@@ -39,7 +39,7 @@ public class ConfContent {
       records.add(ConfRecord.ofComment(comment));
       return;
     }
-    if (records.get(0).key != null) {
+    if (records.get(0).trimmedKey() != null) {
       records.add(0, ConfRecord.ofComment(comment));
       return;
     }
@@ -54,8 +54,8 @@ public class ConfContent {
     Map<String, String> params = new HashMap<>();
 
     for (ConfRecord record : records) {
-      if (record.key != null) {
-        params.put(record.key, record.value);
+      if (record.trimmedKey() != null) {
+        params.put(record.trimmedKey(), record.trimmedValue());
       }
     }
 
@@ -67,13 +67,13 @@ public class ConfContent {
   public ConfContent minus(ConfContent mini) {
 
     Set<String> miniKeys = mini.records.stream()
-                             .map(x -> x.key)
+                             .map(ConfRecord::trimmedKey)
                              .filter(Objects::nonNull)
                              .collect(Collectors.toSet());
 
     return of(records.stream()
-                .filter(x -> x.key != null)
-                .filter(x -> !miniKeys.contains(x.key))
+                .filter(x -> x.trimmedKey() != null)
+                .filter(x -> !miniKeys.contains(x.trimmedKey()))
                 .collect(Collectors.toList()));
   }
 

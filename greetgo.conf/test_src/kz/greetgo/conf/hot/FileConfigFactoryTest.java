@@ -113,8 +113,6 @@ public class FileConfigFactoryTest {
       out.close();
     }
 
-    fab.resetAll();
-
     assertThat(conf.intExampleValue()).isEqualTo(999);
     assertThat(conf.intExampleValue2()).isEqualTo(111);
     assertThat(conf.boolExampleValue()).isEqualTo(true);
@@ -227,7 +225,6 @@ public class FileConfigFactoryTest {
     //
     //
     factory.createAllTypesConfig();
-    factory.sync();
     //
     //
 
