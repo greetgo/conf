@@ -5,6 +5,8 @@ import kz.greetgo.conf.test.util.ConfCallbackMap;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,45 +14,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("unused")
 public class ConfImplToCallbackTest_1 {
 
-  interface Conf {
-
+  interface Conf_paramStr {
     String paramStr();
-
-    boolean paramBool();
-
-    Boolean paramBoolBox();
-
-    int paramInt();
-
-    Integer paramIntBox();
-
-    long paramLong();
-
-    Long paramLongBox();
-
-    float paramFloat();
-
-    Float paramFloatBox();
-
-    double paramDouble();
-
-    Double paramDoubleBox();
-
-    BigDecimal paramBigDecimal();
-
-    Date paramDate();
-
   }
 
   @Test
   public void impl__paramStr() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                   confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramStr> callback     = new ConfImplToCallback<>(Conf_paramStr.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramStr impl = callback.impl();
     //
     //
 
@@ -58,15 +34,19 @@ public class ConfImplToCallbackTest_1 {
     assertThat(impl.paramStr()).isEqualTo("PVCg0jip5R");
   }
 
+  interface Conf_paramBool {
+    boolean paramBool();
+  }
+
   @Test
   public void impl__paramBool() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                    confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramBool> callback     = new ConfImplToCallback<>(Conf_paramBool.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramBool impl = callback.impl();
     //
     //
 
@@ -80,15 +60,19 @@ public class ConfImplToCallbackTest_1 {
     assertThat(impl.paramBool()).isFalse();
   }
 
+  interface Conf_paramBoolBox {
+    Boolean paramBoolBox();
+  }
+
   @Test
   public void impl__paramBoolBox() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                       confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramBoolBox> callback     = new ConfImplToCallback<>(Conf_paramBoolBox.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramBoolBox impl = callback.impl();
     //
     //
 
@@ -102,15 +86,19 @@ public class ConfImplToCallbackTest_1 {
     assertThat(impl.paramBoolBox()).isNull();
   }
 
+  interface Conf_paramInt {
+    int paramInt();
+  }
+
   @Test
   public void impl__paramInt() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                   confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramInt> callback     = new ConfImplToCallback<>(Conf_paramInt.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramInt impl = callback.impl();
     //
     //
 
@@ -131,15 +119,19 @@ public class ConfImplToCallbackTest_1 {
 
   }
 
+  interface Conf_paramIntBox {
+    Integer paramIntBox();
+  }
+
   @Test
   public void impl__paramIntBox() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                      confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramIntBox> callback     = new ConfImplToCallback<>(Conf_paramIntBox.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramIntBox impl = callback.impl();
     //
     //
 
@@ -157,12 +149,12 @@ public class ConfImplToCallbackTest_1 {
   @Test
   public void impl__call__equals() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                      confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramIntBox> callback     = new ConfImplToCallback<>(Conf_paramIntBox.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramIntBox impl = callback.impl();
     //
     //
 
@@ -173,12 +165,12 @@ public class ConfImplToCallbackTest_1 {
   @Test
   public void impl__call__hashCode() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                      confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramIntBox> callback     = new ConfImplToCallback<>(Conf_paramIntBox.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramIntBox impl = callback.impl();
     //
     //
 
@@ -186,15 +178,19 @@ public class ConfImplToCallbackTest_1 {
 
   }
 
+  interface Conf_paramFloat {
+    float paramFloat();
+  }
+
   @Test
   public void impl__paramFloat() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                     confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramFloat> callback     = new ConfImplToCallback<>(Conf_paramFloat.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramFloat impl = callback.impl();
     //
     //
 
@@ -215,15 +211,19 @@ public class ConfImplToCallbackTest_1 {
 
   }
 
+  interface Conf_paramFloatBox {
+    Float paramFloatBox();
+  }
+
   @Test
   public void impl__paramFloatBox() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                        confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramFloatBox> callback     = new ConfImplToCallback<>(Conf_paramFloatBox.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramFloatBox impl = callback.impl();
     //
     //
 
@@ -241,12 +241,12 @@ public class ConfImplToCallbackTest_1 {
   @Test(expectedExceptions = CannotConvertToType.class)
   public void impl__paramFloat__CannotConvertToType() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                     confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramFloat> callback     = new ConfImplToCallback<>(Conf_paramFloat.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramFloat impl = callback.impl();
     //
     //
 
@@ -258,12 +258,12 @@ public class ConfImplToCallbackTest_1 {
   @Test(expectedExceptions = CannotConvertToType.class)
   public void impl__paramDouble__CannotConvertToType() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                      confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramDouble> callback     = new ConfImplToCallback<>(Conf_paramDouble.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramDouble impl = callback.impl();
     //
     //
 
@@ -272,15 +272,19 @@ public class ConfImplToCallbackTest_1 {
 
   }
 
+  interface Conf_paramDouble {
+    double paramDouble();
+  }
+
   @Test
   public void impl__paramDouble() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                      confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramDouble> callback     = new ConfImplToCallback<>(Conf_paramDouble.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramDouble impl = callback.impl();
     //
     //
 
@@ -301,15 +305,19 @@ public class ConfImplToCallbackTest_1 {
 
   }
 
+  interface Conf_paramDoubleBox {
+    Double paramDoubleBox();
+  }
+
   @Test
   public void impl__paramDoubleBox() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap                         confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramDoubleBox> callback     = new ConfImplToCallback<>(Conf_paramDoubleBox.class, confCallback);
 
     //
     //
-    Conf impl = callback.impl();
+    Conf_paramDoubleBox impl = callback.impl();
     //
     //
 
@@ -323,5 +331,108 @@ public class ConfImplToCallbackTest_1 {
     assertThat(impl.paramDoubleBox()).isNull();
 
   }
+
+  interface Conf_paramBigDecimal {
+    BigDecimal paramBigDecimal();
+  }
+
+  private static BigDecimal bd(String s) {
+    return new BigDecimal(s);
+  }
+
+  @Test
+  public void impl__paramBigDecimal() {
+
+    ConfCallbackMap                          confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramBigDecimal> callback     = new ConfImplToCallback<>(Conf_paramBigDecimal.class, confCallback);
+
+    //
+    //
+    Conf_paramBigDecimal impl = callback.impl();
+    //
+    //
+
+    confCallback.prm("paramBigDecimal", "4325.456");
+    assertThat(impl.paramBigDecimal()).isEqualTo(bd("4325.456"));
+
+    confCallback.prm("paramBigDecimal", "-6543.12");
+    assertThat(impl.paramBigDecimal()).isEqualTo(bd("-6543.12"));
+
+    confCallback.prm("paramBigDecimal", null);
+    assertThat(impl.paramBigDecimal()).isEqualTo(BigDecimal.ZERO);
+  }
+
+  interface Conf_paramDate {
+    Date paramDate();
+  }
+
+  private static Date dat(String s) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    try {
+      return sdf.parse(s);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Test
+  public void impl__paramDate() {
+
+    ConfCallbackMap                    confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramDate> callback     = new ConfImplToCallback<>(Conf_paramDate.class, confCallback);
+
+    //
+    //
+    Conf_paramDate impl = callback.impl();
+    //
+    //
+
+
+    confCallback.prm("paramDate", "2010-10-11 12:13:14");
+    assertThat(impl.paramDate()).isEqualTo(dat("2010-10-11 12:13:14"));
+
+    confCallback.prm("paramDate", "2010-10-13");
+    assertThat(impl.paramDate()).isEqualTo(dat("2010-10-13 00:00:00"));
+
+    confCallback.prm("paramDate", null);
+    assertThat(impl.paramDate()).isNull();
+  }
+
+  enum TestEnum {
+    ELEMENT_001,
+    ELEMENT_002,
+    ELEMENT_003,
+  }
+
+  interface Conf_paramEnum {
+    TestEnum paramEnum();
+  }
+
+  @Test
+  public void impl__paramEnum() {
+
+    ConfCallbackMap                    confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf_paramEnum> callback     = new ConfImplToCallback<>(Conf_paramEnum.class, confCallback);
+
+    //
+    //
+    Conf_paramEnum impl = callback.impl();
+    //
+    //
+
+
+    confCallback.prm("paramEnum", "ELEMENT_001");
+    assertThat(impl.paramEnum()).isEqualTo(TestEnum.ELEMENT_001);
+
+    confCallback.prm("paramEnum", "ELEMENT_003");
+    assertThat(impl.paramEnum()).isEqualTo(TestEnum.ELEMENT_003);
+
+    confCallback.prm("paramEnum", null);
+    assertThat(impl.paramEnum()).isNull();
+
+    confCallback.prm("paramEnum", "LEFT");
+    assertThat(impl.paramEnum()).isNull();
+  }
+
 
 }

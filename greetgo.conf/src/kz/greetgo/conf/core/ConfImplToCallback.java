@@ -9,11 +9,13 @@ import kz.greetgo.conf.hot.DefaultListSize;
 import kz.greetgo.conf.hot.Description;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,6 +73,24 @@ public class ConfImplToCallback<T> {
       return convertToType(strValue, returnType);
     }
 
+    if (returnType.isEnum()) {
+      String strValue = confCallback.readParam(methodName);
+      if (strValue == null || strValue.trim().isEmpty()) {
+        return null;
+      }
+
+      try {
+        try {
+          return returnType.getMethod("valueOf", String.class).invoke(null, strValue);
+        } catch (InvocationTargetException e) {
+          throw e.getCause();
+        }
+      } catch (IllegalArgumentException e) {
+        return null;
+      }
+
+    }
+
     if (List.class.isAssignableFrom(returnType)) {
 
       Class<?> arrArg = extractFirstArgumentClass(method.getAnnotatedReturnType().getType());
@@ -85,6 +105,7 @@ public class ConfImplToCallback<T> {
         }
         return ret;
       }
+
 
       if (arrArg.isInterface()) {
         int size = confCallback.readParamSize(methodName);
@@ -209,7 +230,7 @@ public class ConfImplToCallback<T> {
       Class<?>    returnType   = method.getReturnType();
       String      name         = (prefix == null ? "" : (prefix + '.')) + method.getName();
       Description description  = method.getAnnotation(Description.class);
-      String      defaultValue = extractStrDefaultValue(method.getAnnotations(), x -> x);
+      String      defaultValue = extractStrDefaultValue(method.getAnnotations(), returnType);
 
       if (isConvertingType(returnType)) {
         confContent.records.add(ConfRecord.ofDescription(name, defaultValue, description));
@@ -217,11 +238,11 @@ public class ConfImplToCallback<T> {
       }
 
       if (List.class.isAssignableFrom(returnType)) {
-        Class<?> argClass = extractFirstArgumentClass(method.getAnnotatedReturnType().getType());
-        if (isConvertingType(argClass)) {
+        Class<?>        argClass        = extractFirstArgumentClass(method.getAnnotatedReturnType().getType());
+        DefaultListSize defaultListSize = method.getAnnotation(DefaultListSize.class);
+        int             listSize        = defaultListSize == null ? 1 : defaultListSize.value();
 
-          DefaultListSize defaultListSize = method.getAnnotation(DefaultListSize.class);
-          int             listSize        = defaultListSize == null ? 1 : defaultListSize.value();
+        if (isConvertingType(argClass)) {
 
           confContent.records.add(ConfRecord.ofDescription(name + ".0", defaultValue, description));
           for (int i = 1; i < listSize; i++) {
@@ -232,9 +253,6 @@ public class ConfImplToCallback<T> {
         }
 
         if (argClass.isInterface()) {
-
-          DefaultListSize defaultListSize = method.getAnnotation(DefaultListSize.class);
-          int             listSize        = defaultListSize == null ? 1 : defaultListSize.value();
 
           for (int i = 0; i < listSize; i++) {
 
@@ -250,6 +268,33 @@ public class ConfImplToCallback<T> {
 
         throw new RuntimeException("szOckL3MyQ :: " + method);
       }
+
+      if (returnType.isEnum()) {
+
+        List<String> descriptionList = new ArrayList<>();
+        descriptionList.add("Enum " + returnType.getSimpleName() + " with values:");
+        if (description != null) {
+          descriptionList.addAll(Arrays.asList(description.value().split("\n")));
+        }
+
+        try {
+          Object values = returnType.getMethod("values").invoke(null);
+
+          //noinspection rawtypes
+          Arrays.stream(((Enum[]) values))
+                .map(Enum::name)
+                .map(x -> "  = " + x)
+                .forEach(descriptionList::add);
+
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+          throw new RuntimeException(e);
+        }
+
+        confContent.records.add(ConfRecord.of(name, defaultValue, descriptionList));
+
+        continue;
+      }
+
 
       if (returnType.isInterface()) {
 

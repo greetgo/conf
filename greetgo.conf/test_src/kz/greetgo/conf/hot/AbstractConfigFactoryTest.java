@@ -139,7 +139,7 @@ public class AbstractConfigFactoryTest {
 
     testing.cs.saveConfigContent("HostConfigWithLists.txt", "" +
                                                               "elementB.0.intField = 45000\n" +
-                                                              "elementB.0.strField = The new begins\n" +
+                                                              "elementB.0.strField = The new begins STORED\n" +
                                                               "elementB.1.intField = 456\n" +
                                                               "elementB.1.strField = hello world\n" +
                                                               "\n" +
@@ -152,11 +152,14 @@ public class AbstractConfigFactoryTest {
     assertThat(config.elementA().strField()).isEqualTo("By one");
 
     assertThat(config.elementB().get(0).intField()).isEqualTo(45_000);
-    assertThat(config.elementB().get(0).strField()).isEqualTo("The new begins");
+    assertThat(config.elementB().get(0).strField()).isEqualTo("The new begins STORED");
     assertThat(config.elementB().get(1).intField()).isEqualTo(456);
     assertThat(config.elementB().get(1).strField()).isEqualTo("hello world");
 
     String content = testing.cs.loadConfigContent("HostConfigWithLists.txt");
+
+    System.out.println("v36nRz56uV :: content=\n" + content);
+
     content = Arrays.stream(content.split("\n"))
                 .filter(s -> s.trim().length() > 0)
                 .filter(s -> !s.trim().startsWith("#"))
@@ -167,12 +170,9 @@ public class AbstractConfigFactoryTest {
                                     "elementA.intField = 709\n" +
                                     "elementA.strField=By one\n" +
                                     "elementB.0.intField = 45000\n" +
-                                    "elementB.0.strField = The new begins\n" +
+                                    "elementB.0.strField = The new begins STORED\n" +
                                     "elementB.1.intField = 456\n" +
                                     "elementB.1.strField = hello world\n" +
-                                    "elementB.2.intField=20019\n" +
-                                    "elementB.2.strField=By one\n" +
-                                    "elementB.listElementsCount=3\n" +
                                     "status=0");
   }
 

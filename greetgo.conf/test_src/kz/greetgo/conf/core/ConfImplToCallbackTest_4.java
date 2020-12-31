@@ -7,10 +7,13 @@ import kz.greetgo.conf.hot.Description;
 import kz.greetgo.conf.test.util.ConfCallbackMap;
 import org.testng.annotations.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -46,13 +49,14 @@ public class ConfImplToCallbackTest_4 {
       .isEqualTo("Description pfE65v3Js3~1y5MJ2ct38y~1ZbF50qRv1m");
 
     Map<String, String> commentMap = confContent.records.stream()
-                                       .collect(toMap(ConfRecord::trimmedKey, x -> String.join("~", x.comments)));
+                                                        .collect(toMap(ConfRecord::trimmedKey,
+                                                                       x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("param1", "Description Yc2O8GznYK~1U3N4RG8rZf"));
     assertThat(commentMap).contains(entry("param2", "Description gO7aCqMz16~jUzfLJtzIU"));
 
     Map<String, String> valueMap = confContent.records.stream().filter(x -> x.trimmedKey() != null)
-                                     .collect(toMap(ConfRecord::trimmedKey, ConfRecord::trimmedValue));
+                                                      .collect(toMap(ConfRecord::trimmedKey, ConfRecord::trimmedValue));
 
     assertThat(valueMap).contains(entry("param1", "OlQD1fORSn"));
     assertThat(valueMap).contains(entry("param2", "54267"));
@@ -81,14 +85,15 @@ public class ConfImplToCallbackTest_4 {
     //
 
     Map<String, String> commentMap = confContent.records.stream()
-                                       .collect(toMap(ConfRecord::trimmedKey, x -> String.join("~", x.comments)));
+                                                        .collect(toMap(ConfRecord::trimmedKey,
+                                                                       x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("coolParam.0", "Description Hi1a0o4KLd"));
     assertThat(commentMap).contains(entry("coolParam.1", ""));
     assertThat(commentMap).contains(entry("coolParam.2", ""));
 
     Map<String, String> valueMap = confContent.records.stream().filter(x -> x.trimmedKey() != null)
-                                     .collect(toMap(ConfRecord::trimmedKey, ConfRecord::trimmedValue));
+                                                      .collect(toMap(ConfRecord::trimmedKey, ConfRecord::trimmedValue));
 
     assertThat(valueMap).contains(entry("coolParam.0", "ieE5RbQZiP"));
     assertThat(valueMap).contains(entry("coolParam.1", "ieE5RbQZiP"));
@@ -135,7 +140,8 @@ public class ConfImplToCallbackTest_4 {
     }
 
     Map<String, String> commentMap = confContent.records.stream()
-                                       .collect(toMap(ConfRecord::trimmedKey, x -> String.join("~", x.comments)));
+                                                        .collect(toMap(ConfRecord::trimmedKey,
+                                                                       x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("confParam1", "Description of SubConf3~~Description of confParam1"));
     assertThat(commentMap).contains(entry("confParam1.subParam", "Description 59l98wOg1i"));
@@ -144,7 +150,8 @@ public class ConfImplToCallbackTest_4 {
     assertThat(commentMap).contains(entry("confParam2.subParam", "Description 59l98wOg1i"));
 
     Map<String, String> valueMap = confContent.records.stream().filter(x -> x.trimmedKey() != null)
-                                     .collect(toMap(ConfRecord::trimmedKey, x -> "" + x.trimmedValue()));
+                                                      .collect(toMap(ConfRecord::trimmedKey,
+                                                                     x -> "" + x.trimmedValue()));
 
     assertThat(valueMap).contains(entry("confParam1", "null"));
     assertThat(valueMap).contains(entry("confParam1.subParam", "pu1ovJFvhQ"));
@@ -197,7 +204,8 @@ public class ConfImplToCallbackTest_4 {
     }
 
     Map<String, String> commentMap = confContent.records.stream().filter(x -> x.trimmedKey() != null)
-                                       .collect(toMap(ConfRecord::trimmedKey, x -> String.join("~", x.comments)));
+                                                        .collect(toMap(ConfRecord::trimmedKey,
+                                                                       x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("modelParam1", "Description of SubModel4~~Description of modelParam1"));
     assertThat(commentMap).contains(entry("modelParam1.subParam1", "Description of subParam1"));
@@ -248,7 +256,8 @@ public class ConfImplToCallbackTest_4 {
     }
 
     Map<String, String> commentMap = confContent.records.stream().filter(x -> x.trimmedKey() != null)
-                                       .collect(toMap(ConfRecord::trimmedKey, x -> String.join("~", x.comments)));
+                                                        .collect(toMap(ConfRecord::trimmedKey,
+                                                                       x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("sub1.0", "Description of SubConf5~~Description of list of sub1"));
     assertThat(commentMap).contains(entry("sub1.1", "Description of SubConf5~~Description of list of sub1"));
@@ -316,9 +325,108 @@ public class ConfImplToCallbackTest_4 {
     }
 
     Map<String, String> commentMap = confContent.records.stream().filter(x -> x.trimmedKey() != null)
-                                       .collect(toMap(ConfRecord::trimmedKey, x -> String.join("~", x.comments)));
+                                                        .collect(toMap(ConfRecord::trimmedKey,
+                                                                       x -> String.join("~", x.comments)));
 
     assertThat(commentMap).contains(entry("sub2.0.subSub1.0.param1", "Description of param1"));
+  }
+
+  @SuppressWarnings("unused")
+  interface Conf7 {
+
+    int intPrimitive();
+
+    Integer intBoxed();
+
+    long longPrimitive();
+
+    Long longBoxed();
+
+    double doublePrimitive();
+
+    Double doubleBoxed();
+
+    float floatPrimitive();
+
+    Float floatBoxed();
+
+    BigDecimal bigDecimal();
+
+  }
+
+  @Test
+  public void defaultContent__primitiveTypes() {
+
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf7> callback     = new ConfImplToCallback<>(Conf7.class, confCallback);
+
+    //
+    //
+    ConfContent confContent = callback.defaultContent();
+    //
+    //
+
+
+    List<String> lines = new ArrayList<>();
+    confContent.appendTo(lines);
+    List<String> lines2 = lines.stream()
+                               .filter(line -> line.trim().length() > 0)
+                               .filter(line -> !line.trim().startsWith("#"))
+                               .sorted()
+                               .collect(toList());
+
+    for (String line : lines2) {
+      System.out.println("gb4OWD32rS " + line);
+    }
+
+    assertThat(lines2).isEqualTo(Arrays.asList("bigDecimal=0",
+                                               "doubleBoxed",
+                                               "doublePrimitive=0",
+                                               "floatBoxed",
+                                               "floatPrimitive=0",
+                                               "intBoxed",
+                                               "intPrimitive=0",
+                                               "longBoxed",
+                                               "longPrimitive=0"));
+  }
+
+  @SuppressWarnings("unused")
+  enum TestEnum {
+    ENUM_ELEMENT_001,
+    ENUM_ELEMENT_002,
+    ENUM_ELEMENT_003,
+  }
+
+  @SuppressWarnings("unused")
+  interface Conf8 {
+    TestEnum testEnum();
+  }
+
+  @Test
+  public void defaultContent__enum() {
+
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf8> callback     = new ConfImplToCallback<>(Conf8.class, confCallback);
+
+    //
+    //
+    ConfContent confContent = callback.defaultContent();
+    //
+    //
+
+    List<String> lines = new ArrayList<>();
+    confContent.appendTo(lines);
+
+    for (String line : lines) {
+      System.out.println("O812e2SJgw " + line);
+    }
+
+    assertThat(lines.get(0)).isEqualTo("# Enum TestEnum with values:");
+    assertThat(lines.get(1)).isEqualTo("#   = ENUM_ELEMENT_001");
+    assertThat(lines.get(2)).isEqualTo("#   = ENUM_ELEMENT_002");
+    assertThat(lines.get(3)).isEqualTo("#   = ENUM_ELEMENT_003");
+    assertThat(lines.get(4)).isEqualTo("testEnum");
+
   }
 
 }

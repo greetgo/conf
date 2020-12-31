@@ -71,7 +71,7 @@ public class ConfUtil {
     for (String name : cd.list(null)) {
       {
         String setMethodName = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
-        Method method = setMethods.get(setMethodName);
+        Method method        = setMethods.get(setMethodName);
         if (method != null) {
           method.invoke(readTo, convertToType(cd.str(name), method.getParameterTypes()[0]));
           continue FOR;
@@ -90,7 +90,7 @@ public class ConfUtil {
     try {
       try (FileInputStream in = new FileInputStream(file)) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024 * 4];
+        byte[]                buf  = new byte[1024 * 4];
 
         while (true) {
           int count = in.read(buf);
@@ -111,14 +111,14 @@ public class ConfUtil {
     }
   }
 
-  public static final String rus = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-  public static final String RUS = rus.toUpperCase();
+  public static final String rus           = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+  public static final String RUS           = rus.toUpperCase();
   @SuppressWarnings("SpellCheckingInspection")
-  public static final String eng = "abcdefghijklmnopqrstuvwxyz";
-  public static final String ENG = eng.toUpperCase();
-  public static final String DEG = "0123456789";
-  public static final char[] ALL_CHARS = (eng + ENG + rus + RUS + DEG).toCharArray();
-  public static final int ALL_CHARS_LEN = ALL_CHARS.length;
+  public static final String eng           = "abcdefghijklmnopqrstuvwxyz";
+  public static final String ENG           = eng.toUpperCase();
+  public static final String DEG           = "0123456789";
+  public static final char[] ALL_CHARS     = (eng + ENG + rus + RUS + DEG).toCharArray();
+  public static final int    ALL_CHARS_LEN = ALL_CHARS.length;
 
   public static final Random rnd = new Random();
 
@@ -133,8 +133,8 @@ public class ConfUtil {
 
   @SuppressWarnings("UnnecessaryContinue")
   public static String extractStrDefaultValue(Annotation[] annotations, Function<String, String> parameterReplacer) {
-    String value = null;
-    List<String> aa = new ArrayList<>();
+    String       value = null;
+    List<String> aa    = new ArrayList<>();
     for (Annotation a : annotations) {
       if (a instanceof DefaultStrValue) {
         DefaultStrValue b = (DefaultStrValue) a;
@@ -174,6 +174,62 @@ public class ConfUtil {
     return value;
   }
 
+  public static String extractStrDefaultValue(Annotation[] annotations, Class<?> valueType) {
+    String       value = null;
+    List<String> aa    = new ArrayList<>();
+    for (Annotation a : annotations) {
+      if (a instanceof DefaultStrValue) {
+        DefaultStrValue b = (DefaultStrValue) a;
+        value = b.value();
+        aa.add("DefaultStrValue(" + value + ")");
+        continue;
+      }
+      if (a instanceof DefaultIntValue) {
+        DefaultIntValue b = (DefaultIntValue) a;
+        value = "" + b.value();
+        aa.add("DefaultIntValue(" + value + ")");
+        continue;
+      }
+      if (a instanceof DefaultLongValue) {
+        DefaultLongValue b = (DefaultLongValue) a;
+        value = "" + b.value();
+        aa.add("DefaultLongValue(" + b.value() + ")");
+        continue;
+      }
+      if (a instanceof DefaultBoolValue) {
+        DefaultBoolValue b = (DefaultBoolValue) a;
+        value = "" + b.value();
+        aa.add("DefaultBoolValue(" + b.value() + ")");
+        continue;
+      }
+      if (a instanceof DefaultDoubleValue) {
+        DefaultDoubleValue b = (DefaultDoubleValue) a;
+        value = "" + b.value();
+        aa.add("DefaultDoubleValue(" + b.value() + ")");
+        continue;
+      }
+    }
+
+    if (aa.size() > 1) {
+      throw new TooManyDefaultAnnotations(aa);
+    }
+
+    if (value == null && valueType != null) {
+
+      if (valueType == int.class
+            || valueType == long.class
+            || valueType == double.class
+            || valueType == float.class
+            || valueType == BigDecimal.class
+      ) {
+        value = "0";
+      }
+
+    }
+
+    return value;
+  }
+
   public static String convertToStr(Object value) {
     if (value == null) {
       return null;
@@ -199,12 +255,12 @@ public class ConfUtil {
   }
 
   private static final class PatternFormat {
-    final Pattern pattern;
+    final Pattern          pattern;
     final SimpleDateFormat format;
 
     public PatternFormat(Pattern pattern, SimpleDateFormat format) {
       this.pattern = pattern;
-      this.format = format;
+      this.format  = format;
     }
   }
 
@@ -219,21 +275,21 @@ public class ConfUtil {
     addPatternFormat("(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2})", "yyyy-MM-dd HH:mm");
     addPatternFormat("(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2})", "yyyy-MM-dd HH:mm:ss");
     addPatternFormat("(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\.\\d{3})",
-      "yyyy-MM-dd HH:mm:ss.SSS");
+                     "yyyy-MM-dd HH:mm:ss.SSS");
     addPatternFormat("(\\d{4}-\\d{2}-\\d{2}/\\d{2}:\\d{2}:\\d{2}\\.\\d{3})",
-      "yyyy-MM-dd/HH:mm:ss.SSS");
+                     "yyyy-MM-dd/HH:mm:ss.SSS");
     addPatternFormat("(\\d{2}:\\d{2}:\\d{2}\\.\\d{3})", "HH:mm:ss.SSS");
     addPatternFormat("(\\d{2}:\\d{2}:\\d{2})", "HH:mm:ss");
     addPatternFormat("(\\d{2}:\\d{2})", "HH:mm");
 
     addPatternFormat("(\\d{2}/\\d{2}/\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\.\\d{3})",
-      "dd/MM/yyyy HH:mm:ss.SSS");
+                     "dd/MM/yyyy HH:mm:ss.SSS");
     addPatternFormat("(\\d{2}/\\d{2}/\\d{4}\\s\\d{2}:\\d{2}:\\d{2})", "dd/MM/yyyy HH:mm:ss");
     addPatternFormat("(\\d{2}/\\d{2}/\\d{4}\\s\\d{2}:\\d{2})", "dd/MM/yyyy HH:mm");
     addPatternFormat("(\\d{2}/\\d{2}/\\d{4})", "dd/MM/yyyy");
 
     addPatternFormat("(\\d{2}\\.\\d{2}\\.\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\.\\d{3})",
-      "dd.MM.yyyy HH:mm:ss.SSS");
+                     "dd.MM.yyyy HH:mm:ss.SSS");
     addPatternFormat("(\\d{2}\\.\\d{2}\\.\\d{4}\\s\\d{2}:\\d{2}:\\d{2})", "dd.MM.yyyy HH:mm:ss");
     addPatternFormat("(\\d{2}\\.\\d{2}\\.\\d{4}\\s\\d{2}:\\d{2})", "dd.MM.yyyy HH:mm");
     addPatternFormat("(\\d{2}\\.\\d{2}\\.\\d{4})", "dd.MM.yyyy");
@@ -369,9 +425,9 @@ public class ConfUtil {
         }
       }
       throw new CannotDetectDateFormat(str,
-        PATTERN_FORMAT_LIST.stream()
-          .map(p -> p.format.toPattern())
-          .collect(Collectors.toList())
+                                       PATTERN_FORMAT_LIST.stream()
+                                                          .map(p -> p.format.toPattern())
+                                                          .collect(Collectors.toList())
       );
     }
     throw new CannotConvertToType(str, type);
