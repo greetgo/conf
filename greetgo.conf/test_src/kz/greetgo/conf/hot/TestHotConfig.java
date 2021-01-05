@@ -17,7 +17,7 @@ public class TestHotConfig {
     System.out.println("config1.strExampleValue = " + config1.strExampleValue());
     System.out.println("config1.intExampleValue = " + config1.intExampleValue());
     System.out.println("config1.boolExampleValue = " + config1.boolExampleValue());
-    System.out.println("config2.asd = " + config2.asd());
-    System.out.println("config2.intAsd = " + config2.intAsd());
+    System.out.println("config2.asd = " + config2.probe());
+    System.out.println("config2.intAsd = " + config2.intProbe());
   }
 }

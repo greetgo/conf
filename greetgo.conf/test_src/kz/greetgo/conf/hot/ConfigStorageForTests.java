@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConfigStorageForTests implements ConfigStorage {
 
   private final Map<String, String> contentMap = new ConcurrentHashMap<>();
-  private final Map<String, Date> changeMap = new ConcurrentHashMap<>();
+  private final Map<String, Date>   changeMap  = new ConcurrentHashMap<>();
 
   private final AtomicInteger callCountOfLoadConfigContent = new AtomicInteger(0);
 
@@ -20,7 +20,7 @@ public class ConfigStorageForTests implements ConfigStorage {
   public String loadConfigContent(String configLocation) {
     callCountOfLoadConfigContent.incrementAndGet();
     if (!contentMap.containsKey(configLocation)) {
-      throw new RuntimeException("No content for " + configLocation);
+      return null;
     }
     return contentMap.get(configLocation);
   }
@@ -50,8 +50,15 @@ public class ConfigStorageForTests implements ConfigStorage {
     changeMap.put(configLocation, new Date());
   }
 
+  private final AtomicInteger callCountOfGetLastChangedAt = new AtomicInteger(0);
+
+  public int callCountOfGetLastChangedAt() {
+    return callCountOfGetLastChangedAt.get();
+  }
+
   @Override
   public Date getLastChangedAt(String configLocation) {
+    callCountOfGetLastChangedAt.incrementAndGet();
     return changeMap.get(configLocation);
   }
 

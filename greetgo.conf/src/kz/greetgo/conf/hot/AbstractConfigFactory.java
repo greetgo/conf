@@ -75,7 +75,7 @@ public abstract class AbstractConfigFactory {
    * @return auto reset timeout. Zero - auto resetting is off
    */
   protected long autoResetTimeout() {
-    return 2000;
+    return 3000;
   }
 
   /**

@@ -63,6 +63,7 @@ public class AbstractConfigFactoryTest {
 
   }
 
+  // TODO pompei отладить этот тест
   @Test
   public void createInManyThreads() throws Exception {
 
@@ -83,8 +84,8 @@ public class AbstractConfigFactoryTest {
           config1.intExampleValue2();
           config1.strExampleValue();
 
-          config2.asd();
-          config2.intAsd();
+          config2.probe();
+          config2.intProbe();
         }
       });
     }
@@ -101,9 +102,24 @@ public class AbstractConfigFactoryTest {
       t.join();
     }
 
-    assertThat(testing.cs.callCountOfLoadConfigContent()).isEqualTo(20);
-    assertThat(testing.cs.callCountOfIsConfigContentExists()).isEqualTo(22);
-    assertThat(testing.cs.callCountOfSaveConfigContent()).isEqualTo(2);
+    System.out.println("uXN0T24S5A :: callCountOf"
+                         + "\n\t\tLoadConfigContent      = " + testing.cs.callCountOfLoadConfigContent()
+                         + "\n\t\tIsConfigContentExists  = " + testing.cs.callCountOfIsConfigContentExists()
+                         + "\n\t\tGetLastChangedAt       = " + testing.cs.callCountOfGetLastChangedAt()
+                         + "\n\t\tSaveConfigContent      = " + testing.cs.callCountOfSaveConfigContent()
+    );
+
+    assertThat(testing.cs.callCountOfLoadConfigContent()).describedAs("callCountOfLoadConfigContent")
+                                                         .isEqualTo(2);
+
+    assertThat(testing.cs.callCountOfIsConfigContentExists()).describedAs("callCountOfIsConfigContentExists")
+                                                             .isEqualTo(0);
+
+    assertThat(testing.cs.callCountOfGetLastChangedAt()).describedAs("callCountOfGetLastChangedAt")
+                                                        .isEqualTo(2);
+
+    assertThat(testing.cs.callCountOfSaveConfigContent()).describedAs("callCountOfSaveConfigContent")
+                                                         .isEqualTo(2);
 
   }
 
@@ -118,21 +134,19 @@ public class AbstractConfigFactoryTest {
 
     String content = testing.cs.loadConfigContent("HostConfigWithLists.txt");
     content = Arrays.stream(content.split("\n"))
-                .filter(s -> s.trim().length() > 0)
-                .filter(s -> !s.trim().startsWith("#"))
-                .sorted()
-                .collect(Collectors.joining("\n"));
+                    .filter(s -> s.trim().length() > 0)
+                    .filter(s -> !s.trim().startsWith("#"))
+                    .sorted()
+                    .collect(Collectors.joining("\n"));
 
     assertThat(content).isEqualTo("" +
                                     "elementA.intField=20019\n" +
                                     "elementA.strField=By one\n" +
                                     "elementB.0.intField=20019\n" +
                                     "elementB.0.strField=By one\n" +
-                                    "elementB.listElementsCount=1\n" +
                                     "status=0");
   }
 
-  // TODO pompei продолжить здесь - восстановить тест
   @Test
   public void checkArrays_hasContent() {
     final Testing testing = new Testing();
@@ -161,10 +175,10 @@ public class AbstractConfigFactoryTest {
     System.out.println("v36nRz56uV :: content=\n" + content);
 
     content = Arrays.stream(content.split("\n"))
-                .filter(s -> s.trim().length() > 0)
-                .filter(s -> !s.trim().startsWith("#"))
-                .sorted()
-                .collect(Collectors.joining("\n"));
+                    .filter(s -> s.trim().length() > 0)
+                    .filter(s -> !s.trim().startsWith("#"))
+                    .sorted()
+                    .collect(Collectors.joining("\n"));
 
     assertThat(content).isEqualTo("" +
                                     "elementA.intField = 709\n" +
@@ -174,14 +188,6 @@ public class AbstractConfigFactoryTest {
                                     "elementB.1.intField = 456\n" +
                                     "elementB.1.strField = hello world\n" +
                                     "status=0");
-  }
-
-  @Test
-  public void replaceParametersInDefaultStrValue() {
-    final Testing testing = new Testing();
-    HotConfig1    config1 = testing.createConfig(HotConfig1.class);
-
-    assertThat(config1.name()).isEqualTo("Привет Жыдкий терминатор");
   }
 
   @Test
@@ -196,10 +202,10 @@ public class AbstractConfigFactoryTest {
     String location = testing.configLocationFor(HotConfigWithDefaultListSize.class);
 
     String content = Arrays.stream(testing.cs.loadConfigContent(location).split("\n"))
-                       .filter(s -> s.trim().length() > 0)
-                       .filter(s -> !s.trim().startsWith("#"))
-                       .sorted()
-                       .collect(Collectors.joining("\n"));
+                           .filter(s -> s.trim().length() > 0)
+                           .filter(s -> !s.trim().startsWith("#"))
+                           .sorted()
+                           .collect(Collectors.joining("\n"));
 
     assertThat(content).isEqualTo("classList.0.intField=20019\n" +
                                     "classList.0.strField=By one\n" +
@@ -215,7 +221,6 @@ public class AbstractConfigFactoryTest {
                                     "classList.5.strField=By one\n" +
                                     "classList.6.intField=20019\n" +
                                     "classList.6.strField=By one\n" +
-                                    "classList.listElementsCount=7\n" +
                                     "longList.0=70078\n" +
                                     "longList.1=70078\n" +
                                     "longList.2=70078\n" +
@@ -224,8 +229,7 @@ public class AbstractConfigFactoryTest {
                                     "longList.5=70078\n" +
                                     "longList.6=70078\n" +
                                     "longList.7=70078\n" +
-                                    "longList.8=70078\n" +
-                                    "longList.listElementsCount=9");
+                                    "longList.8=70078");
 
     testing.cs.saveConfigContent(location, "classList.2.strField=Boom loon hi\n" +
                                              "classList.5.intField=119988\n" +
@@ -235,10 +239,10 @@ public class AbstractConfigFactoryTest {
     assertThat(config.classList()).hasSize(7);
 
     String content2 = Arrays.stream(testing.cs.loadConfigContent(location).split("\n"))
-                        .filter(s -> s.trim().length() > 0)
-                        .filter(s -> !s.trim().startsWith("#"))
-                        .sorted()
-                        .collect(Collectors.joining("\n"));
+                            .filter(s -> s.trim().length() > 0)
+                            .filter(s -> !s.trim().startsWith("#"))
+                            .sorted()
+                            .collect(Collectors.joining("\n"));
 
     assertThat(content2).isEqualTo("classList.0.intField=20019\n" +
                                      "classList.0.strField=By one\n" +
@@ -254,7 +258,6 @@ public class AbstractConfigFactoryTest {
                                      "classList.5.strField=By one\n" +
                                      "classList.6.intField=20019\n" +
                                      "classList.6.strField=By one\n" +
-                                     "classList.listElementsCount=7\n" +
                                      "longList.0=70078\n" +
                                      "longList.1=70078\n" +
                                      "longList.2=70078\n" +
@@ -263,7 +266,6 @@ public class AbstractConfigFactoryTest {
                                      "longList.5=70078\n" +
                                      "longList.6=70078\n" +
                                      "longList.7=70078\n" +
-                                     "longList.8=70078\n" +
-                                     "longList.listElementsCount=9");
+                                     "longList.8=70078");
   }
 }

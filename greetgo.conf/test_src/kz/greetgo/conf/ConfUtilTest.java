@@ -167,7 +167,7 @@ public class ConfUtilTest {
     assertThat(convertToType(str, Date.class)).isEqualTo(F.parse(str));
   }
 
-  public static final class Asd {
+  public static final class TestModel {
     public int intField1;
     public Integer intField2;
     private int intField3;
@@ -192,13 +192,13 @@ public class ConfUtilTest {
       out.println("intField3 111");
       out.close();
     }
-    ByteArrayInputStream in = new ByteArrayInputStream(bout.toByteArray());
-    Asd asd = new Asd();
-    ConfUtil.readFromStream(asd, in);
+    ByteArrayInputStream in        = new ByteArrayInputStream(bout.toByteArray());
+    TestModel            testModel = new TestModel();
+    ConfUtil.readFromStream(testModel, in);
 
-    assertThat(asd.intField1).isEqualTo(678);
-    assertThat(asd.intField2).isEqualTo(876);
-    assertThat(asd.getIntField3()).isEqualTo(111);
+    assertThat(testModel.intField1).isEqualTo(678);
+    assertThat(testModel.intField2).isEqualTo(876);
+    assertThat(testModel.getIntField3()).isEqualTo(111);
   }
 
   @Test
@@ -220,12 +220,12 @@ public class ConfUtilTest {
       fileOutputStream.write(bout.toByteArray());
     }
 
-    Asd asd = new Asd();
-    ConfUtil.readFromFile(asd, file.getAbsolutePath());
+    TestModel testModel = new TestModel();
+    ConfUtil.readFromFile(testModel, file.getAbsolutePath());
 
-    assertThat(asd.intField1).isEqualTo(6782);
-    assertThat(asd.intField2).isEqualTo(8762);
-    assertThat(asd.getIntField3()).isEqualTo(1112);
+    assertThat(testModel.intField1).isEqualTo(6782);
+    assertThat(testModel.intField2).isEqualTo(8762);
+    assertThat(testModel.getIntField3()).isEqualTo(1112);
 
   }
 }
