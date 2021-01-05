@@ -68,6 +68,10 @@ public class ConfImplToCallback<T> {
       return hashCode();
     }
 
+    if ("toString".equals(methodName)) {
+      return "HotConfigProxy(" + interfaceClass.getName() + "->" + this + ")@" + System.identityHashCode(proxy);
+    }
+
     if (isConvertingType(returnType)) {
       String strValue = confCallback.readParam(methodName);
       return convertToType(strValue, returnType);

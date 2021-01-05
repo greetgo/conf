@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
+//TODO pompei проверить на используемость, и, если не используется, - удалить
 public class ConfCallbackCached implements ConfCallback {
 
   private final ConfCallback                                source;
@@ -14,10 +15,6 @@ public class ConfCallbackCached implements ConfCallback {
   private final LongSupplier                                currentTimeMillis;
 
   private final AtomicLong lastCheck = new AtomicLong(0);
-
-  public ConfCallbackCached(ConfCallback source, long timeoutMs) {
-    this(source, timeoutMs, System::currentTimeMillis);
-  }
 
   public ConfCallbackCached(ConfCallback source, long timeoutMs, LongSupplier currentTimeMillis) {
     this.source            = source;

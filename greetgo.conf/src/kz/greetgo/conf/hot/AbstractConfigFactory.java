@@ -7,6 +7,7 @@ import kz.greetgo.conf.core.ConfContentSerializer;
 import kz.greetgo.conf.core.ConfImplBuilder;
 
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Factory for hot config implementations
@@ -78,6 +79,8 @@ public abstract class AbstractConfigFactory {
     return 3000;
   }
 
+  private final ConcurrentHashMap<Class<?>, Object> proxyMap = new ConcurrentHashMap<>();
+
   /**
    * Creates and returns instance of config
    *
@@ -85,10 +88,34 @@ public abstract class AbstractConfigFactory {
    * @return instance of config
    */
   public <T> T createConfig(Class<T> configInterface) {
-    return ConfImplBuilder
-             .confImplBuilder(configInterface, confAccess(configInterface))
-             .changeCheckTimeoutMs(autoResetTimeout())
-             .build();
+
+    {
+      //noinspection unchecked
+      T ret = (T) proxyMap.get(configInterface);
+      if (ret != null) return (T) ret;
+    }
+
+    synchronized (proxyMap) {
+      {
+        //noinspection unchecked
+        T ret = (T) proxyMap.get(configInterface);
+        if (ret != null) return (T) ret;
+      }
+
+      {
+        T ret = ConfImplBuilder.confImplBuilder(configInterface, confAccess(configInterface))
+                               .currentTimeMillis(this::currentTimeMillis)
+                               .changeCheckTimeoutMs(autoResetTimeout())
+                               .build();
+
+        proxyMap.put(configInterface, ret);
+        return ret;
+      }
+    }
+  }
+
+  protected long currentTimeMillis() {
+    return System.currentTimeMillis();
   }
 
 }

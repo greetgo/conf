@@ -7,7 +7,7 @@
 /buildSrc/subprojects/*/build
 /subprojects/*/build
 /subprojects/docs/src/samples/**/build
-/subprojects/internal-android-performance-testing/build-android-libs
+/subprojects/internal-android-performance-tf/build-android-libs
 
 # IDEA
 # ----

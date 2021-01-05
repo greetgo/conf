@@ -2,6 +2,7 @@ package kz.greetgo.conf.hot;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,7 +13,7 @@ public class ConfigStorageForTests implements ConfigStorage {
 
   private final AtomicInteger callCountOfLoadConfigContent = new AtomicInteger(0);
 
-  public int callCountOfLoadConfigContent() {
+  public int callCountOfLoad() {
     return callCountOfLoadConfigContent.get();
   }
 
@@ -27,7 +28,7 @@ public class ConfigStorageForTests implements ConfigStorage {
 
   private final AtomicInteger callCountOfIsConfigContentExists = new AtomicInteger(0);
 
-  public int callCountOfIsConfigContentExists() {
+  public int callCountOfIsExists() {
     return callCountOfIsConfigContentExists.get();
   }
 
@@ -37,9 +38,13 @@ public class ConfigStorageForTests implements ConfigStorage {
     return contentMap.containsKey(configLocation);
   }
 
+  public Set<String> configLocations() {
+    return contentMap.keySet();
+  }
+
   private final AtomicInteger callCountOfSaveConfigContent = new AtomicInteger(0);
 
-  public int callCountOfSaveConfigContent() {
+  public int callCountOfSave() {
     return callCountOfSaveConfigContent.get();
   }
 
@@ -62,4 +67,7 @@ public class ConfigStorageForTests implements ConfigStorage {
     return changeMap.get(configLocation);
   }
 
+  public String getContent(String configLocation) {
+    return contentMap.get(configLocation);
+  }
 }

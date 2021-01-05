@@ -1,54 +1,36 @@
 package kz.greetgo.conf.core;
 
-import kz.greetgo.conf.hot.CannotConvertToType;
-import kz.greetgo.conf.hot.DefaultIntValue;
-import kz.greetgo.conf.hot.DefaultStrValue;
-import kz.greetgo.conf.hot.Description;
-import kz.greetgo.conf.hot.ForcibleInit;
+import kz.greetgo.conf.test.util.ConfAccessFake;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
-@SuppressWarnings("BusyWait")
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class ConfImplBuilderTest {
 
-  @Description("Description of TestConfig")
+  @SuppressWarnings("UnusedReturnValue")
   interface TestConfig {
+    String param1();
 
-    @Description("Description of param paramStr")
-    @DefaultStrValue("default wow")
-    String paramStr();
-
-    @Description("Description of param paramInt")
-    @DefaultIntValue(444011)
-    int paramInt();
-
-    @Description("Порт доступа ко всему")
-    @DefaultIntValue(8080)
-    int port();
-
+    int param2();
   }
 
   @Test
-  public void build() throws Exception {
-    Path dir         = Paths.get("build").resolve(getClass().getSimpleName());
-    File workingFile = dir.resolve("kill-me-to-stop-working").toFile();
-    File lockFile    = dir.resolve("lockFile").toFile();
-    File lockFileT   = dir.resolve("lockFile.killItToLock").toFile();
+  public void build__simpleTiming() {
 
-    if (!lockFile.exists()) {
-      lockFileT.getParentFile().mkdirs();
-      lockFileT.createNewFile();
-    }
+    AtomicLong time = new AtomicLong(1000);
 
-    File       file       = dir.resolve("test-config.txt").toFile();
-    ConfAccess confAccess = new ConfAccessFile(file, new ConfAccessStdSerializer());
+    ConfAccessFake confAccess = new ConfAccessFake();
+    confAccess.content = new ConfContent();
+    confAccess.content.records.add(ConfRecord.of("param1", "test value"));
+    confAccess.content.records.add(ConfRecord.of("param2", "543156"));
+    confAccess.clearCounting();
 
-    ConfImplBuilder<TestConfig> builder = ConfImplBuilder
-                                            .confImplBuilder(TestConfig.class, confAccess)
-                                            .changeCheckTimeoutMs(1000);
+    ConfImplBuilder<TestConfig> builder = ConfImplBuilder.confImplBuilder(TestConfig.class, confAccess)
+                                                         .currentTimeMillis(time::get)
+                                                         .changeCheckTimeoutMs(3000);
 
     //
     //
@@ -56,88 +38,167 @@ public class ConfImplBuilderTest {
     //
     //
 
-    workingFile.getParentFile().mkdirs();
-    workingFile.createNewFile();
+    assertThat(confAccess.loadCallCount).isZero();
 
-    while (lockFile.exists() && workingFile.exists()) {
-      try {
+    String toString = testConfig.toString();
 
-        System.out.println("Ls05Lc5bjk :: testConfig.paramStr = " + testConfig.paramStr());
-        System.out.println("Ls05Lc5bjk :: testConfig.paramInt = " + testConfig.paramInt());
-        System.out.println("Ls05Lc5bjk :: testConfig.port     = " + testConfig.port());
+    assertThat(confAccess.loadCallCount).isZero();
 
-      } catch (CannotConvertToType e) {
-        e.printStackTrace();
-      }
+    assertThat(toString).endsWith("@" + System.identityHashCode(testConfig));
+    assertThat(toString).contains(TestConfig.class.getName());
 
-      Thread.sleep(1500);
-    }
+    testConfig.param1();
 
-  }
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
 
-  @ForcibleInit
-  interface TestConfig2 {
-    @DefaultStrValue("It is OK")
-    String statusQuo();
+    time.addAndGet(1000);
+
+    testConfig.param1();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
+
+    testConfig.param2();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
+
+    time.addAndGet(3001);
+
+    testConfig.param1();
+    testConfig.param2();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(3);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
   }
 
   @Test
-  public void build__ForcibleInit() throws Exception {
-    Path dir         = Paths.get("build").resolve(getClass().getSimpleName());
-    File workingFile = dir.resolve("kill-me-to-stop-working").toFile();
-    File lockFile    = dir.resolve("lockFile").toFile();
-    File lockFileT   = dir.resolve("lockFile.killItToLock").toFile();
+  public void build__equableTiming() {
 
-    if (!lockFile.exists()) {
-      lockFileT.getParentFile().mkdirs();
-      lockFileT.createNewFile();
-    }
+    AtomicLong time = new AtomicLong(1000);
 
-    File       doNotRead   = dir.resolve("do-not-read").toFile();
-    File       file        = dir.resolve("test-config.txt").toFile();
-    File       file2       = dir.resolve("test-config-ForcibleInit.txt").toFile();
-    ConfAccess confAccess  = new ConfAccessFile(file, new ConfAccessStdSerializer());
-    ConfAccess confAccess2 = new ConfAccessFile(file2, new ConfAccessStdSerializer());
+    ConfAccessFake confAccess = new ConfAccessFake();
+    confAccess.currentTimeMillis = time::get;
 
-    ConfImplBuilder<TestConfig> builder = ConfImplBuilder
-                                            .confImplBuilder(TestConfig.class, confAccess)
-                                            .changeCheckTimeoutMs(1000);
-    ConfImplBuilder<TestConfig2> builder2 = ConfImplBuilder
-                                              .confImplBuilder(TestConfig2.class, confAccess2)
-                                              .changeCheckTimeoutMs(1000);
+    ConfImplBuilder<TestConfig> builder = ConfImplBuilder.confImplBuilder(TestConfig.class, confAccess)
+                                                         .currentTimeMillis(time::get)
+                                                         .changeCheckTimeoutMs(3000);
 
     //
     //
-    TestConfig  testConfig  = builder.build();
-    TestConfig2 testConfig2 = builder2.build();
+    TestConfig testConfig = builder.build();
     //
     //
 
-    workingFile.getParentFile().mkdirs();
-    workingFile.createNewFile();
-    doNotRead.getParentFile().mkdirs();
-    doNotRead.createNewFile();
+    assertThat(confAccess.loadCallCount).isZero();
 
-    System.out.println("FZr8D2Y89V :: Started");
+    String toString = testConfig.toString();
 
-    while (lockFile.exists() && workingFile.exists()) {
-      try {
+    assertThat(confAccess.loadCallCount).isZero();
 
-        if (!doNotRead.exists()) {
-          System.out.println("gACby3JD9T :: testConfig2.statusQuo = " + testConfig2.statusQuo());
-          System.out.println("gACby3JD9T :: testConfig.statusQuo  = " + testConfig.port());
-          System.out.println("gACby3JD9T :: testConfig.paramStr   = " + testConfig.paramStr());
-          System.out.println("gACby3JD9T :: testConfig.paramInt   = " + testConfig.paramInt());
-        }
+    assertThat(toString).endsWith("@" + System.identityHashCode(testConfig));
+    assertThat(toString).contains(TestConfig.class.getName());
 
-      } catch (CannotConvertToType e) {
-        e.printStackTrace();
-      }
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
 
-      Thread.sleep(1500);
-    }
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
 
-    System.out.println("1VD20f89EP :: Finished");
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(3);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(3);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(3);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(4);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(4);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(4);
+
+    time.addAndGet(1001);
+    testConfig.param1();
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(5);
+  }
+
+  @Test
+  public void build__timingWithModifications() {
+
+    AtomicLong time = new AtomicLong(1000);
+
+    ConfAccessFake confAccess = new ConfAccessFake();
+    confAccess.currentTimeMillis = time::get;
+
+    confAccess.content = new ConfContent();
+    confAccess.content.records.add(ConfRecord.of("param1", "test value"));
+    confAccess.content.records.add(ConfRecord.of("param2", "543156"));
+
+    confAccess.clearCounting();
+
+    ConfImplBuilder<TestConfig> builder = ConfImplBuilder.confImplBuilder(TestConfig.class, confAccess)
+                                                         .currentTimeMillis(time::get)
+                                                         .changeCheckTimeoutMs(3000);
+
+    //
+    //
+    TestConfig testConfig = builder.build();
+    //
+    //
+
+    assertThat(confAccess.loadCallCount).isZero();
+
+    String toString = testConfig.toString();
+
+    assertThat(confAccess.loadCallCount).isZero();
+
+    assertThat(toString).endsWith("@" + System.identityHashCode(testConfig));
+    assertThat(toString).contains(TestConfig.class.getName());
+
+    testConfig.param1();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(2);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
+
+    time.addAndGet(4000);
+
+    testConfig.param1();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(3);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
+
+    time.addAndGet(1000);
+    confAccess.lastModifiedAt = new Date(time.get());
+
+    testConfig.param1();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(3);
+    assertThat(confAccess.loadCallCount).isEqualTo(1);
+
+    time.addAndGet(4000);
+
+    testConfig.param1();
+
+    assertThat(confAccess.lastModifiedAtCount).isEqualTo(4);
+    assertThat(confAccess.loadCallCount).isEqualTo(2);
   }
 
 }
