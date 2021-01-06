@@ -1,0 +1,19 @@
+plugins {
+  id "kz.greetgo.upload-to-maven"
+  id "kz.greetgo.upload-to-gg-repo"
+}
+
+dependencies {
+  compile project(":greetgo.conf")
+}
+
+uploadToMavenCentral {
+  description = "Configuration library using in greetgo!"
+  url = 'https://github.com/greetgo/greetgo.conf'
+  scm.url = 'https://github.com/greetgo/greetgo.conf.git'
+  developer {
+    id = 'pompei'
+    name = 'Evgeniy Kolpakov'
+    email = 'ekolpakov@greet-go.com'
+  }
+}
