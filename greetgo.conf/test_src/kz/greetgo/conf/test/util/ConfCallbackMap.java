@@ -9,10 +9,10 @@ import java.util.Set;
 
 public class ConfCallbackMap implements ConfCallback {
 
-  private final Map<String, String> params = new HashMap<>();
-  private final Map<String, Integer> sizes = new HashMap<>();
-  private final Set<String> addedParams = new HashSet<>();
-  private final Set<String> addedSizes = new HashSet<>();
+  private final Map<String, String>  params      = new HashMap<>();
+  private final Map<String, Integer> sizes       = new HashMap<>();
+  private final Set<String>          addedParams = new HashSet<>();
+  private final Set<String>          addedSizes  = new HashSet<>();
 
   public void clear() {
     params.clear();

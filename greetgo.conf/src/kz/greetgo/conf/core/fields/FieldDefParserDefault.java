@@ -23,7 +23,7 @@ public class FieldDefParserDefault implements FieldDefParser {
   public List<FieldDef> parse(Class<?> aClass) {
 
     LinkedHashMap<String, Optional<Description>> descriptionMap = new LinkedHashMap<>();
-    Map<String, String> defaultValues = new HashMap<>();
+    Map<String, String>                          defaultValues  = new HashMap<>();
 
     for (Field field : aClass.getFields()) {
       if (field.getAnnotation(ConfIgnore.class) != null) {
@@ -89,10 +89,10 @@ public class FieldDefParserDefault implements FieldDefParser {
       @Override
       public List<String> descriptionLines() {
         return e.getValue()
-          .map(Description::value)
-          .map(str -> str.split("\n"))
-          .map(Arrays::asList)
-          .orElseGet(ArrayList::new)
+                .map(Description::value)
+                .map(str -> str.split("\n"))
+                .map(Arrays::asList)
+                .orElseGet(ArrayList::new)
           ;
       }
 

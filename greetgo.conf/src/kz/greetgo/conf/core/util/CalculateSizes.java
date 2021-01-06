@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class CalculateSizes {
 
-  private static final Pattern END = Pattern.compile("\\.(\\d+)$");
+  private static final Pattern END    = Pattern.compile("\\.(\\d+)$");
   private static final Pattern MIDDLE = Pattern.compile("\\.(\\d+)\\.");
 
   private CalculateSizes() {}
@@ -25,8 +25,8 @@ public class CalculateSizes {
       {
         Matcher m = END.matcher(paramKey);
         if (m.find()) {
-          String key = paramKey.substring(0, m.start());
-          int value = Integer.parseInt(m.group(1));
+          String key   = paramKey.substring(0, m.start());
+          int    value = Integer.parseInt(m.group(1));
           append(key, value);
         }
       }
@@ -34,8 +34,8 @@ public class CalculateSizes {
       {
         Matcher m = MIDDLE.matcher(paramKey);
         while (m.find()) {
-          String key = paramKey.substring(0, m.start());
-          int value = Integer.parseInt(m.group(1));
+          String key   = paramKey.substring(0, m.start());
+          int    value = Integer.parseInt(m.group(1));
           append(key, value);
         }
       }

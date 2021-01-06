@@ -225,10 +225,10 @@ public class EnvConfigImplementor {
         constructor.setAccessible(true);
 
         return constructor.newInstance(configInterface)
-                 .in(configInterface)
-                 .unreflectSpecial(method, configInterface)
-                 .bindTo(proxy)
-                 .invokeWithArguments();
+                          .in(configInterface)
+                          .unreflectSpecial(method, configInterface)
+                          .bindTo(proxy)
+                          .invokeWithArguments();
 
       }
 

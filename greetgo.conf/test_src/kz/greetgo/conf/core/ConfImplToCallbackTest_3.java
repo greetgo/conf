@@ -10,7 +10,7 @@ public class ConfImplToCallbackTest_3 {
 
   public static class Model {
     public String strField;
-    public int intField;
+    public int    intField;
   }
 
   interface Conf {
@@ -20,8 +20,8 @@ public class ConfImplToCallbackTest_3 {
   @Test
   public void impl__model() {
 
-    ConfCallbackMap confCallback = new ConfCallbackMap();
-    ConfImplToCallback<Conf> callback = new ConfImplToCallback<>(Conf.class, confCallback);
+    ConfCallbackMap          confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf> callback     = new ConfImplToCallback<>(Conf.class, confCallback);
 
     //
     //

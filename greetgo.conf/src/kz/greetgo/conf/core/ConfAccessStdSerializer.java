@@ -28,9 +28,9 @@ public class ConfAccessStdSerializer implements ConfContentSerializer {
     if (text == null) {
       return ConfContent.empty();
     }
-    List<ConfRecord> ret = new ArrayList<>();
-    List<String> comments = new ArrayList<>();
-    String[] lines = text.split("\n");
+    List<ConfRecord> ret      = new ArrayList<>();
+    List<String>     comments = new ArrayList<>();
+    String[]         lines    = text.split("\n");
     for (String line : lines) {
       String trimmedLine = line.trim();
       if (trimmedLine.length() == 0) {

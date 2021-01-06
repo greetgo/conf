@@ -5,12 +5,12 @@ import java.util.List;
 
 public class CannotDetectDateFormat extends ConvertingError {
 
-  public final String paringStr;
+  public final String       paringStr;
   public final List<String> patternFormatList;
 
   public CannotDetectDateFormat(String paringStr, List<String> patternFormatList) {
     super(message(paringStr, patternFormatList));
-    this.paringStr = paringStr;
+    this.paringStr         = paringStr;
     this.patternFormatList = patternFormatList;
   }
 
@@ -24,7 +24,7 @@ public class CannotDetectDateFormat extends ConvertingError {
       method
     );
 
-    this.paringStr = paringStr;
+    this.paringStr         = paringStr;
     this.patternFormatList = patternFormatList;
   }
 

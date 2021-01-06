@@ -12,11 +12,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileParamReader {
 
-  private final Path configFile;
+  private final Path   configFile;
   private final String fileDescription;
 
   public FileParamReader(Path configFile, String fileDescription) {
-    this.configFile = configFile;
+    this.configFile      = configFile;
     this.fileDescription = fileDescription;
   }
 
@@ -48,8 +48,8 @@ public class FileParamReader {
 
     try {
       Pattern pattern = Pattern.compile("\\s*(#\\s*)?" + paramName + "\\s*=(.*)");
-      boolean exists = false;
-      String value = null;
+      boolean exists  = false;
+      String  value   = null;
       for (String line : Files.readAllLines(configFile)) {
         Matcher matcher = pattern.matcher(line);
         if (matcher.matches()) {

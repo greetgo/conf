@@ -2,7 +2,7 @@ package kz.greetgo.conf.core;
 
 public class ConfCallbackPrefix implements ConfCallback {
 
-  private final String prefix;
+  private final String       prefix;
   private final ConfCallback source;
 
   public ConfCallbackPrefix(String prefix, ConfCallback source) {

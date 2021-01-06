@@ -67,14 +67,14 @@ public class ConfContent {
   public ConfContent minus(ConfContent mini) {
 
     Set<String> miniKeys = mini.records.stream()
-                             .map(ConfRecord::trimmedKey)
-                             .filter(Objects::nonNull)
-                             .collect(Collectors.toSet());
+                                       .map(ConfRecord::trimmedKey)
+                                       .filter(Objects::nonNull)
+                                       .collect(Collectors.toSet());
 
     return of(records.stream()
-                .filter(x -> x.trimmedKey() != null)
-                .filter(x -> !miniKeys.contains(x.trimmedKey()))
-                .collect(Collectors.toList()));
+                     .filter(x -> x.trimmedKey() != null)
+                     .filter(x -> !miniKeys.contains(x.trimmedKey()))
+                     .collect(Collectors.toList()));
   }
 
   public boolean isEmpty() {

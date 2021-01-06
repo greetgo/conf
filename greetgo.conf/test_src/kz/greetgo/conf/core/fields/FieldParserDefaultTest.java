@@ -48,7 +48,7 @@ public class FieldParserDefaultTest {
   @SuppressWarnings("unused")
   public static class Model2 {
 
-    public String field1;
+    public  String field1;
     private String field2;
 
     public String getField1() {

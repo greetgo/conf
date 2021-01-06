@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfAccessFileTest {
 
-  private final Path testDir = Paths.get("build/" + getClass().getSimpleName());
+  private final Path                  testDir           = Paths.get("build/" + getClass().getSimpleName());
   private final ConfContentSerializer contentSerializer = new ConfAccessStdSerializer();
 
   @Test

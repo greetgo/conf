@@ -39,7 +39,7 @@ public class ConfDir {
 
     userDir = userDir.toUpperCase().trim();
 
-    File home = new File(System.getProperty("user.home"));
+    File   home  = new File(System.getProperty("user.home"));
     File[] files = home.listFiles();
     if (files == null) {
       return null;

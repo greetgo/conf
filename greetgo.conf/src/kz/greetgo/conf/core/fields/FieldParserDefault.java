@@ -42,9 +42,9 @@ public class FieldParserDefault implements FieldParser {
     }
 
     {
-      Map<String, FieldSetter> setters = new HashMap<>();
-      Map<String, FieldGetter> getters = new HashMap<>();
-      Set<String> ignorableNames = new HashSet<>();
+      Map<String, FieldSetter> setters        = new HashMap<>();
+      Map<String, FieldGetter> getters        = new HashMap<>();
+      Set<String>              ignorableNames = new HashSet<>();
 
       for (Field field : aClass.getFields()) {
         if (field.getAnnotation(ConfIgnore.class) != null) {

@@ -25,7 +25,7 @@ public class FileParamReaderTest {
     String fileDescription3 = RND.str(10);
 
     FileParamReader fileParamReader = new FileParamReader(configFile,
-      fileDescription1 + "\n" + fileDescription2 + "\n" + fileDescription3);
+                                                          fileDescription1 + "\n" + fileDescription2 + "\n" + fileDescription3);
 
     String paramDescription1 = RND.str(10);
     String paramDescription2 = RND.str(10);
@@ -34,7 +34,7 @@ public class FileParamReaderTest {
     //
     //
     String param = fileParamReader.readParam("servers", "localhost:27017",
-      paramDescription1 + '\n' + paramDescription2 + '\n' + paramDescription3);
+                                             paramDescription1 + '\n' + paramDescription2 + '\n' + paramDescription3);
     //
     //
 
@@ -42,9 +42,9 @@ public class FileParamReaderTest {
 
     assertThat(configFile).exists();
 
-    boolean existsFileDescription1 = false;
-    boolean existsFileDescription2 = false;
-    boolean existsFileDescription3 = false;
+    boolean existsFileDescription1  = false;
+    boolean existsFileDescription2  = false;
+    boolean existsFileDescription3  = false;
     boolean existsParamDescription1 = false;
     boolean existsParamDescription2 = false;
     boolean existsParamDescription3 = false;
@@ -194,7 +194,7 @@ public class FileParamReaderTest {
     //
     //
     String param = fileParamReader.readParam("servers", "localhost:27017",
-      paramDescription1 + '\n' + paramDescription2 + '\n' + paramDescription3);
+                                             paramDescription1 + '\n' + paramDescription2 + '\n' + paramDescription3);
     //
     //
 

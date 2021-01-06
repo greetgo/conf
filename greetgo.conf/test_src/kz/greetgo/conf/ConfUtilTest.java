@@ -168,9 +168,9 @@ public class ConfUtilTest {
   }
 
   public static final class TestModel {
-    public int intField1;
-    public Integer intField2;
-    private int intField3;
+    public  int     intField1;
+    public  Integer intField2;
+    private int     intField3;
 
     public int getIntField3() {
       return intField3;

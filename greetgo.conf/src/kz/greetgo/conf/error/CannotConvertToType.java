@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 public class CannotConvertToType extends ConvertingError {
 
-  public final String convertingValue;
+  public final String   convertingValue;
   public final Class<?> type;
 
   private static String message(String convertingValue, Class<?> type) {
@@ -14,13 +14,13 @@ public class CannotConvertToType extends ConvertingError {
   public CannotConvertToType(String convertingValue, Class<?> type, Throwable e) {
     super(message(convertingValue, type), e);
     this.convertingValue = convertingValue;
-    this.type = type;
+    this.type            = type;
   }
 
   public CannotConvertToType(String convertingValue, Class<?> type) {
     super(message(convertingValue, type));
     this.convertingValue = convertingValue;
-    this.type = type;
+    this.type            = type;
   }
 
   public CannotConvertToType(String convertingValue, Class<?> type,
@@ -28,9 +28,9 @@ public class CannotConvertToType extends ConvertingError {
                              CannotConvertToType cause) {
 
     super(message(convertingValue, type) + " ; at " + place(configInterface, method),
-      cause, configInterface, method);
+          cause, configInterface, method);
     this.convertingValue = convertingValue;
-    this.type = type;
+    this.type            = type;
 
   }
 

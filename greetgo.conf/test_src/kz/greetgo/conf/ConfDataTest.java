@@ -88,8 +88,8 @@ public class ConfDataTest {
 
   @Test
   public void readFromFile() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -127,8 +127,8 @@ public class ConfDataTest {
 
   @Test
   public void readFromFile_UTF8() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -148,8 +148,8 @@ public class ConfDataTest {
 
   @Test
   public void str_1() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -169,8 +169,8 @@ public class ConfDataTest {
 
   @Test(expectedExceptions = NoValue.class, expectedExceptionsMessageRegExp = "asd/dsa")
   public void strEx_1() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -190,8 +190,8 @@ public class ConfDataTest {
 
   @Test(expectedExceptions = NoValue.class, expectedExceptionsMessageRegExp = "wow")
   public void strEx_2() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -211,8 +211,8 @@ public class ConfDataTest {
 
   @Test(expectedExceptions = NoValue.class)
   public void strEx_3() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -229,8 +229,8 @@ public class ConfDataTest {
 
   @Test
   public void str_2() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -251,8 +251,8 @@ public class ConfDataTest {
 
   @Test
   public void inte_1() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -274,8 +274,8 @@ public class ConfDataTest {
 
   @Test
   public void asInt_2() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -302,8 +302,8 @@ public class ConfDataTest {
 
   @Test
   public void list_1() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");
@@ -328,8 +328,8 @@ public class ConfDataTest {
 
   @Test
   public void list_2() throws Exception {
-    Random rnd = new Random();
-    File file = new File("build/target/confData" + rnd.nextInt(1000000000));
+    Random rnd  = new Random();
+    File   file = new File("build/target/confData" + rnd.nextInt(1000000000));
     file.getParentFile().mkdirs();
     {
       PrintStream out = new PrintStream(file, "UTF-8");

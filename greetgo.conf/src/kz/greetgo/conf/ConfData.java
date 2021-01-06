@@ -182,9 +182,9 @@ public class ConfData {
    * @throws NoValue when no value for specified path
    */
   public String strEx(String path) {
-    String[] split = path.split("/");
-    Map<String, List<Object>> cur = data;
-    StringBuilder prevPath = new StringBuilder();
+    String[]                  split    = path.split("/");
+    Map<String, List<Object>> cur      = data;
+    StringBuilder             prevPath = new StringBuilder();
     for (int i = 0, C = split.length - 1; i < C; i++) {
       String step = split[i];
       if (prevPath.length() > 0) {
@@ -410,20 +410,20 @@ public class ConfData {
    */
   public Date dateEx(String path) {
     return dateEx(path,
-      "yyyy-MM-dd'T'HH:mm:ss.SSS",
-      "yyyy-MM-dd'T'HH:mm:ss",
-      "yyyy-MM-dd'T'HH:mm",
-      "yyyy-MM-dd HH:mm:ss.SSS",
-      "yyyy-MM-dd HH:mm:ss",
-      "yyyy-MM-dd HH:mm",
-      "yyyy-MM-dd",
-      "dd/MM/yyyy HH:mm:ss.SSS",
-      "dd/MM/yyyy HH:mm:ss",
-      "dd/MM/yyyy HH:mm",
-      "dd/MM/yyyy",
-      "HH:mm:ss.SSS",
-      "HH:mm:ss",
-      "HH:mm"
+                  "yyyy-MM-dd'T'HH:mm:ss.SSS",
+                  "yyyy-MM-dd'T'HH:mm:ss",
+                  "yyyy-MM-dd'T'HH:mm",
+                  "yyyy-MM-dd HH:mm:ss.SSS",
+                  "yyyy-MM-dd HH:mm:ss",
+                  "yyyy-MM-dd HH:mm",
+                  "yyyy-MM-dd",
+                  "dd/MM/yyyy HH:mm:ss.SSS",
+                  "dd/MM/yyyy HH:mm:ss",
+                  "dd/MM/yyyy HH:mm",
+                  "dd/MM/yyyy",
+                  "HH:mm:ss.SSS",
+                  "HH:mm:ss",
+                  "HH:mm"
     );
   }
 
@@ -561,25 +561,25 @@ public class ConfData {
   private static class Name {
     private static final Pattern END_DIGIT = Pattern.compile("^(.+)\\.(\\d+)$");
 
-    public final int index;
+    public final int    index;
     public final String name;
 
     public Name(String bigName) {
       if (bigName == null) {
         index = 0;
-        name = null;
+        name  = null;
         return;
       }
 
       Matcher m = END_DIGIT.matcher(bigName);
       if (!m.matches()) {
         index = 0;
-        name = bigName;
+        name  = bigName;
         return;
       }
 
       index = Integer.parseInt(m.group(2));
-      name = m.group(1);
+      name  = m.group(1);
     }
 
     public String bigName() {
@@ -639,7 +639,7 @@ public class ConfData {
   }
 
   public List<String> list(String path) {
-    List<String> ret = new ArrayList<>();
+    List<String>              ret = new ArrayList<>();
     Map<String, List<Object>> cur = data;
     if (path != null && path.length() > 0) {
       for (String name : path.split("/")) {

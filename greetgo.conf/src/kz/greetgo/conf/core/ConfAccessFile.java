@@ -12,13 +12,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ConfAccessFile implements ConfAccess {
 
-  private final File file;
+  private final File                  file;
   private final ConfContentSerializer contentSerializer;
 
   public ConfAccessFile(File file, ConfContentSerializer contentSerializer) {
     Objects.requireNonNull(file);
     Objects.requireNonNull(contentSerializer);
-    this.file = file;
+    this.file              = file;
     this.contentSerializer = contentSerializer;
   }
 

@@ -17,12 +17,12 @@ public class EArchiveServiceConfigTest {
   public void readConfig() throws Exception {
 
     Path parent = Paths
-      .get("build")
-      .resolve("EArchiveServiceConfigTest")
-      .resolve(RND.str(10))
-      .resolve("parent");
+                    .get("build")
+                    .resolve("EArchiveServiceConfigTest")
+                    .resolve(RND.str(10))
+                    .resolve("parent");
     Path path = parent
-      .resolve("EArchiveServiceConfig.hotconfig");
+                  .resolve("EArchiveServiceConfig.hotconfig");
 
     //noinspection ResultOfMethodCallIgnored
     path.toFile().getParentFile().mkdirs();

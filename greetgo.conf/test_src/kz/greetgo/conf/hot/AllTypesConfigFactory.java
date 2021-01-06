@@ -3,11 +3,11 @@ package kz.greetgo.conf.hot;
 import java.nio.file.Path;
 
 public class AllTypesConfigFactory extends FileConfigFactory {
-  private final Path baseDir;
+  private final Path   baseDir;
   private final String configFileExt;
 
   public AllTypesConfigFactory(Path baseDir, String configFileExt) {
-    this.baseDir = baseDir;
+    this.baseDir       = baseDir;
     this.configFileExt = configFileExt;
   }
 
