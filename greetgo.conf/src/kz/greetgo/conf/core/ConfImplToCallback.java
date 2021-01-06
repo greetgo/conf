@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 import static kz.greetgo.conf.ConfUtil.convertToType;
@@ -48,8 +49,9 @@ public class ConfImplToCallback<T> {
     return impl;
   }
 
-  private final ConcurrentHashMap<String, List<ConfImplToCallback<?>>> subCallbackLists = new ConcurrentHashMap<>();
-  private final ConcurrentHashMap<String, ConfImplToCallback<?>>       subCallbacks     = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, List<ConfImplToCallback<?>>> subCallbackLists  = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, ConfImplToCallback<?>>       subCallbacks      = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, Supplier<Object>>            byMethodSuppliers = new ConcurrentHashMap<>();
 
   public Object invokeInterfaceMethod(Object proxy, Method method, Object[] args) throws Throwable {
     String   methodName = method.getName();
@@ -74,17 +76,31 @@ public class ConfImplToCallback<T> {
       return "HotConfigProxy(" + interfaceClass.getName() + "->" + this + ")@" + System.identityHashCode(proxy);
     }
 
+    {
+      Supplier<Object> supplier = byMethodSuppliers.get(methodName);
+      if (supplier != null) {
+        return supplier.get();
+      }
+    }
+
     if (isConvertingType(returnType)) {
       FirstReadEnv firstReadEnv = method.getAnnotation(FirstReadEnv.class);
       if (firstReadEnv != null) {
         String envValue = confCallback.readEnv(firstReadEnv.value());
         if (envValue != null && envValue.trim().length() > 0) {
-          return convertToType(envValue, returnType);
+          Object returnValue = convertToType(envValue, returnType);
+          byMethodSuppliers.put(methodName, () -> returnValue);
+          return returnValue;
         }
       }
       {
-        String strValue = confCallback.readParam(methodName);
-        return convertToType(strValue, returnType);
+        Supplier<Object> supplier = () -> {
+          String strValue = confCallback.readParam(methodName);
+          return convertToType(strValue, returnType);
+        };
+
+        byMethodSuppliers.put(methodName, supplier);
+        return supplier.get();
       }
     }
 
@@ -93,12 +109,19 @@ public class ConfImplToCallback<T> {
       if (firstReadEnv != null) {
         String envValue = confCallback.readEnv(firstReadEnv.value());
         if (envValue != null && envValue.trim().length() > 0) {
-          return ConfUtil.valueOfEnum(envValue, returnType);
+          T returnValue = ConfUtil.valueOfEnum(envValue, returnType);
+          byMethodSuppliers.put(methodName, () -> returnValue);
+          return returnValue;
         }
       }
       {
-        String strValue = confCallback.readParam(methodName);
-        return ConfUtil.valueOfEnum(strValue, returnType);
+        Supplier<Object> supplier = () -> {
+          String strValue = confCallback.readParam(methodName);
+          return ConfUtil.valueOfEnum(strValue, returnType);
+        };
+
+        byMethodSuppliers.put(methodName, supplier);
+        return supplier.get();
       }
     }
 

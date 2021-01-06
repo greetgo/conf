@@ -487,7 +487,7 @@ public class ConfUtil {
 
   }
 
-  public static <T extends Enum<T>> T valueOfEnum(String strValue, Class<?> enumClass) throws Throwable {
+  public static <T> T valueOfEnum(String strValue, Class<?> enumClass) {
 
     if (strValue == null || strValue.trim().isEmpty()) {
       return null;
@@ -502,6 +502,10 @@ public class ConfUtil {
       }
     } catch (IllegalArgumentException e) {
       return null;
+    } catch (RuntimeException e) {
+      throw e;
+    } catch (Throwable e) {
+      throw new RuntimeException(e);
     }
   }
 
