@@ -1,5 +1,6 @@
 package kz.greetgo.conf.core;
 
+import kz.greetgo.conf.hot.FirstReadEnv;
 import kz.greetgo.conf.test.util.ConfCallbackMap;
 import org.testng.annotations.Test;
 
@@ -135,6 +136,102 @@ public class ConfImplToCallbackTest_2 {
     confCallback.siz("listConf2", 4);
     confCallback.prm("listConf2.1.conf1.longParam", "8214738275");
     assertThat(impl.listConf2().get(1).conf1().longParam()).isEqualTo(8214738275L);
+  }
+
+  interface Conf4 {
+    @FirstReadEnv("STONE_E")
+    String stone();
+  }
+
+  @Test
+  public void impl_FirstReadEnv() {
+
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf4> callback     = new ConfImplToCallback<>(Conf4.class, confCallback);
+
+    confCallback.env("STONE_E", "stone from env");
+
+    //
+    //
+    Conf4 impl = callback.impl();
+    //
+    //
+
+    String stone = impl.stone();
+
+    assertThat(stone).isEqualTo("stone from env");
+
+  }
+
+  @Test
+  public void impl_FirstReadEnv__NoEnv() {
+
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf4> callback     = new ConfImplToCallback<>(Conf4.class, confCallback);
+
+    confCallback.env("STONE_E", "");
+    confCallback.prm("stone", "stone from file");
+
+    //
+    //
+    Conf4 impl = callback.impl();
+    //
+    //
+
+    String stone = impl.stone();
+
+    assertThat(stone).isEqualTo("stone from file");
+
+  }
+
+  public enum Enum5 {
+    VAL_X, VAL_WOW, STATUS
+  }
+
+  interface Conf5 {
+    @FirstReadEnv("SIN_US")
+    Enum5 sinus();
+  }
+
+  @Test
+  public void impl_FirstReadEnv__enum() {
+
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf5> callback     = new ConfImplToCallback<>(Conf5.class, confCallback);
+
+    confCallback.env("SIN_US", "VAL_WOW");
+
+    //
+    //
+    Conf5 impl = callback.impl();
+    //
+    //
+
+    Enum5 sinus = impl.sinus();
+
+    assertThat(sinus).isEqualTo(Enum5.VAL_WOW);
+
+  }
+
+  @Test
+  public void impl_FirstReadEnv__enum__noEnv() {
+
+    ConfCallbackMap           confCallback = new ConfCallbackMap();
+    ConfImplToCallback<Conf5> callback     = new ConfImplToCallback<>(Conf5.class, confCallback);
+
+    confCallback.env("SIN_US", "   ");
+    confCallback.prm("sinus", "VAL_X");
+
+    //
+    //
+    Conf5 impl = callback.impl();
+    //
+    //
+
+    Enum5 sinus = impl.sinus();
+
+    assertThat(sinus).isEqualTo(Enum5.VAL_X);
+
   }
 
 }

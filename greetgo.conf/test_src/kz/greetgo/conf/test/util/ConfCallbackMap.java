@@ -9,21 +9,30 @@ import java.util.Set;
 
 public class ConfCallbackMap implements ConfCallback {
 
-  private final Map<String, String>  params      = new HashMap<>();
-  private final Map<String, Integer> sizes       = new HashMap<>();
-  private final Set<String>          addedParams = new HashSet<>();
-  private final Set<String>          addedSizes  = new HashSet<>();
+  private final Map<String, String>  params       = new HashMap<>();
+  private final Map<String, String>  env          = new HashMap<>();
+  private final Map<String, Integer> sizes        = new HashMap<>();
+  private final Set<String>          addedParams  = new HashSet<>();
+  private final Set<String>          addedSizes   = new HashSet<>();
+  private final Set<String>          addedEnvName = new HashSet<>();
 
   public void clear() {
     params.clear();
     sizes.clear();
     addedParams.clear();
     addedSizes.clear();
+    env.clear();
+    addedEnvName.clear();
   }
 
   public void prm(String path, String value) {
     params.put(path, value);
     addedParams.add(path);
+  }
+
+  public void env(String envName, String envValue) {
+    addedEnvName.add(envName);
+    env.put(envName, envValue);
   }
 
   public void siz(String path, int size) {
@@ -47,5 +56,11 @@ public class ConfCallbackMap implements ConfCallback {
     return sizes.get(paramPath);
   }
 
-
+  @Override
+  public String readEnv(String envName) {
+    if (!addedEnvName.contains(envName)) {
+      throw new RuntimeException("kHO7C78NLQ :: no env " + envName);
+    }
+    return env.get(envName);
+  }
 }

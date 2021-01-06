@@ -19,6 +19,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -484,6 +485,24 @@ public class ConfUtil {
       sourceClass = sourceClass.getSuperclass();
     }
 
+  }
+
+  public static <T extends Enum<T>> T valueOfEnum(String strValue, Class<?> enumClass) throws Throwable {
+
+    if (strValue == null || strValue.trim().isEmpty()) {
+      return null;
+    }
+
+    try {
+      try {
+        //noinspection unchecked
+        return (T) enumClass.getMethod("valueOf", String.class).invoke(null, strValue);
+      } catch (InvocationTargetException e) {
+        throw e.getCause();
+      }
+    } catch (IllegalArgumentException e) {
+      return null;
+    }
   }
 
 }

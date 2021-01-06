@@ -70,4 +70,9 @@ public class ConfCallbackCached implements ConfCallback {
       lastCheck.set(now);
     }
   }
+
+  @Override
+  public String readEnv(String envName) {
+    throw new RuntimeException("Not impl yet: ConfCallbackCached.readEnv");
+  }
 }

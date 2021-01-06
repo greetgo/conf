@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.LongSupplier;
 
 import static kz.greetgo.conf.ConfUtil.findAnnotation;
@@ -35,6 +36,13 @@ public class ConfImplBuilder<T> {
     return this;
   }
 
+  private Function<String, String> envAccess = System::getenv;
+
+  public ConfImplBuilder<T> envAccess(Function<String, String> envAccess) {
+    this.envAccess = envAccess;
+    return this;
+  }
+
   public ConfImplBuilder<T> currentTimeMillis(LongSupplier currentTimeMillis) {
     Objects.requireNonNull(currentTimeMillis);
     this.currentTimeMillis = currentTimeMillis;
@@ -42,7 +50,9 @@ public class ConfImplBuilder<T> {
   }
 
   public T build() {
-    return new Impl(confClass, confAccess, changeCheckTimeoutMs, currentTimeMillis).confImplToCallback.impl();
+    return new Impl(confClass, confAccess, envAccess, changeCheckTimeoutMs, currentTimeMillis)
+             .confImplToCallback
+             .impl();
   }
 
   private class Impl {
@@ -50,6 +60,7 @@ public class ConfImplBuilder<T> {
     final ConfImplToCallback<T>            confImplToCallback;
     final long                             changeCheckTimeoutMs;
     final LongSupplier                     currentTimeMillis;
+    final Function<String, String>         envAccess;
     final AtomicReference<ConfContentData> data          = new AtomicReference<>();
     final AtomicLong                       lastCheckTime = new AtomicLong(0);
 
@@ -65,11 +76,19 @@ public class ConfImplBuilder<T> {
         prepareData();
         return Optional.ofNullable(data.get().sizes.get(paramPath)).orElse(0);
       }
+
+      @Override
+      public String readEnv(String envName) {
+        return envAccess.apply(envName);
+      }
     };
 
-    private Impl(Class<T> confClass, ConfAccess confAccess, long changeCheckTimeoutMs, LongSupplier currentTimeMillis) {
+    private Impl(Class<T> confClass, ConfAccess confAccess, Function<String, String> envAccess,
+                 long changeCheckTimeoutMs, LongSupplier currentTimeMillis) {
+
       this.confAccess           = confAccess;
       confImplToCallback        = new ConfImplToCallback<>(confClass, confCallbackImpl);
+      this.envAccess            = envAccess;
       this.changeCheckTimeoutMs = changeCheckTimeoutMs;
       this.currentTimeMillis    = currentTimeMillis;
 

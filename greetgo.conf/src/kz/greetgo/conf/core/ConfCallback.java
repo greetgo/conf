@@ -6,4 +6,6 @@ public interface ConfCallback {
 
   int readParamSize(String paramPath);
 
+  String readEnv(String envName);
+
 }

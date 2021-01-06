@@ -1,5 +1,6 @@
 package kz.greetgo.conf.core;
 
+import kz.greetgo.conf.ConfUtil;
 import kz.greetgo.conf.core.fields.ConfIgnore;
 import kz.greetgo.conf.core.fields.FieldAccess;
 import kz.greetgo.conf.core.fields.FieldDef;
@@ -7,6 +8,7 @@ import kz.greetgo.conf.core.fields.FieldDefParserDefault;
 import kz.greetgo.conf.core.fields.FieldParserDefault;
 import kz.greetgo.conf.hot.DefaultListSize;
 import kz.greetgo.conf.hot.Description;
+import kz.greetgo.conf.hot.FirstReadEnv;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -73,26 +75,31 @@ public class ConfImplToCallback<T> {
     }
 
     if (isConvertingType(returnType)) {
-      String strValue = confCallback.readParam(methodName);
-      return convertToType(strValue, returnType);
+      FirstReadEnv firstReadEnv = method.getAnnotation(FirstReadEnv.class);
+      if (firstReadEnv != null) {
+        String envValue = confCallback.readEnv(firstReadEnv.value());
+        if (envValue != null && envValue.trim().length() > 0) {
+          return convertToType(envValue, returnType);
+        }
+      }
+      {
+        String strValue = confCallback.readParam(methodName);
+        return convertToType(strValue, returnType);
+      }
     }
 
     if (returnType.isEnum()) {
-      String strValue = confCallback.readParam(methodName);
-      if (strValue == null || strValue.trim().isEmpty()) {
-        return null;
-      }
-
-      try {
-        try {
-          return returnType.getMethod("valueOf", String.class).invoke(null, strValue);
-        } catch (InvocationTargetException e) {
-          throw e.getCause();
+      FirstReadEnv firstReadEnv = method.getAnnotation(FirstReadEnv.class);
+      if (firstReadEnv != null) {
+        String envValue = confCallback.readEnv(firstReadEnv.value());
+        if (envValue != null && envValue.trim().length() > 0) {
+          return ConfUtil.valueOfEnum(envValue, returnType);
         }
-      } catch (IllegalArgumentException e) {
-        return null;
       }
-
+      {
+        String strValue = confCallback.readParam(methodName);
+        return ConfUtil.valueOfEnum(strValue, returnType);
+      }
     }
 
     if (List.class.isAssignableFrom(returnType)) {

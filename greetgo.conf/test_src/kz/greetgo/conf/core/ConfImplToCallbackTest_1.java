@@ -398,7 +398,7 @@ public class ConfImplToCallbackTest_1 {
     assertThat(impl.paramDate()).isNull();
   }
 
-  enum TestEnum {
+  public enum TestEnum {
     ELEMENT_001,
     ELEMENT_002,
     ELEMENT_003,

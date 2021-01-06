@@ -32,6 +32,11 @@ public class ConfCallbackCachedTest {
       readParamSizeCount++;
       return readParamSize;
     }
+
+    @Override
+    public String readEnv(String envName) {
+      throw new RuntimeException("Kk32tiy2Xc :: Not impl yet: ConfCallbackFake.readEnv");
+    }
   }
 
   @Test

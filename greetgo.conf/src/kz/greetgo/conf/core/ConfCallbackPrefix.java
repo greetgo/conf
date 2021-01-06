@@ -20,4 +20,10 @@ public class ConfCallbackPrefix implements ConfCallback {
     return source.readParamSize(prefix + paramPath);
   }
 
+  @Override
+  public String readEnv(String envName) {
+    throw new RuntimeException("KF1dPxOt1k :: "
+                                 + "Access to environment variables cannot be used inside hierarchy. "
+                                 + "envName = " + envName + ", source = " + source);
+  }
 }
