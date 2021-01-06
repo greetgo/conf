@@ -87,17 +87,18 @@ public class ConfUtil {
   }
 
   public static String readFile(File file) {
-    try {
-      try (FileInputStream in = new FileInputStream(file)) {
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        byte[]                buf  = new byte[1024 * 4];
+    if (!file.exists()) return null;
+    try (FileInputStream in = new FileInputStream(file)) {
 
-        while (true) {
-          int count = in.read(buf);
-          if (count < 0) return bout.toString("UTF-8");
-          bout.write(buf, 0, count);
-        }
+      ByteArrayOutputStream bout = new ByteArrayOutputStream();
+      byte[]                buf  = new byte[1024 * 4];
+
+      while (true) {
+        int count = in.read(buf);
+        if (count < 0) return bout.toString("UTF-8");
+        bout.write(buf, 0, count);
       }
+
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

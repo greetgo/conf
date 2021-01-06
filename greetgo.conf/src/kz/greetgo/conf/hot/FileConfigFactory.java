@@ -3,7 +3,10 @@ package kz.greetgo.conf.hot;
 import kz.greetgo.conf.ConfUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.util.Date;
 
 /**
@@ -71,8 +74,13 @@ public abstract class FileConfigFactory extends AbstractConfigFactory {
     @Override
     public Date getLastChangedAt(String configLocation) {
       File file = configStorageFile(configLocation);
-      long lastModified = file.lastModified();
-      return lastModified == 0L ? null : new Date(lastModified);
+      if (!file.exists()) return null;
+      try {
+        FileTime lastModifiedTime = Files.getLastModifiedTime(file.toPath());
+        return new Date(lastModifiedTime.toMillis());
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
 
   };

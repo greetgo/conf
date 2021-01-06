@@ -1,15 +1,28 @@
 package kz.greetgo.conf.hot;
 
 import java.nio.file.Path;
+import java.util.function.LongSupplier;
 
 public class TestHotConfigFab extends FileConfigFactory {
 
-  private final Path baseDir;
+  private final Path   baseDir;
   private final String configFileExt;
 
   public TestHotConfigFab(Path baseDir, String configFileExt) {
-    this.baseDir = baseDir;
+    this.baseDir       = baseDir;
     this.configFileExt = configFileExt;
+  }
+
+  public LongSupplier currentTimeMillis = System::currentTimeMillis;
+
+  @Override
+  protected long currentTimeMillis() {
+    return currentTimeMillis.getAsLong();
+  }
+
+  @Override
+  protected long autoResetTimeout() {
+    return 3000;
   }
 
   @Override

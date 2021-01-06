@@ -6,11 +6,13 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,8 +26,8 @@ public class FileConfigFactoryTest {
       if (f.exists()) f.delete();
     }
 
-    TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("wow"), ".hot");
-    HotConfig1 conf = fab.createConfig1();
+    TestHotConfigFab fab  = new TestHotConfigFab(Paths.get("build").resolve("wow"), ".hot");
+    HotConfig1       conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(0);
     assertThat(conf.intExampleValue2()).isEqualTo(349);
@@ -45,8 +47,8 @@ public class FileConfigFactoryTest {
       out.close();
     }
 
-    TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("asd"), ".hot");
-    HotConfig1 conf = fab.createConfig1();
+    TestHotConfigFab fab  = new TestHotConfigFab(Paths.get("build").resolve("asd"), ".hot");
+    HotConfig1       conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(711);
     assertThat(conf.intExampleValue2()).isEqualTo(349);
@@ -69,8 +71,8 @@ public class FileConfigFactoryTest {
       }
     }
 
-    TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("asd"), ".hot");
-    HotConfig1 conf = fab.createConfig1();
+    TestHotConfigFab fab  = new TestHotConfigFab(Paths.get("build").resolve("asd"), ".hot");
+    HotConfig1       conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(7111);
     assertThat(conf.intExampleValue2()).isEqualTo(444);
@@ -79,7 +81,7 @@ public class FileConfigFactoryTest {
   }
 
   @Test
-  public void reset() throws Exception {
+  public void readConfigParamsAfterFileChanged() throws Exception {
 
     File f = new File("build/asd/HotConfig1.hot");
     if (f.exists()) {
@@ -96,13 +98,21 @@ public class FileConfigFactoryTest {
       out.close();
     }
 
+    System.out.println("0dH548V7S7 :: getLastModifiedTime = " + Files.getLastModifiedTime(f.toPath()).toMillis());
+
+    AtomicLong time = new AtomicLong(1000);
+
     TestHotConfigFab fab = new TestHotConfigFab(Paths.get("build").resolve("asd"), ".hot");
+    fab.currentTimeMillis = time::get;
+
     HotConfig1 conf = fab.createConfig1();
 
     assertThat(conf.intExampleValue()).isEqualTo(7111);
     assertThat(conf.intExampleValue2()).isEqualTo(444);
     assertThat(conf.boolExampleValue()).isEqualTo(false);
     assertThat(conf.strExampleValue()).isEqualTo("status");
+
+    Thread.sleep(70);
 
     {
       PrintStream out = new PrintStream(f, "UTF-8");
@@ -111,7 +121,12 @@ public class FileConfigFactoryTest {
       out.println("boolExampleValue = 1");
       out.println("strExampleValue = quantum");
       out.close();
+
+      System.out.println("5Dhj4Pq543 :: getLastModifiedTime = " + Files.getLastModifiedTime(f.toPath()).toMillis());
     }
+
+    time.addAndGet(5000);
+    Thread.sleep(70);
 
     assertThat(conf.intExampleValue()).isEqualTo(999);
     assertThat(conf.intExampleValue2()).isEqualTo(111);
@@ -134,9 +149,9 @@ public class FileConfigFactoryTest {
   public void parentingOfHotConfigs() throws Exception {
 
     final Path baseDir = Paths
-      .get("build")
-      .resolve("parentingOfHotConfigs_baseDir")
-      .resolve("" + rnd.nextInt(10_000_000));
+                           .get("build")
+                           .resolve("parentingOfHotConfigs_baseDir")
+                           .resolve("" + rnd.nextInt(10_000_000));
 
     FileConfigFactory fileConfigFactory = new FileConfigFactory() {
       @Override
@@ -169,9 +184,9 @@ public class FileConfigFactoryTest {
   @Test
   public void testingMethod_toString_inConfig() {
     final Path baseDir = Paths
-      .get("build")
-      .resolve("testingMethod_toString_inConfig")
-      .resolve("" + rnd.nextInt(10_000_000));
+                           .get("build")
+                           .resolve("testingMethod_toString_inConfig")
+                           .resolve("" + rnd.nextInt(10_000_000));
 
     FileConfigFactory fileConfigFactory = new FileConfigFactory() {
       @Override
@@ -192,8 +207,8 @@ public class FileConfigFactoryTest {
   @Test
   public void dynamicTest() {
 
-    final Path baseDir = Paths.get("build").resolve("dynamicTest");
-    final String ext = ".hot.txt";
+    final Path   baseDir = Paths.get("build").resolve("dynamicTest");
+    final String ext     = ".hot.txt";
 
     TestHotConfigFab fab = new TestHotConfigFab(baseDir, ext);
 
@@ -208,17 +223,14 @@ public class FileConfigFactoryTest {
   }
 
   @Test
-  public void sync__allTypesConfig__initDefaultValues() {
+  public void initDefaultValuesOnCreate() {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
 
-    final Path baseDir = Paths
-      .get("build")
-      .resolve("allTypesConfig__initDefaultValues")
-      .resolve(sdf.format(new Date()));
+    final Path baseDir = Paths.get("build")
+                              .resolve(getClass().getSimpleName())
+                              .resolve("initDefaultValuesOnCreate");
 
-    final String ext = ".hot." + RND.str(10) + ".txt";
-
-    System.out.println("4f32c5fc :: baseDir = " + baseDir);
+    final String ext = ".hot." + sdf.format(new Date()) + '.' + RND.str(10) + ".txt";
 
     AllTypesConfigFactory factory = new AllTypesConfigFactory(baseDir, ext);
 
@@ -229,6 +241,8 @@ public class FileConfigFactoryTest {
     //
 
     Path configFile = baseDir.resolve(AllTypesConfig.class.getSimpleName() + ext);
+
+    System.out.println("6RTdUAj2pG :: configFile = " + configFile);
 
     assertThat(configFile).exists();
 
@@ -249,9 +263,9 @@ public class FileConfigFactoryTest {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
 
     final Path baseDir = Paths
-      .get("build")
-      .resolve("readConfig__allTypesConfig__readFromFile")
-      .resolve(sdf.format(new Date()));
+                           .get("build")
+                           .resolve("readConfig__allTypesConfig__readFromFile")
+                           .resolve(sdf.format(new Date()));
 
     final String ext = ".hot." + RND.str(10) + ".txt";
 

@@ -51,33 +51,23 @@ public class AbstractConfigFactoryTest {
   public void useConfigAsKeyOfMap() {
     final TestingFactory tf = new TestingFactory();
 
-    HotConfig1 config11 = tf.createConfig(HotConfig1.class);
-    HotConfig1 config12 = tf.createConfig(HotConfig1.class);
+    HotConfig1 config1 = tf.createConfig(HotConfig1.class);
 
-    HotConfig2 config21 = tf.createConfig(HotConfig2.class);
-    HotConfig2 config22 = tf.createConfig(HotConfig2.class);
+    HotConfig2 config2 = tf.createConfig(HotConfig2.class);
 
-    Object value11 = RND.str(10);
-    Object value12 = RND.str(10);
-    Object value21 = RND.str(10);
-    Object value22 = RND.str(10);
+    Object value1 = RND.str(10);
+    Object value2 = RND.str(10);
 
     Map<Object, Object> map = new HashMap<>();
 
-    map.put(config11, value11);
-    map.put(config12, value12);
-    map.put(config21, value21);
-    map.put(config22, value22);
+    map.put(config1, value1);
+    map.put(config2, value2);
 
-    Object actualValue11 = map.get(config11);
-    Object actualValue12 = map.get(config12);
-    Object actualValue21 = map.get(config21);
-    Object actualValue22 = map.get(config22);
+    Object actualValue1 = map.get(config1);
+    Object actualValue2 = map.get(config2);
 
-    assertThat(actualValue11).isEqualTo(value11);
-    assertThat(actualValue12).isEqualTo(value12);
-    assertThat(actualValue21).isEqualTo(value21);
-    assertThat(actualValue22).isEqualTo(value22);
+    assertThat(actualValue1).isEqualTo(value1);
+    assertThat(actualValue2).isEqualTo(value2);
 
   }
 
@@ -186,7 +176,7 @@ public class AbstractConfigFactoryTest {
                                            .isEqualTo(0);
 
     assertThat(tf.cs.callCountOfGetLastChangedAt()).describedAs("callCountOfGetLastChangedAt")
-                                                   .isEqualTo(2);
+                                                   .isEqualTo(4);
 
     assertThat(tf.cs.callCountOfSave()).describedAs("callCountOfSaveConfigContent")
                                        .isEqualTo(2);
@@ -317,7 +307,10 @@ public class AbstractConfigFactoryTest {
 
   @Test
   public void defaultListSize_new_reset_exists() {
+    AtomicLong time = new AtomicLong(1000);
+
     final TestingFactory tf = new TestingFactory();
+    tf.currentTimeMillis = time::get;
 
     HotConfigWithDefaultListSize config = tf.createConfig(HotConfigWithDefaultListSize.class);
 
@@ -360,8 +353,10 @@ public class AbstractConfigFactoryTest {
                                         "classList.5.intField=119988\n" +
                                         "longList.4=4511\n");
 
-    assertThat(config.longList()).hasSize(9);
-    assertThat(config.classList()).hasSize(7);
+    time.addAndGet(5000);
+
+    assertThat(config.longList()).hasSize(5);
+    assertThat(config.classList()).hasSize(6);
 
     String content2 = Arrays.stream(tf.cs.loadConfigContent(location).split("\n"))
                             .filter(s -> s.trim().length() > 0)
@@ -369,28 +364,13 @@ public class AbstractConfigFactoryTest {
                             .sorted()
                             .collect(Collectors.joining("\n"));
 
-    assertThat(content2).isEqualTo("classList.0.intField=20019\n" +
-                                     "classList.0.strField=By one\n" +
-                                     "classList.1.intField=20019\n" +
-                                     "classList.1.strField=By one\n" +
-                                     "classList.2.intField=20019\n" +
-                                     "classList.2.strField=Boom loon hi\n" +
-                                     "classList.3.intField=20019\n" +
-                                     "classList.3.strField=By one\n" +
-                                     "classList.4.intField=20019\n" +
-                                     "classList.4.strField=By one\n" +
+    assertThat(content2).isEqualTo("classList.2.strField=Boom loon hi\n" +
                                      "classList.5.intField=119988\n" +
-                                     "classList.5.strField=By one\n" +
-                                     "classList.6.intField=20019\n" +
-                                     "classList.6.strField=By one\n" +
-                                     "longList.0=70078\n" +
-                                     "longList.1=70078\n" +
-                                     "longList.2=70078\n" +
-                                     "longList.3=70078\n" +
-                                     "longList.4=4511\n" +
-                                     "longList.5=70078\n" +
-                                     "longList.6=70078\n" +
-                                     "longList.7=70078\n" +
-                                     "longList.8=70078");
+                                     "longList.4=4511");
+
+    tf.cs.saveConfigContent(location, "longList.1=98\n" +
+                                        "longList.0=11\n" +
+                                        "longList.3=17\n");
+
   }
 }

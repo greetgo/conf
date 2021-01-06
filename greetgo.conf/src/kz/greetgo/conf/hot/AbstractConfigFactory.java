@@ -92,14 +92,14 @@ public abstract class AbstractConfigFactory {
     {
       //noinspection unchecked
       T ret = (T) proxyMap.get(configInterface);
-      if (ret != null) return (T) ret;
+      if (ret != null) return ret;
     }
 
     synchronized (proxyMap) {
       {
         //noinspection unchecked
         T ret = (T) proxyMap.get(configInterface);
-        if (ret != null) return (T) ret;
+        if (ret != null) return ret;
       }
 
       {

@@ -1,5 +1,6 @@
 package kz.greetgo.conf.hot;
 
+@ForcibleInit
 @SuppressWarnings("unused")
 @Description("Config description CHE")
 public interface AllTypesConfig {
