@@ -1,6 +1,6 @@
 package kz.greetgo.conf.core;
 
-import kz.greetgo.conf.hot.CannotConvertToType;
+import kz.greetgo.conf.error.CannotConvertToType;
 import kz.greetgo.conf.hot.DefaultIntValue;
 import kz.greetgo.conf.hot.DefaultStrValue;
 import kz.greetgo.conf.hot.Description;

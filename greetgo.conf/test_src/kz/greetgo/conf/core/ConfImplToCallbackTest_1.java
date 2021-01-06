@@ -1,6 +1,6 @@
 package kz.greetgo.conf.core;
 
-import kz.greetgo.conf.hot.CannotConvertToType;
+import kz.greetgo.conf.error.CannotConvertToType;
 import kz.greetgo.conf.test.util.ConfCallbackMap;
 import org.testng.annotations.Test;
 

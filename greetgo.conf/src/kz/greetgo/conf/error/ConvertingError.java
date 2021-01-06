@@ -1,4 +1,4 @@
-package kz.greetgo.conf.hot;
+package kz.greetgo.conf.error;
 
 import java.lang.reflect.Method;
 

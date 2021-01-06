@@ -1,13 +1,13 @@
 package kz.greetgo.conf;
 
-import kz.greetgo.conf.hot.CannotConvertToType;
-import kz.greetgo.conf.hot.CannotDetectDateFormat;
+import kz.greetgo.conf.error.CannotConvertToType;
+import kz.greetgo.conf.error.CannotDetectDateFormat;
+import kz.greetgo.conf.error.TooManyDefaultAnnotations;
 import kz.greetgo.conf.hot.DefaultBoolValue;
 import kz.greetgo.conf.hot.DefaultDoubleValue;
 import kz.greetgo.conf.hot.DefaultIntValue;
 import kz.greetgo.conf.hot.DefaultLongValue;
 import kz.greetgo.conf.hot.DefaultStrValue;
-import kz.greetgo.conf.hot.TooManyDefaultAnnotations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

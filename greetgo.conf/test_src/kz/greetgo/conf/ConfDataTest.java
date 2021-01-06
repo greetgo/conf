@@ -1,5 +1,6 @@
 package kz.greetgo.conf;
 
+import kz.greetgo.conf.error.NoValue;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

@@ -1,7 +1,7 @@
 package kz.greetgo.conf.env;
 
 import kz.greetgo.conf.ConfUtil;
-import kz.greetgo.conf.hot.CannotConvertToType;
+import kz.greetgo.conf.error.CannotConvertToType;
 import kz.greetgo.conf.hot.Description;
 
 import java.lang.invoke.MethodHandles;

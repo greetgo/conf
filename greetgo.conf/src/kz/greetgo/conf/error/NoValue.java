@@ -1,4 +1,4 @@
-package kz.greetgo.conf;
+package kz.greetgo.conf.error;
 
 /**
  * Indicates that there is no value for specified element
