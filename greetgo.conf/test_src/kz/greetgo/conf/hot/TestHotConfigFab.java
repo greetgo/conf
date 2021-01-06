@@ -42,4 +42,5 @@ public class TestHotConfigFab extends FileConfigFactory {
   public HotConfig2 createConfig2() {
     return createConfig(HotConfig2.class);
   }
+
 }

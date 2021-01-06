@@ -299,4 +299,47 @@ public class FileConfigFactoryTest {
     assertThat(config.doubleValue()).isEqualTo(5426.76548);
 
   }
+
+  @ConfigFileName("AnotherFileName")
+  public interface ConfigWithAnotherFile {
+    @SuppressWarnings("UnusedReturnValue")
+    String someParam();
+  }
+
+  public static class ConfigWithAnotherFileFab extends FileConfigFactory {
+    private final Path baseDir;
+
+    public ConfigWithAnotherFileFab(Path baseDir) {
+      this.baseDir = baseDir;
+    }
+
+    @Override
+    protected String getConfigFileExt() {
+      return ".txt";
+    }
+
+    @Override
+    protected Path getBaseDir() {
+      return baseDir;
+    }
+
+    public ConfigWithAnotherFile createConfigWithAnotherFile() {
+      return createConfig(ConfigWithAnotherFile.class);
+    }
+  }
+
+  @Test
+  public void check_ConfigFileName() {
+
+    String dir = getClass().getSimpleName() + "/" + RND.str(10);
+
+    ConfigWithAnotherFileFab fab  = new ConfigWithAnotherFileFab(Paths.get("build").resolve(dir));
+    ConfigWithAnotherFile    conf = fab.createConfigWithAnotherFile();
+    conf.someParam();
+
+
+    File f = new File("build/" + dir + "/AnotherFileName.txt");
+    assertThat(f).exists();
+
+  }
 }

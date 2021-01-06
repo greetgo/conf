@@ -10,3 +10,9 @@
 
 ? -> 1.4.0
   1) Added kz.greetgo.conf.env.EnvConfigImplementor : read configs from env (useful for docker)
+
+#######################################################################################################################
+
+? -> 2.0.0
+
+  Full refactoring.

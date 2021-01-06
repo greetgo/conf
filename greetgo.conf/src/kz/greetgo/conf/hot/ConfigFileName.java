@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 
 /**
- * <p>
  * Defined config file name.
- * </p>
+ * <p>
+ * Extension of file has been gotten from method {@link FileConfigFactory#getConfigFileExt()}
  *
  * @author pompei
  */
