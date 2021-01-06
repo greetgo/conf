@@ -9,23 +9,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 
 /**
- * <p>Perform default parameter value</p>
- * <p>You can use following variables:
- * <table>
- * <tr>
- * <td><strong>{user.name}</strong></td>
- * <td>Current system user name</td>
- * </tr>
- * <tr>
- * <td><strong>{user.home}<strong></td>
- * <td>Current system user home directory</td>
- * </tr>
- * </table>
- * <p/>
- * You can extend this list with overriding method
- * {@link AbstractConfigFactory#replaceParametersInDefaultStrValue(String)}
- * <p/>
- * </p>
+ * Perform default parameter value
  *
  * @author pompei
  */

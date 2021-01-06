@@ -523,7 +523,7 @@ public class ConfData {
   }
 
   /**
-   * <p>Reads value of parameter as date with formats specified in <code>formats</code></></p>
+   * <p>Reads value of parameter as date with formats specified in <code>formats</code></p>
    * <p>If no parameter or parameter value cannot be parsed, returns <code>defaultValue</code></p>
    *
    * @param path         path to parameter
