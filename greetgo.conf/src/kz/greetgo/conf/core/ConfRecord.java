@@ -134,4 +134,9 @@ public class ConfRecord {
       comments.set(i, addingComments.get(i));
     }
   }
+
+  public String commentValue() {
+    if (comments.isEmpty()) return null;
+    return String.join("\n", comments);
+  }
 }

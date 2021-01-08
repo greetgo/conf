@@ -2,6 +2,7 @@ package kz.greetgo.conf.jdbc.test.db;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -26,7 +27,22 @@ public class DataSource1Connection implements DataSource, AutoCloseable {
 
   @Override
   public Connection getConnection() {
-    return connection;
+    return (Connection) Proxy.newProxyInstance(
+      getClass().getClassLoader(), new Class[]{Connection.class},
+      (proxy, method, args) -> {
+
+        if (method.getParameterCount() == 0) {
+          if ("toString".equals(method.getName())) {
+            return "Proxy{" + connection + "}@" + System.identityHashCode(proxy);
+          }
+          if ("close".equals(method.getName())) {
+            // ignore this method
+            return null;
+          }
+        }
+
+        return method.invoke(connection, args);
+      });
   }
 
   @Override

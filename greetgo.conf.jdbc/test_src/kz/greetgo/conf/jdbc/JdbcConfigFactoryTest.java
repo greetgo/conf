@@ -42,11 +42,7 @@ public class JdbcConfigFactoryTest {
   @Test(dataProvider = "dbTypeProvider")
   public void createConfig(JdbcType jdbcType, String schema) throws SQLException {
 
-    System.out.println("s7c3Ai1xi5 :: jdbcType = " + jdbcType + ", schema = " + schema);
-
     DataSource dataSource = dbManager.newDataSourceFor(jdbcType);
-
-    System.out.println("LFzg1B5T09 :: dataSource = " + dataSource);
 
     JdbcConfigFactory configFactory = new JdbcConfigFactory() {
       @Override
@@ -65,11 +61,17 @@ public class JdbcConfigFactoryTest {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     assertThat(sdf.format(config.dateParam())).isEqualTo("2019-01-11 23:11:10");
 
-    String tableName = (schema == null ? "" : schema + ".") + "TestConfig";
+    String tableName = configFactory.register().tableName(schema, "TestConfig");
+
+    System.out.println("avz1rCLm6I :: tableName = " + tableName);
 
     Map<String, String> params = new HashMap<>();
 
     try (Connection connection = dataSource.getConnection()) {
+
+      String userName = connection.getMetaData().getUserName();
+      System.out.println("n5Z1649HOG :: userName = " + userName);
+
       try (PreparedStatement ps = connection.prepareStatement("select * from " + tableName)) {
         try (ResultSet rs = ps.executeQuery()) {
           while (rs.next()) {
