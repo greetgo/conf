@@ -5,6 +5,9 @@ plugins {
 
 dependencies {
   compile project(":greetgo.conf")
+
+  testCompile "com.h2database:h2:1.4.200"
+  testCompile "org.postgresql:postgresql:42.2.18"
 }
 
 uploadToMavenCentral {

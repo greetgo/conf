@@ -1,0 +1,14 @@
+version: "2.3"
+services:
+
+  postgres:
+    image: postgres:13.1
+    mem_limit: 200M
+    container_name: pg_greetgo_conf_jdbc
+    restart: always
+    ports:
+      - "25432:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "111"
