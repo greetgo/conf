@@ -3,6 +3,7 @@ package kz.greetgo.conf.jdbc.dialects;
 import kz.greetgo.conf.core.ConfRecord;
 import kz.greetgo.conf.jdbc.FieldNames;
 import kz.greetgo.conf.jdbc.NamingStyle;
+import kz.greetgo.conf.jdbc.errors.NoSchema;
 import kz.greetgo.conf.jdbc.errors.NoTable;
 
 import javax.sql.DataSource;
@@ -29,6 +30,9 @@ public class DbRegister_PostgreSQL extends DbRegister {
     if ("42P01".equals(sqlException.getSQLState())) {
       return new NoTable(sqlException);
     }
+    if ("3F000".equals(sqlException.getSQLState())) {
+      return new NoSchema(sqlException);
+    }
     throw new RuntimeException(sqlException);
   }
 
@@ -48,6 +52,17 @@ public class DbRegister_PostgreSQL extends DbRegister {
         try (ResultSet rs = ps.executeQuery()) {
           return !rs.next() ? null : ConfRecord.ofComment(rs.getString(1));
         }
+      }
+    } catch (SQLException e) {
+      throw convertSqlError(e);
+    }
+  }
+
+  @Override
+  public void createSchema(String schema) {
+    try (Connection connection = dataSource.getConnection()) {
+      try (Statement statement = connection.createStatement()) {
+        statement.execute("create schema " + schemaQuoted(schema));
       }
     } catch (SQLException e) {
       throw convertSqlError(e);

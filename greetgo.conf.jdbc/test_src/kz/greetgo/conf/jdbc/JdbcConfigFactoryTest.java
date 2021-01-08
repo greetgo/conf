@@ -35,7 +35,7 @@ public class JdbcConfigFactoryTest {
       {JdbcType.H2, null},
       {JdbcType.H2, "a1"},
       {JdbcType.Postgres, null},
-      {JdbcType.Postgres, "s" + RND.strEng(10)},
+      {JdbcType.Postgres, "s1amVlfBCiK" /*+ RND.strEng(10)*/},
     };
   }
 
@@ -48,6 +48,11 @@ public class JdbcConfigFactoryTest {
       @Override
       protected DataSource dataSource() {
         return dataSource;
+      }
+
+      @Override
+      protected String schema() {
+        return schema;
       }
     };
 

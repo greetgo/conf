@@ -43,6 +43,11 @@ public class DbRegister_H2 extends DbRegister {
   }
 
   @Override
+  public void createSchema(String schema) {
+    throw new RuntimeException("Not impl yet: DbRegister_H2.createSchema");
+  }
+
+  @Override
   public void upsertRecord(String schema, String tableNameArg, FieldNames fieldNames, ConfRecord record) {
     throw new RuntimeException("Not impl yet: DbRegister_H2.upsertRecord");
   }

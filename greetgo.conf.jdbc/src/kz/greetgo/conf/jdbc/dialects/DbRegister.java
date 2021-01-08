@@ -62,8 +62,12 @@ public abstract class DbRegister {
 
   protected abstract NamingStyle defaultNamingStyle();
 
+  protected String schemaQuoted(String schema) {
+    return schema == null ? defaultSchema() : nameQuote(schema);
+  }
+
   public String tableName(String schema, String tableName) {
-    String realSchema = schema == null ? defaultSchema() : nameQuote(schema);
+    String realSchema = schemaQuoted(schema);
     return (realSchema == null ? "" : realSchema + '.') + nameQuote(tableName);
   }
 
@@ -150,4 +154,5 @@ public abstract class DbRegister {
 
   public abstract void createTable(String schema, String tableName, FieldNames fieldNames);
 
+  public abstract void createSchema(String schema);
 }

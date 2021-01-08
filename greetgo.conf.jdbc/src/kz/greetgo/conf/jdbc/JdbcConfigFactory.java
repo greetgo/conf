@@ -6,6 +6,7 @@ import kz.greetgo.conf.core.ConfImplBuilder;
 import kz.greetgo.conf.core.ConfRecord;
 import kz.greetgo.conf.hot.ConfigFileName;
 import kz.greetgo.conf.jdbc.dialects.DbRegister;
+import kz.greetgo.conf.jdbc.errors.NoSchema;
 import kz.greetgo.conf.jdbc.errors.NoTable;
 
 import javax.sql.DataSource;
@@ -128,12 +129,18 @@ public abstract class JdbcConfigFactory {
       }
 
       ConfRecord selectTableDescriptionRecord(String schema, String tableName) {
-        try {
-          return register().selectTableDescriptionRecord(schema, tableName);
-        } catch (NoTable e) {
-          register().createTable(schema, tableName, fieldNames());
-          return register().selectTableDescriptionRecord(schema, tableName);
+        for (int i = 0; i < 7; i++) {
+          try {
+            return register().selectTableDescriptionRecord(schema, tableName);
+          } catch (NoTable e) {
+            register().createTable(schema, tableName, fieldNames());
+            continue;
+          } catch (NoSchema e) {
+            register().createSchema(schema);
+            continue;
+          }
         }
+        throw new RuntimeException("IoX33QLd1d :: Cannot selectTableDescriptionRecord");
       }
 
       @Override
