@@ -1,9 +1,12 @@
 package kz.greetgo.conf.jdbc.test.db;
 
 import kz.greetgo.conf.jdbc.JdbcType;
+import org.postgresql.util.PSQLException;
+import org.testng.SkipException;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.net.ConnectException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -54,6 +57,11 @@ public class DbManager {
         statement.execute("grant all privileges on database " + db + " to " + user);
       }
 
+    } catch (PSQLException e) {
+      if (e.getCause() instanceof ConnectException) {
+        throw new SkipException("gp78zcWg8e :: No PostgreSQL database");
+      }
+      throw e;
     }
 
     return toDataSource(DriverManager.getConnection("jdbc:postgresql://localhost:25432/" + db, user, password));
