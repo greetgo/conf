@@ -28,7 +28,7 @@ public class DbManager {
         case H2:
           return newDataSource_H2();
 
-        case Postgres:
+        case PostgreSQL:
           return newDataSource_Postgres();
 
         default:

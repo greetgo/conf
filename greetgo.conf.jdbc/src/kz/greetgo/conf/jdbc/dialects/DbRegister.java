@@ -2,6 +2,7 @@ package kz.greetgo.conf.jdbc.dialects;
 
 import kz.greetgo.conf.core.ConfRecord;
 import kz.greetgo.conf.jdbc.FieldNames;
+import kz.greetgo.conf.jdbc.JdbcType;
 import kz.greetgo.conf.jdbc.NamingStyle;
 
 import javax.sql.DataSource;
@@ -18,22 +19,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class DbRegister {
 
   public static DbRegister create(DataSource dataSource, NamingStyle namingStyle) {
-    try (Connection connection = dataSource.getConnection()) {
 
-      String databaseProductName = connection.getMetaData().getDatabaseProductName();
-
-      if ("H2".equals(databaseProductName)) {
+    JdbcType jdbcType = JdbcType.detect(dataSource);
+    switch (jdbcType) {
+      case H2:
         return new DbRegister_H2(namingStyle, dataSource);
-      }
 
-      if ("PostgreSQL".equals(databaseProductName)) {
+      case PostgreSQL:
         return new DbRegister_PostgreSQL(namingStyle, dataSource);
-      }
 
-      throw new RuntimeException("z011DO5ebV :: Cannot create dialect for " + dataSource);
-
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
+      default:
+        throw new RuntimeException("U7OFiEdbV8 :: DbRegister for " + jdbcType + " is not implemented");
     }
   }
 
