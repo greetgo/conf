@@ -33,9 +33,9 @@ public class JdbcConfigFactoryTest {
   public Object[][] dbTypeProvider() {
     return new Object[][]{
       {JdbcType.H2, null},
-      {JdbcType.H2, "a1"},
+      {JdbcType.H2, "s" + RND.strEng(10)},
       {JdbcType.Postgres, null},
-      {JdbcType.Postgres, "s1amVlfBCiK" /*+ RND.strEng(10)*/},
+      {JdbcType.Postgres, "s" + RND.strEng(10)},
     };
   }
 

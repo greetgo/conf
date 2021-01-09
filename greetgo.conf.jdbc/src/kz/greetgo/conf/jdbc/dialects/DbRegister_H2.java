@@ -8,6 +8,7 @@ import kz.greetgo.conf.jdbc.errors.NoTable;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -86,6 +87,37 @@ public class DbRegister_H2 extends DbRegister {
 
   @Override
   public void upsertRecord(String schema, String tableNameArg, FieldNames fieldNames, ConfRecord record) {
-    throw new RuntimeException("Not impl yet: DbRegister_H2.upsertRecord");
+
+    String paramPath   = nameQuote(fieldNames.paramPath());
+    String paramValue  = nameQuote(fieldNames.paramValue());
+    String modifiedAt  = nameQuote(fieldNames.modifiedAt());
+    String description = nameQuote(fieldNames.description());
+    String tableName   = tableName(schema, tableNameArg);
+
+    String paramPath_Value   = record.key();
+    String paramValue_Value  = record.value();
+    String description_Value = record.commentValue();
+
+    StringBuilder sql = new StringBuilder();
+    sql.append("MERGE INTO ").append(tableName).append('(');
+    sql.append(paramPath).append(", ");
+    sql.append(paramValue).append(", ");
+    sql.append(description).append(", ");
+    sql.append(modifiedAt).append(')');
+    sql.append(" KEY (").append(paramPath).append(')');
+    sql.append(" VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+
+    try (Connection connection = dataSource.getConnection()) {
+
+      try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+        ps.setString(1, paramPath_Value);
+        ps.setString(2, paramValue_Value);
+        ps.setString(3, description_Value);
+        ps.executeUpdate();
+      }
+
+    } catch (SQLException e) {
+      throw convertSqlError(e);
+    }
   }
 }
