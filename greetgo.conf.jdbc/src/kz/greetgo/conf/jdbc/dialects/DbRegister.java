@@ -72,7 +72,7 @@ public abstract class DbRegister {
   }
 
   protected String nameQuote(String name) {
-    return "" + '"' + name + '"';
+    return "" + '"' + name(name) + '"';
   }
 
   protected String name(String name) {
