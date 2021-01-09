@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class JdbcConfigFactory {
@@ -118,29 +119,47 @@ public abstract class JdbcConfigFactory {
 
         ConfContent ret = new ConfContent();
 
-        ConfRecord tableDescriptionRecord = selectTableDescriptionRecord(schema(), tableName);
-        if (tableDescriptionRecord != null && tableDescriptionRecord.comments.size() > 0) {
-          ret.records.add(tableDescriptionRecord);
+        try {
+          ConfRecord tableDescriptionRecord = register().selectTableDescriptionRecord(schema(), tableName);
+          if (tableDescriptionRecord != null && tableDescriptionRecord.comments.size() > 0) {
+            ret.records.add(tableDescriptionRecord);
+          }
+
+          ret.records.addAll(register().selectParamRecords(schema(), tableName, fieldNames()));
+
+          return ret.records.isEmpty() ? null : ret;
+        } catch (NoSchema | NoTable e) {
+          return null;
         }
-
-        ret.records.addAll(register().selectParamRecords(schema(), tableName, fieldNames()));
-
-        return ret.records.isEmpty() ? null : ret;
       }
 
-      ConfRecord selectTableDescriptionRecord(String schema, String tableName) {
-        for (int i = 0; i < 7; i++) {
+      void boom(Handler handler) {
+        while (true) {
           try {
-            return register().selectTableDescriptionRecord(schema, tableName);
-          } catch (NoTable e) {
-            register().createTable(schema, tableName, fieldNames());
-            continue;
+            handler.handle();
+            return;
           } catch (NoSchema e) {
-            register().createSchema(schema);
+            register().createSchema(schema());
+            continue;
+          } catch (NoTable e) {
+            register().createTable(schema(), tableNameFor(configInterface), fieldNames());
             continue;
           }
         }
-        throw new RuntimeException("IoX33QLd1d :: Cannot selectTableDescriptionRecord");
+      }
+
+      <W> W doom(Supplier<W> supplier) {
+        while (true) {
+          try {
+            return supplier.get();
+          } catch (NoSchema e) {
+            register().createSchema(schema());
+            continue;
+          } catch (NoTable e) {
+            register().createTable(schema(), tableNameFor(configInterface), fieldNames());
+            continue;
+          }
+        }
       }
 
       @Override
@@ -154,12 +173,13 @@ public abstract class JdbcConfigFactory {
                                        .flatMap(x -> x.comments.stream())
                                        .collect(Collectors.toList());
 
-        register().setTableComments(schema(), tableName, fieldNames(), tableComments);
+        boom(() -> register().setTableComments(schema(), tableName, fieldNames(), tableComments));
 
-        Map<String, ConfRecord> existsRecords = register().selectParamRecords(schema(), tableName, fieldNames())
-                                                          .stream()
-                                                          .filter(x -> x.key() != null && x.key().length() > 0)
-                                                          .collect(Collectors.toMap(ConfRecord::key, x -> x));
+        Map<String, ConfRecord> existsRecords
+          = doom(() -> register().selectParamRecords(schema(), tableName, fieldNames()))
+              .stream()
+              .filter(x -> x.key() != null && x.key().length() > 0)
+              .collect(Collectors.toMap(ConfRecord::key, x -> x));
 
         for (ConfRecord record : confContent.records) {
           String paramPath = record.key();
@@ -170,18 +190,22 @@ public abstract class JdbcConfigFactory {
 
           existsRecords.remove(paramPath);
 
-          register().upsertRecord(schema(), tableName, fieldNames(), record);
+          boom(() -> register().upsertRecord(schema(), tableName, fieldNames(), record));
         }
 
         for (String paramPath : existsRecords.keySet()) {
-          register().removeRecord(schema(), tableName, fieldNames(), paramPath);
+          boom(() -> register().removeRecord(schema(), tableName, fieldNames(), paramPath));
         }
       }
 
       @Override
       public Date lastModifiedAt() {
         String tableName = tableNameFor(configInterface);
-        return register().selectLastModifiedAt(schema(), tableName, fieldNames());
+        try {
+          return register().selectLastModifiedAt(schema(), tableName, fieldNames());
+        } catch (NoSchema | NoTable e) {
+          return null;
+        }
       }
     };
   }

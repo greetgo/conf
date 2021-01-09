@@ -132,8 +132,6 @@ public class DbRegister_PostgreSQL extends DbRegister {
                    + description + " = ?, "
                    + modifiedAt + " = current_timestamp";
 
-    System.out.println("z3Ej35CXYd :: sql = " + sql);
-
     try (Connection connection = dataSource.getConnection()) {
 
       try (PreparedStatement ps = connection.prepareStatement(sql)) {
