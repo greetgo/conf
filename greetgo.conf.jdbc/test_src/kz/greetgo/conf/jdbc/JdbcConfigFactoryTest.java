@@ -3,6 +3,7 @@ package kz.greetgo.conf.jdbc;
 import kz.greetgo.conf.jdbc.dialects.DbRegister;
 import kz.greetgo.conf.jdbc.test.TestVariant;
 import kz.greetgo.conf.jdbc.test.configs.TestConfig;
+import kz.greetgo.conf.jdbc.test.configs.TestConfig2;
 import kz.greetgo.conf.jdbc.test.db.DbManager;
 import kz.greetgo.conf.jdbc.test.db.RND;
 import kz.greetgo.conf.jdbc.test.db.access.TestDbAccess;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -153,7 +155,7 @@ public class JdbcConfigFactoryTest {
       }
 
       @Override
-      protected FieldNames fieldNames() {
+      public FieldNames fieldNames() {
         return fn;
       }
 
@@ -205,5 +207,86 @@ public class JdbcConfigFactoryTest {
     time.addAndGet(10_000);
 
     assertThat(config.strParam()).isEqualTo(newStrParamValue);
+  }
+
+  @Test(dataProvider = "testVariantDataProvider")
+  public void createConfig_removeParam(TestVariant tv) throws Exception {
+
+    DataSource dataSource = dbManager.newDataSourceFor(tv.jdbcType);
+
+    System.out.println("AV56dSB1NR :: dataSource = " + dataSource);
+
+    AtomicLong time = new AtomicLong(1000);
+
+    JdbcConfigFactory configFactory = new JdbcConfigFactory() {
+      @Override
+      protected DataSource dataSource() {
+        return dataSource;
+      }
+
+      @Override
+      protected String schema() {
+        return tv.schema;
+      }
+
+      @Override
+      protected NamingStyle namingStyle() {
+        return tv.namingStyle;
+      }
+
+      @Override
+      protected long autoResetTimeout() {
+        return 3000;
+      }
+
+      @Override
+      protected long currentTimeMillis() {
+        return time.get();
+      }
+    };
+
+    //
+    //
+    TestConfig config = configFactory.createConfig(TestConfig.class);
+    //
+    //
+
+    config.strParam();
+
+    DbRegister register = configFactory.register();
+
+    String tableName = register.tableName(tv.schema, "TestConfig");
+
+    System.out.println("avz1rCLm6I :: tableName = " + tableName);
+
+    TestDbAccess testDbAccess = TestDbAccess.of(dataSource);
+
+    FieldNames fn = configFactory.fieldNames();
+
+    String paramPath  = register.nameQuote(fn.paramPath());
+    String paramValue = register.nameQuote(fn.paramValue());
+    String modifiedAt = register.nameQuote(fn.modifiedAt());
+
+    String asdValue = RND.strEng(10);
+
+    String value = RND.strEng(11);
+
+    testDbAccess.insertParam(tableName, paramPath, paramValue, "asd", asdValue, modifiedAt);
+    testDbAccess.updateParam(tableName, paramPath, paramValue, "strParam", value);
+    testDbAccess.incrementTimestampSec(tableName, modifiedAt, 3);
+
+    time.addAndGet(10_000);
+
+    assertThat(config.strParam()).isEqualTo(value);
+
+    String asdActualValue = testDbAccess.readParam(tableName, paramPath, paramValue, "asd")
+                                        .orElseThrow(RuntimeException::new);
+
+    assertThat(asdActualValue).isEqualTo(asdValue);
+
+    configFactory.reset();
+
+    TestConfig2 config2 = configFactory.createConfig(TestConfig2.class);
+    assertThat(config2.strParam()).isEqualTo(value);
   }
 }

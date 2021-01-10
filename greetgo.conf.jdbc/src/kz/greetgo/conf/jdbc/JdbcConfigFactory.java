@@ -38,7 +38,7 @@ public abstract class JdbcConfigFactory {
     return null;
   }
 
-  protected FieldNames fieldNames() {
+  public FieldNames fieldNames() {
     return new FieldNames() {
       @Override
       public String paramPath() {
@@ -101,6 +101,11 @@ public abstract class JdbcConfigFactory {
         return register;
       }
     }
+  }
+
+  public void reset() {
+    dbRegister.set(null);
+    proxyMap.clear();
   }
 
   private final ConcurrentHashMap<Class<?>, Object> proxyMap = new ConcurrentHashMap<>();

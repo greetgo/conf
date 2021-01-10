@@ -126,9 +126,7 @@ public abstract class DbRegister {
 
   public abstract void upsertRecord(String schema, String tableNameArg, FieldNames fieldNames, ConfRecord record);
 
-  public void removeRecord(String schema, String tableName, FieldNames fieldNames, String paramPath) {
-    throw new RuntimeException("Not impl yet: DbRegister.removeRecord");
-  }
+  public void removeRecord(String schema, String tableName, FieldNames fieldNames, String paramPath) {}
 
   public abstract void setTableComments(String schema, String tableName, FieldNames fieldNames, List<String> tableComments);
 
