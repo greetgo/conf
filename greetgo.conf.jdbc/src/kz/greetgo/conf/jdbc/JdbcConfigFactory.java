@@ -39,7 +39,27 @@ public abstract class JdbcConfigFactory {
   }
 
   protected FieldNames fieldNames() {
-    return new FieldNames();
+    return new FieldNames() {
+      @Override
+      public String paramPath() {
+        return "param_path";
+      }
+
+      @Override
+      public String paramValue() {
+        return "param_value";
+      }
+
+      @Override
+      public String description() {
+        return "description";
+      }
+
+      @Override
+      public String modifiedAt() {
+        return "modified_at";
+      }
+    };
   }
 
   /**
@@ -100,14 +120,22 @@ public abstract class JdbcConfigFactory {
       }
 
       {
-        T ret = ConfImplBuilder.confImplBuilder(configInterface, confAccess(configInterface))
-                               .changeCheckTimeoutMs(autoResetTimeout())
-                               .build();
-
+        T ret = buildConfigProxy(configInterface);
         proxyMap.put(configInterface, ret);
         return ret;
       }
     }
+  }
+
+  protected long currentTimeMillis() {
+    return System.currentTimeMillis();
+  }
+
+  private <T> T buildConfigProxy(Class<T> configInterface) {
+    return ConfImplBuilder.confImplBuilder(configInterface, confAccess(configInterface))
+                          .changeCheckTimeoutMs(autoResetTimeout())
+                          .currentTimeMillis(this::currentTimeMillis)
+                          .build();
   }
 
   private <T> ConfAccess confAccess(Class<T> configInterface) {

@@ -71,11 +71,11 @@ public abstract class DbRegister {
     return null;
   }
 
-  protected String nameQuote(String name) {
+  public String nameQuote(String name) {
     return "" + '"' + name(name) + '"';
   }
 
-  protected String name(String name) {
+  public String name(String name) {
     switch (namingStyle()) {
 
       case DIRECT:
@@ -140,7 +140,7 @@ public abstract class DbRegister {
     try (Connection connection = dataSource.getConnection()) {
       try (PreparedStatement ps = connection.prepareStatement(sql)) {
         try (ResultSet rs = ps.executeQuery()) {
-          return rs.next() ? rs.getDate(1) : null;
+          return rs.next() ? rs.getTimestamp(1) : null;
         }
       }
     } catch (SQLException e) {

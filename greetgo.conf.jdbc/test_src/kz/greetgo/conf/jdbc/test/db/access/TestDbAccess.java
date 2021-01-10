@@ -51,4 +51,24 @@ public abstract class TestDbAccess {
     }
     return params;
   }
+
+  public void updateParam(String tableName,
+                          String fieldName, String fieldValue,
+                          String name, String value) throws SQLException {
+
+    String sql = "update " + tableName + " set " + fieldValue + " = ? where " + fieldName + " = ?";
+
+    try (Connection connection = dataSource.getConnection()) {
+      try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, value);
+        ps.setString(2, name);
+        int updateCount = ps.executeUpdate();
+        if (updateCount != 1) throw new RuntimeException("61chGj0wl8 :: Illegal update tableName = "
+                                                           + tableName + ", updateCount = " + updateCount);
+      }
+    }
+
+  }
+
+  public abstract void incrementTimestampSec(String tableName, String timestampField, int deltaSec) throws SQLException;
 }

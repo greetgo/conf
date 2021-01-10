@@ -1,21 +1,13 @@
 package kz.greetgo.conf.jdbc;
 
-public class FieldNames {
+public interface FieldNames {
 
-  public String paramPath() {
-    return "param_path";
-  }
+  String paramPath();
 
-  public String paramValue() {
-    return "param_value";
-  }
+  String paramValue();
 
-  public String description() {
-    return "param_description";
-  }
+  String description();
 
-  public String modifiedAt() {
-    return "modified_at";
-  }
+  String modifiedAt();
 
 }
