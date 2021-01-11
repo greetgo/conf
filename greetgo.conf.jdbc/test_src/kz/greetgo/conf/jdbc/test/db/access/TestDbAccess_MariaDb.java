@@ -15,7 +15,7 @@ class TestDbAccess_MariaDb extends TestDbAccess {
   public void incrementTimestampSec(String tableName, String timestampField, int deltaSec) throws SQLException {
 
     String sql = "update " + tableName + " set " + timestampField
-                   + " = " + timestampField + " + '" + deltaSec + " seconds'";
+                   + " = " + timestampField + " + interval " + deltaSec + " second";
 
     try (Connection connection = dataSource.getConnection()) {
       try (PreparedStatement ps = connection.prepareStatement(sql)) {
