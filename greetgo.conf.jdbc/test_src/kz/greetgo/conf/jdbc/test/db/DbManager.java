@@ -61,6 +61,11 @@ public class DbManager {
           statement.execute("grant all privileges on `" + db + "`.* to '" + user + "'@'%'");
           statement.execute("flush privileges");
         }
+      } catch (SQLException e) {
+        if("08000".equals(e.getSQLState())) {
+          throw new SkipException("YeK1M93fvl :: No MariaDb connection", e);
+        }
+        throw e;
       }
     }
 
