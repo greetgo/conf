@@ -8,6 +8,7 @@ dependencies {
 
   testCompile "com.h2database:h2:1.4.200"
   testCompile "org.postgresql:postgresql:42.2.18"
+  testCompile "org.mariadb.jdbc:mariadb-java-client:2.7.1"
 }
 
 uploadToMavenCentral {

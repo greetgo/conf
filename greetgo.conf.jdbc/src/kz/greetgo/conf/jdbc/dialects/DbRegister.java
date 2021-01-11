@@ -28,6 +28,9 @@ public abstract class DbRegister {
       case PostgreSQL:
         return new DbRegister_PostgreSQL(namingStyle, dataSource);
 
+      case MariaDb:
+        return new DbRegister_MariaDb(namingStyle, dataSource);
+
       default:
         throw new RuntimeException("U7OFiEdbV8 :: DbRegister for " + jdbcType + " is not implemented");
     }
@@ -62,7 +65,7 @@ public abstract class DbRegister {
     return schema == null ? defaultSchema() : nameQuote(schema);
   }
 
-  public String tableName(String schema, String tableName) {
+  public String tableNameQuoted(String schema, String tableName) {
     String realSchema = schemaQuoted(schema);
     return (realSchema == null ? "" : realSchema + '.') + nameQuote(tableName);
   }
@@ -72,7 +75,7 @@ public abstract class DbRegister {
   }
 
   public String nameQuote(String name) {
-    return "" + '"' + name(name) + '"';
+    return '"' + name(name) + '"';
   }
 
   public String name(String name) {
@@ -94,7 +97,7 @@ public abstract class DbRegister {
   }
 
   public List<ConfRecord> selectParamRecords(String schema, String tableNameArg, FieldNames fieldNames) {
-    String tableName = tableName(schema, tableNameArg);
+    String tableName = tableNameQuoted(schema, tableNameArg);
     String paramPath = nameQuote(fieldNames.paramPath());
     String sql       = "select * from " + tableName + " order by " + paramPath;
 
@@ -131,7 +134,7 @@ public abstract class DbRegister {
   public abstract void setTableComments(String schema, String tableName, FieldNames fieldNames, List<String> tableComments);
 
   public Date selectLastModifiedAt(String schema, String tableNameArg, FieldNames fieldNames) {
-    String tableName  = tableName(schema, tableNameArg);
+    String tableName  = tableNameQuoted(schema, tableNameArg);
     String modifiedAt = nameQuote(fieldNames.modifiedAt());
     String sql        = "select max(" + modifiedAt + ") from " + tableName;
 

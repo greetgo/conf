@@ -24,6 +24,9 @@ public abstract class TestDbAccess {
       case PostgreSQL:
         return new TestDbAccess_PostgreSQL(dataSource);
 
+      case MariaDb:
+        return new TestDbAccess_MariaDb(dataSource);
+
       default:
         throw new RuntimeException("6BoFvXp1d5 :: No TestDbAccess for " + jdbcType);
     }

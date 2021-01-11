@@ -53,7 +53,7 @@ public class DbRegister_H2 extends DbRegister {
     String paramValue  = nameQuote(fieldNames.paramValue());
     String modifiedAt  = nameQuote(fieldNames.modifiedAt());
     String description = nameQuote(fieldNames.description());
-    String tableName   = tableName(schema, tableNameArg);
+    String tableName   = tableNameQuoted(schema, tableNameArg);
 
     //noinspection MismatchedQueryAndUpdateOfStringBuilder
     StringBuilder sql = new StringBuilder();
@@ -92,7 +92,7 @@ public class DbRegister_H2 extends DbRegister {
     String paramValue  = nameQuote(fieldNames.paramValue());
     String modifiedAt  = nameQuote(fieldNames.modifiedAt());
     String description = nameQuote(fieldNames.description());
-    String tableName   = tableName(schema, tableNameArg);
+    String tableName   = tableNameQuoted(schema, tableNameArg);
 
     String paramPath_Value   = record.key();
     String paramValue_Value  = record.value();

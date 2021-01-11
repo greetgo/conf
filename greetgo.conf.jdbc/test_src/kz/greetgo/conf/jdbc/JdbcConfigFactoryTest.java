@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +41,7 @@ public class JdbcConfigFactoryTest {
     variants.add(TestVariant.of(JdbcType.H2, "s" + RND.strEng(10)));
     variants.add(TestVariant.of(JdbcType.PostgreSQL, null));
     variants.add(TestVariant.of(JdbcType.PostgreSQL, "s" + RND.strEng(10)));
+    variants.add(TestVariant.of(JdbcType.MariaDb, null));
 
     return variants.stream()
                    .flatMap(this::allNamingStyles)
@@ -87,7 +87,7 @@ public class JdbcConfigFactoryTest {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     assertThat(sdf.format(config.dateParam())).isEqualTo("2019-01-11 23:11:10");
 
-    String tableName = configFactory.register().tableName(tv.schema, "TestConfig");
+    String tableName = configFactory.register().tableNameQuoted(tv.schema, "TestConfig");
 
     System.out.println("avz1rCLm6I :: tableName = " + tableName);
 
@@ -182,7 +182,7 @@ public class JdbcConfigFactoryTest {
 
     DbRegister register = configFactory.register();
 
-    String tableName = register.tableName(tv.schema, "TestConfig");
+    String tableName = register.tableNameQuoted(tv.schema, "TestConfig");
 
     System.out.println("avz1rCLm6I :: tableName = " + tableName);
 
@@ -255,7 +255,7 @@ public class JdbcConfigFactoryTest {
 
     DbRegister register = configFactory.register();
 
-    String tableName = register.tableName(tv.schema, "TestConfig");
+    String tableName = register.tableNameQuoted(tv.schema, "TestConfig");
 
     System.out.println("avz1rCLm6I :: tableName = " + tableName);
 

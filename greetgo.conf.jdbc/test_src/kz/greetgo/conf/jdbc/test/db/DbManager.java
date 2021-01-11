@@ -31,6 +31,9 @@ public class DbManager {
         case PostgreSQL:
           return newDataSource_Postgres();
 
+        case MariaDb:
+          return newDataSource_MariaDb();
+
         default:
           throw new RuntimeException("G2lJPm4D8S :: Unknown JdbcType " + jdbcType);
       }
@@ -42,6 +45,34 @@ public class DbManager {
   }
 
   @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
+  private DataSource newDataSource_MariaDb() throws Exception {
+    Class.forName("org.mariadb.jdbc.Driver");
+    String rnd      = RND.strEng(10).toLowerCase();
+    String user     = "user_" + rnd;
+    String password = RND.strEng(15).toLowerCase();
+    String db       = "db_" + rnd;
+
+    {
+      String url = "jdbc:mariadb://localhost:23306";
+      try (Connection admin = DriverManager.getConnection(url, "root", "111")) {
+        try (Statement statement = admin.createStatement()) {
+          statement.execute("create user " + user + " identified by '" + password + "'");
+          statement.execute("create database " + db);
+          statement.execute("grant all privileges on `" + db + "`.* to '" + user + "'@'%'");
+          statement.execute("flush privileges");
+        }
+      }
+    }
+
+    {
+      String     url        = "jdbc:mariadb://localhost:23306/" + db;
+      Connection connection = DriverManager.getConnection(url, user, password);
+      return toDataSource(connection);
+    }
+  }
+
+
+  @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
   private DataSource newDataSource_Postgres() throws Exception {
     Class.forName("org.postgresql.Driver");
     String rnd      = RND.strEng(10).toLowerCase();
@@ -49,7 +80,8 @@ public class DbManager {
     String password = RND.strEng(15).toLowerCase();
     String db       = "db_" + rnd;
 
-    try (Connection admin = DriverManager.getConnection("jdbc:postgresql://localhost:25432/postgres", "postgres", "111")) {
+    String url = "jdbc:postgresql://localhost:25432/postgres";
+    try (Connection admin = DriverManager.getConnection(url, "postgres", "111")) {
 
       try (Statement statement = admin.createStatement()) {
         statement.execute("create user " + user + " with encrypted password '" + password + "'");

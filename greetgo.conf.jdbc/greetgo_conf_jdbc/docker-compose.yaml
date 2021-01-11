@@ -13,14 +13,14 @@ services:
     environment:
       POSTGRES_PASSWORD: "111"
 
-#  mariadb:
-#    image: mariadb:10.5.8
-#    mem_limit: 200M
-#    container_name: mariadb_greetgo_conf_jdbc
-#    restart: always
-#    ports:
-#      - "23306:3306"
-#    volumes:
-#      - ./volumes/mariadb:/var/lib/mysql
-#    environment:
-#      MYSQL_ROOT_PASSWORD: "111"
+  mariadb:
+    image: mariadb:10.5.8
+    mem_limit: 200M
+    container_name: mariadb_greetgo_conf_jdbc
+    restart: always
+    ports:
+      - "23306:3306"
+    volumes:
+      - ./volumes/mariadb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "111"

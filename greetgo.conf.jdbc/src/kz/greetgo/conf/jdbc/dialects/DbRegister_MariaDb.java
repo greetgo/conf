@@ -3,7 +3,6 @@ package kz.greetgo.conf.jdbc.dialects;
 import kz.greetgo.conf.core.ConfRecord;
 import kz.greetgo.conf.jdbc.FieldNames;
 import kz.greetgo.conf.jdbc.NamingStyle;
-import kz.greetgo.conf.jdbc.errors.NoSchema;
 import kz.greetgo.conf.jdbc.errors.NoTable;
 
 import javax.sql.DataSource;
@@ -15,42 +14,52 @@ import java.sql.Statement;
 import java.util.List;
 
 @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
-public class DbRegister_PostgreSQL extends DbRegister {
-  protected DbRegister_PostgreSQL(NamingStyle namingStyle, DataSource dataSource) {
+public class DbRegister_MariaDb extends DbRegister {
+  protected DbRegister_MariaDb(NamingStyle namingStyle, DataSource dataSource) {
     super(namingStyle, dataSource);
   }
 
   @Override
   protected NamingStyle defaultNamingStyle() {
-    return NamingStyle.LOWER_CASED;
+    return NamingStyle.DIRECT;
   }
 
   @Override
   public RuntimeException convertSqlError(SQLException sqlException) {
-    if ("42P01".equals(sqlException.getSQLState())) {
+    if ("42S02".equals(sqlException.getSQLState())) {
       return new NoTable(sqlException);
-    }
-    if ("3F000".equals(sqlException.getSQLState())) {
-      return new NoSchema(sqlException);
     }
     throw new RuntimeException(sqlException);
   }
 
   @Override
+  public String nameQuote(String name) {
+    return '`' + name(name) + '`';
+  }
+
+  @Override
   protected String defaultSchema() {
-    return "public";
+    return null;
   }
 
   @Override
   public ConfRecord selectTableDescriptionRecord(String schema, String tableNameArg) {
-    String tableName = tableNameQuoted(schema, tableNameArg);
+    String tableName = name(tableNameArg);
 
-    String sql = "SELECT obj_description('" + tableName + "'::regclass, 'pg_class')";
+    String sql = "select table_comment from information_schema.TABLES " +
+                   "where TABLE_NAME = ? and TABLE_SCHEMA = schema()";
 
     try (Connection connection = dataSource.getConnection()) {
       try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, tableName);
         try (ResultSet rs = ps.executeQuery()) {
-          return !rs.next() ? null : ConfRecord.ofComment(rs.getString(1));
+          if (rs.next()) {
+            String comment = rs.getString(1);
+            if (comment != null && comment.trim().length() > 0) {
+              return ConfRecord.ofComment(null);
+            }
+          }
+          return null;
         }
       }
     } catch (SQLException e) {
@@ -98,7 +107,7 @@ public class DbRegister_PostgreSQL extends DbRegister {
   @Override
   public void setTableComments(String schema, String tableNameArg, FieldNames fieldNames, List<String> tableComments) {
     String tableName = tableNameQuoted(schema, tableNameArg);
-    String sql = "comment on table " + tableName + " is "
+    String sql = "alter table " + tableName + " comment "
                    + (tableComments == null || tableComments.isEmpty()
                         ? "null"
                         : "'" + String.join("\n", tableComments).replace('\'', ' ') + "'");
@@ -127,7 +136,7 @@ public class DbRegister_PostgreSQL extends DbRegister {
     String sql = "insert into " + tableName
                    + " (" + paramPath + ", " + paramValue + ", "
                    + description + ", " + modifiedAt + ") values (?, ?, ?, current_timestamp)"
-                   + " on conflict (" + paramPath + ") do update set "
+                   + " on duplicate key update "
                    + paramValue + " = ?, "
                    + description + " = ?, "
                    + modifiedAt + " = current_timestamp";
