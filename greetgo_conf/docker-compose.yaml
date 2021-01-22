@@ -24,3 +24,28 @@ services:
       - ./volumes/mariadb:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: "111"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.5.0
+    mem_limit: 200M
+    restart: always
+    volumes:
+      - "./volumes/zookeeper/data:/var/lib/zookeeper/data"
+      - "./volumes/zookeeper/log:/var/lib/zookeeper/log"
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: "1"
+      ZOOKEEPER_CLIENT_PORT: "2181"
+
+  zoonavigator:
+    image: elkozmon/zoonavigator:1.1.0
+    mem_limit: 200M
+    restart: always
+    ports:
+      - "9000:9000"
+    environment:
+      HTTP_PORT: 9000
+      AUTO_CONNECT_CONNECTION_ID: "MAIN"
+      CONNECTION_MAIN_NAME: "main"
+      CONNECTION_MAIN_CONN: "zookeeper:2181"
