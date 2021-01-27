@@ -2,9 +2,8 @@ package kz.greetgo.conf.jdbc;
 
 import kz.greetgo.conf.core.ConfAccess;
 import kz.greetgo.conf.core.ConfContent;
-import kz.greetgo.conf.core.ConfImplBuilder;
 import kz.greetgo.conf.core.ConfRecord;
-import kz.greetgo.conf.hot.ConfigFileName;
+import kz.greetgo.conf.hot.AbstractHotConfFactory;
 import kz.greetgo.conf.jdbc.dialects.DbRegister;
 import kz.greetgo.conf.jdbc.errors.NoSchema;
 import kz.greetgo.conf.jdbc.errors.NoTable;
@@ -13,12 +12,11 @@ import javax.sql.DataSource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class JdbcConfigFactory {
+public abstract class JdbcConfigFactory extends AbstractHotConfFactory {
 
   protected NamingStyle namingStyle() {
     return NamingStyle.DEFAULT_DIALECT;
@@ -62,23 +60,13 @@ public abstract class JdbcConfigFactory {
     };
   }
 
-  /**
-   * Defines auto reset timeout. It is a time interval in milliseconds to check last config modification date and time.
-   * And if the date and time was changed, then it calls method `reset` for this config.
-   *
-   * @return auto reset timeout. Zero - auto resetting is off
-   */
-  protected long autoResetTimeout() {
-    return 3000;
-  }
-
   protected String tableNameFor(Class<?> configInterface) {
-    String         tablePrefix  = tablePrefix();
-    String         tablePostfix = tablePostfix();
-    ConfigFileName fileName     = configInterface.getAnnotation(ConfigFileName.class);
+    String tablePrefix   = tablePrefix();
+    String tablePostfix  = tablePostfix();
+    String interfaceName = extractInterfaceName(configInterface);
     return ""
              + (tablePrefix == null ? "" : tablePrefix)
-             + (fileName != null ? fileName.value() : configInterface.getSimpleName())
+             + interfaceName
              + (tablePostfix == null ? "" : tablePostfix)
       ;
   }
@@ -103,48 +91,14 @@ public abstract class JdbcConfigFactory {
     }
   }
 
+  @Override
   public void reset() {
+    super.reset();
     dbRegister.set(null);
-    proxyMap.clear();
   }
 
-  private final ConcurrentHashMap<Class<?>, Object> proxyMap = new ConcurrentHashMap<>();
-
-  public <T> T createConfig(Class<T> configInterface) {
-    {
-      //noinspection unchecked
-      T ret = (T) proxyMap.get(configInterface);
-      if (ret != null) return ret;
-    }
-
-    synchronized (proxyMap) {
-      {
-        //noinspection unchecked
-        T ret = (T) proxyMap.get(configInterface);
-        if (ret != null) return ret;
-      }
-
-      {
-        T ret = buildConfigProxy(configInterface);
-        proxyMap.put(configInterface, ret);
-        return ret;
-      }
-    }
-  }
-
-  protected long currentTimeMillis() {
-    return System.currentTimeMillis();
-  }
-
-  private <T> T buildConfigProxy(Class<T> configInterface) {
-    return ConfImplBuilder.confImplBuilder(configInterface, confAccess(configInterface))
-                          .changeCheckTimeoutMs(autoResetTimeout())
-                          .currentTimeMillis(this::currentTimeMillis)
-                          .build();
-  }
-
-  private <T> ConfAccess confAccess(Class<T> configInterface) {
-
+  @Override
+  protected <T> ConfAccess confAccess(Class<T> configInterface) {
     return new ConfAccess() {
       @Override
       public ConfContent load() {

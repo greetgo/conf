@@ -1,3 +1,8 @@
 dependencies {
 
+  compile project(":greetgo.conf")
+
+  compile "org.apache.curator:curator-recipes:5.1.0"
+
+  testCompile "kz.greetgo.util:greetgo.util:$greetgoUtilVersion"
 }
