@@ -8,6 +8,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,6 +29,8 @@ public abstract class AbstractZookeeperConfigFactory extends AbstractHotConfFact
 
   private final AtomicReference<CuratorFramework> client = new AtomicReference<>(null);
 
+  private final ReentrantLock locker = new ReentrantLock();
+
   private CuratorFramework client() {
 
     {
@@ -35,7 +38,8 @@ public abstract class AbstractZookeeperConfigFactory extends AbstractHotConfFact
       if (ret != null) return ret;
     }
 
-    synchronized (client) {
+    locker.lock();
+    try {
       {
         CuratorFramework ret = client.get();
         if (ret != null) return ret;
@@ -51,6 +55,8 @@ public abstract class AbstractZookeeperConfigFactory extends AbstractHotConfFact
       client.set(ret);
 
       return ret;
+    } finally {
+      locker.unlock();
     }
   }
 
@@ -90,8 +96,7 @@ public abstract class AbstractZookeeperConfigFactory extends AbstractHotConfFact
 
   @Override
   protected <T> ConfAccess confAccess(Class<T> configInterface) {
-    String configPath = extractConfigPath(configInterface);
-    return new ZookeeperConfAccess(configPath, this::client, this::confContentSerializer);
+    return new ZookeeperConfAccess(extractConfigPath(configInterface), this::client, this::confContentSerializer);
   }
 
   protected long currentTimeMillis() {

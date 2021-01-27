@@ -25,31 +25,31 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "111"
 
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper:5.5.0
-#    mem_limit: 200M
-#    restart: always
-#    volumes:
-#      - "./volumes/zookeeper/data:/var/lib/zookeeper/data"
-#      - "./volumes/zookeeper/log:/var/lib/zookeeper/log"
-#    ports:
-#      - "51078:2181"
-#    environment:
-#      ZOOKEEPER_SERVER_ID: "1"
-#      ZOOKEEPER_CLIENT_PORT: "2181"
-
   zookeeper:
-    image: zookeeper:3.6.2
-    user: "0:0"
+    image: confluentinc/cp-zookeeper:5.5.0
     mem_limit: 200M
     restart: always
+    volumes:
+      - "./volumes/zookeeper/data:/var/lib/zookeeper/data"
+      - "./volumes/zookeeper/log:/var/lib/zookeeper/log"
     ports:
       - "51078:2181"
-    volumes:
-      - "./volumes/zookeeper/data:/data"
-      - "./volumes/zookeeper/log:/datalog"
     environment:
-      ZOO_MY_ID: 1
+      ZOOKEEPER_SERVER_ID: "1"
+      ZOOKEEPER_CLIENT_PORT: "2181"
+
+#  zookeeper:
+#    image: zookeeper:3.6.2
+#    user: "0:0"
+#    mem_limit: 200M
+#    restart: always
+#    ports:
+#      - "51078:2181"
+#    volumes:
+#      - "./volumes/zookeeper/data:/data"
+#      - "./volumes/zookeeper/log:/datalog"
+#    environment:
+#      ZOO_MY_ID: 1
 
   zoonavigator:
     image: elkozmon/zoonavigator:1.1.0
