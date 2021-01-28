@@ -40,7 +40,7 @@ public class SomeYourSpringBeanComponent {
 
 ```
 
-To do it, you need create java interface:
+To do it, you need create java interface (configuration java interface):
 
 ```java
 @Description("Here you describe config file")
@@ -100,6 +100,10 @@ That's all. It's simple. Isn't it?
 
 Moreover, you can change config file, and the system automatically detect it and reread config information
 without restarting application.
+
+Also, you can do NOT create config file by yourself manually - system creates the file automatically, and fill
+parameters with default values, witch specified by annotations @Default(Str|Int|Long|...)Value
+in the configuration java interface.
 
 ### How to do it?
 
