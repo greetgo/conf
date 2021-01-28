@@ -8,7 +8,7 @@
 
 - [Quick start guide storing config data in Zookeeper](doc/003_quick_start_guide__zookeeper.md)
 
-- [How easy to implement your own config storage](doc/004_implement_own_config_storage.md)
+- [How easy to realize your own config storage](doc/004_realize_own_config_storage.md)
 
 ### Small preamble
 
@@ -113,4 +113,4 @@ in the configuration java interface.
 
 - [Quick start guide storing config data in Zookeeper](doc/003_quick_start_guide__zookeeper.md)
 
-- [How easy to implement your own config storage](doc/004_implement_own_config_storage.md)
+- [How easy to realize your own config storage](doc/004_realize_own_config_storage.md)
