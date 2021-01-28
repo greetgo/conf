@@ -55,10 +55,12 @@ public interface TestConfig2 {
 ### 3. Create factory for config java interface implementation:
 
 ```java
-import kz.greetgo.conf.jdbc.JdbcConfigFactory;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import javax.sql.DataSource;
+
+import kz.greetgo.conf.jdbc.JdbcConfigFactory;
 
 @Component
 public class MyConfigFileFactory extends JdbcConfigFactory {
