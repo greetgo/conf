@@ -1,10 +1,22 @@
-# Configuration through java interfaces
+## Configuration through java interfaces
+
+### References
+
+- [Quick start guide storing config data in files](doc/001_quick_start_guide__files.md)
+
+- [Quick start guide storing config data in SQL DB (JDBC)](doc/002_quick_start_guide__jdbc.md)
+
+- [Quick start guide storing config data in Zookeeper](doc/003_quick_start_guide__zookeeper.md)
+
+- [How easy to implement your own config storage](doc/004_implement_own_config_storage.md)
+
+### Small preamble
 
 Every application needs different configuration information. Reading this information is always hard.
 
 You can simplify it very much.
 
-What if you want simply autowire some configuration and use it like in the following code:
+What if you want simply @Autowire some config and use it. Something like in the following code:
 
 ```java
 
@@ -48,7 +60,7 @@ interface ConnectionConfig {
 }
 ```
 
-Make small spring magic:
+Do some spring magic:
 
 ```java
 
@@ -58,6 +70,11 @@ public class MagicConfigFactory extends SomeAbstractConfigFactory {
   @Override
   protected Path getBaseDir() {
     return Paths.get("/some/specified/directory/where/config/files/are/located");
+  }
+  
+  @Override
+  protected String getConfigFileExt() {
+    return ".hotconfig";
   }
 
   @Bean
@@ -79,7 +96,17 @@ password=Louk1FjpdUNjZB3I961As3NiOdHq0Z
 databaseName=matrix
 ```
 
-That's all - simple.
+That's all. It's simple. Isn't it?
 
 Moreover, you can change config file, and the system automatically detect it and reread config information
 without restarting application.
+
+### How to do it?
+
+- [Quick start guide storing config data in files](doc/001_quick_start_guide__files.md)
+
+- [Quick start guide storing config data in SQL DB (JDBC)](doc/002_quick_start_guide__jdbc.md)
+
+- [Quick start guide storing config data in Zookeeper](doc/003_quick_start_guide__zookeeper.md)
+
+- [How easy to implement your own config storage](doc/004_implement_own_config_storage.md)
