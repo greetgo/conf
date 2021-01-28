@@ -1,6 +1,8 @@
-# Interface configuration
+# Configuration through java interfaces
 
 Every application needs different configuration information. Reading this information is always hard.
+
+You can simplify it very much.
 
 What if you want simply autowire some configuration and use it like in the following code:
 
@@ -46,7 +48,7 @@ interface ConnectionConfig {
 }
 ```
 
-Make some magic in spring application:
+Make small spring magic:
 
 ```java
 
