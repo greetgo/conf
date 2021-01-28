@@ -1,5 +1,7 @@
 ### Quick start guide storing config data in SQL DB (JDBC)
 
+### 1. Add the following maven dependencies:
+
 ```
   <dependency>
     <groupId>kz.greetgo</groupId>
