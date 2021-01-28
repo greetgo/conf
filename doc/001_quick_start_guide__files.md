@@ -55,7 +55,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
-public class MyConfigFileFactory extends FileConfigFactory {
+public class MyConfigFactory extends FileConfigFactory {
   @Override
   protected Path getBaseDir() {
     return Paths.get("/path/to/directory/where/config/files/are/located");
@@ -108,7 +108,7 @@ Or if you do NOT use Spring Framework, you can do something like the following:
 public class SomeYourLauncher {
 
   public static void main(String[] args) {
-    MyConfigFileFactory factory = new MyConfigFileFactory();
+    MyConfigFactory factory = new MyConfigFactory();
 
     TestConfig1 config1 = factory.createTestConfig1();
     TestConfig2 config2 = factory.createTestConfig2();

@@ -63,7 +63,7 @@ import javax.sql.DataSource;
 import kz.greetgo.conf.jdbc.JdbcConfigFactory;
 
 @Component
-public class MyConfigFileFactory extends JdbcConfigFactory {
+public class MyConfigFactory extends JdbcConfigFactory {
 
   @Override
   protected DataSource dataSource() {
@@ -120,7 +120,7 @@ Or if you do NOT use Spring Framework, you can do something like the following:
 public class SomeYourLauncher {
 
   public static void main(String[] args) {
-    MyConfigFileFactory factory = new MyConfigFileFactory();
+    MyConfigFactory factory = new MyConfigFactory();
 
     TestConfig1 config1 = factory.createTestConfig1();
     TestConfig2 config2 = factory.createTestConfig2();
