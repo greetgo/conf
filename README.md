@@ -1,9 +1,32 @@
 # Interface configuration
 
-Every application needs different configuration information. It's desirable to reread configuration without
-restart application - hot configuration.
+Every application needs different configuration information. Reading this information is always hard.
 
-What if you create java interface:
+What if you want simply autowire some configuration and use it like in the following code:
+
+```java
+
+@Component
+public class SomeYourSpringBeanComponent {
+
+  @Autowire
+  private ConnectionConfig config;
+
+  public void yourCoolMethod() {
+
+    Connection connection = DriverManager.getConnection(
+      "jdbc:postgresql://" + config.host() + "/" + config.databaseName(),
+      config.username(), config.password());
+    
+    doSomeWithConnection(connection);
+    
+  }
+
+}
+
+```
+
+To do it, you need create java interface:
 
 ```java
 @Description("Here you describe config file")
@@ -44,7 +67,7 @@ public class MagicConfigFactory extends SomeAbstractConfigFactory {
 
 ```
 
-After you create file `ConnectionConfig.hostconfig` in specified directory with the following content:
+Create file `ConnectionConfig.hostconfig` in specified directory with the following content:
 
 ```
 host=remote.postgres.domain.com
@@ -54,26 +77,7 @@ password=Louk1FjpdUNjZB3I961As3NiOdHq0Z
 databaseName=matrix
 ```
 
-Now you can autowire this interface in any of your application bean component and reads config data
-using code like this:
+That's all - simple.
 
-```java
-
-@Component
-public class SomeYouSpringBeanComponent {
-  
-  @Autowire
-  private ConnectionConfig connectionConfig;
-  
-  public void yourCoolMethod() {
-    
-    System.out.println("username = " + connectionConfig.username());
-    
-  }
-  
-}
-
-```
-
-Also, if you change config file, the system automatically detect it and reread new config data
-without the restart application.
+Moreover, you can change config file, and the system automatically detect it and reread config information
+without restarting application.
