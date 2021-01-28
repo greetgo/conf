@@ -13,6 +13,7 @@ Or if you use gradle:
 ```
     compile "kz.greetgo:greetgo.conf:2.0.0"
 ```
+
 ### 2. Create config java interfaces, you need to use in your application.
 
 For example:
@@ -120,5 +121,6 @@ public class SomeYourLauncher {
 }
 ```
 
-You can create config file manually. Or you can let the system to create config file automatically.
-In this situation the system will use for parameters the default values - values from annotations @Default...Value.
+You can create config files manually. Or you can let the system to create config files automatically.
+In this situation the system will use for parameters the default values - values
+from annotations @Default(Str|Int|...)Value.
