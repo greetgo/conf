@@ -10,6 +10,8 @@
 
 - [How easy to realize your own config storage](doc/004_realize_own_config_storage.md)
 
+- [Features](doc/005_features.md)
+
 ### Small preamble
 
 Every application needs different configuration information. Reading this information is always hard.
@@ -114,3 +116,5 @@ in the configuration java interface.
 - [Quick start guide storing config data in Zookeeper](doc/003_quick_start_guide__zookeeper.md)
 
 - [How easy to realize your own config storage](doc/004_realize_own_config_storage.md)
+
+- [Features](doc/005_features.md)
