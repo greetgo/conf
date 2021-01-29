@@ -1,12 +1,12 @@
 ### Features
 
-#### Data types
+#### Base types in method returns of the config interface 
 
-You can use the following types for config parameters:
+You can use the following types in method returns of the config interface:
 
 ```java
 public interface SomeConfig {
-  
+
   String param1();
 
   int param2();
@@ -30,9 +30,7 @@ public interface SomeConfig {
   BigInteger param11();
 
   SomeEnum param12();
-
 }
-
 ```
 
 #### Lazy config file creation OR annotation @ForcibleInit
@@ -57,3 +55,31 @@ If you want the system creates config file at line 1, then you need mark the con
 
     kz.greetgo.conf.hot.ForcibleInit
 
+### Data types in method returns of the config interface
+
+Also, you can use data class as parameter type. For example, let you have data class:
+
+```java
+public class SomeModel {
+  public int field1;
+  public String field2;
+}
+```
+
+Then you can use config interface:
+
+```java
+public interface ConfigInterface {
+  SomeModel param1();
+  SomeModel param2();
+}
+```
+
+Then config file looks like:
+
+```text
+param1.field1=11
+param1.field2=txt1
+param2.field1=22
+param2.field2=txt2
+```
